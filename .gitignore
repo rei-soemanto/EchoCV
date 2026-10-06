@@ -31,6 +31,10 @@ __pycache__/
 *.bin
 ct2-*/
 runs/
+*.task
+ml/artifacts/
+ml/.cache/
+ml/calibration/results/raw/
 apps/web/public/models/*
 !apps/web/public/models/.gitkeep
 

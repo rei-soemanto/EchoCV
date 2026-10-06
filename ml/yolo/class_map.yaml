@@ -1,0 +1,37 @@
+# Source class -> EchoCV behaviour class (shared/labels.json), or a role:
+#   face / hand   boxes used to derive touching_face (hand box >= 20% on the face box)
+#   negative      image-level "no behaviour" (classification sets)
+#   drop_image    ambiguous for our classes: leave the image out entirely
+# Unlisted classes are ignored: their boxes are dropped and the image stays as a negative.
+# _neg_keep: share of label-free TRAIN images to keep (val/test keep all).
+
+rf_body_language:
+  _neg_keep: 0.3
+  ARMS CROSSED LOOSE: arms_crossed
+  ARMS CROSSED LEGS CROSSED: arms_crossed  # box spans the whole seated body
+  SELF-HUG: arms_crossed
+  ONE ARM BARRIER: arms_crossed  # one arm across the body: same "closed posture" feedback
+  HAND TEMPLE REST: touching_face
+  NECK TOUCH THROAT: touching_face  # face/neck self-touch is one feedback item
+  HEAD FORWARD THRUST: drop_image  # side-view forward head: too close to slouching to be a negative
+
+rf_face_gesture:
+  _neg_keep: 0.15
+  Face: face
+  Closed_Fist: hand
+  No_Gesture: hand
+  Open_Palm: hand
+  Pointing_Up: hand
+  Thumb_Down: hand
+  Thumb_Up: hand
+  Victory: hand
+
+rf_face_hand:
+  Face: face
+  Hand: hand
+
+rf_sitting_posture_cls:
+  _neg_keep: 0.5
+  bad_posture: slouching
+  good_posture: negative
+  Unlabeled: drop_image

@@ -120,8 +120,8 @@ flowchart LR
     R[Consented mock-interview<br/>recordings, ID + EN] --> L1[Label behaviours<br/>Roboflow]
     R --> L2[Verbatim transcripts<br/>with eee / hmm / um tags]
     R --> L3[HR practitioners rate<br/>using EchoCV rubric]
-    L1 --> T1[Fine-tune YOLO26n<br/>RTX 3050 Ti, batch=-1]
-    L2 --> T2[LoRA fine-tune Whisper turbo<br/>Colab/Kaggle T4<br/>+ Common Voice, FLEURS, AMI]
+    L1 --> T1[Fine-tune YOLO26n<br/>RTX 3050 Ti, batch=16]
+    L2 --> T2[LoRA fine-tune Whisper turbo<br/>RTX 3050 Ti, decoder-first<br/>+ FLEURS, AMI, DisfluencySpeech]
     T1 --> E1[Export LiteRT .tflite]
     T2 --> E2[Convert to CTranslate2 int8]
     E1 --> HUB[(Hugging Face Hub<br/>versioned weights)]
@@ -152,7 +152,7 @@ flowchart LR
 | Auth | Auth.js (NextAuth) or Supabase Auth | Email / Google sign-in | ISC / Apache-2.0 |
 | Model registry | Hugging Face Hub (private repos) | Versioned YOLO + Whisper weights | — |
 | Labelling | Roboflow (free plan) for YOLO; Label Studio or spreadsheet for verbatim transcripts | Fast annotation | — |
-| Training | Ultralytics (local RTX 3050 Ti); Hugging Face Transformers + PEFT/LoRA (Colab/Kaggle T4) | Fits the hardware | AGPL-3.0 / Apache-2.0 |
+| Training | Ultralytics and Hugging Face Transformers + PEFT/LoRA, both on the local RTX 3050 Ti (Whisper: frozen encoder, decoder LoRA, fits 4 GB) | Fits the hardware | AGPL-3.0 / Apache-2.0 |
 | Deployment | Vercel (web); GPU VM or Hugging Face Space / Modal (speech service) | Cheap for a demo | — |
 | Testing | Vitest (web unit), Playwright (end-to-end), pytest (speech service) | — | MIT / Apache-2.0 |
 
@@ -224,13 +224,16 @@ echocv/
 │
 ├── ml/
 │   ├── yolo/                        # Custom behaviour detector
-│   │   ├── data.yaml                # Class list (from shared/labels)
-│   │   ├── train.py                 # yolo26n.pt fine-tune
-│   │   └── export.py                # → LiteRT (run on Linux/Colab)
-│   ├── whisper/                     # Verbatim filler fine-tune
-│   │   ├── prepare_data.py          # Merge own data + Common Voice + FLEURS + AMI
-│   │   ├── train_lora.ipynb         # Colab/Kaggle notebook
-│   │   └── convert_ct2.py           # → CTranslate2 int8 for faster-whisper
+│   │   ├── build_dataset.py         # Roboflow seeds + COCO pose-rule crops → YOLO data
+│   │   ├── train.py                 # yolo26n.pt fine-tune (local GPU)
+│   │   ├── export.py                # → ONNX (local)
+│   │   └── export_litert.ipynb      # → LiteRT (Colab: Linux only)
+│   ├── whisper/                     # Verbatim filler fine-tune (local GPU)
+│   │   ├── synth_id.py              # Synthetic Indonesian fillers on FLEURS
+│   │   ├── prepare_data.py          # FLEURS + AMI + DisfluencySpeech (+ own data later)
+│   │   ├── train_lora.py            # Decoder-first LoRA, fits 4 GB
+│   │   └── merge_and_convert.py     # → CTranslate2 int8 for faster-whisper
+│   ├── calibration/                 # Eye-contact and smile thresholds (MediaPipe)
 │   ├── eval/                        # Score calibration vs HR ratings
 │   └── data/                        # Download scripts only (datasets git-ignored)
 │

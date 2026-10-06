@@ -1,19 +1,40 @@
 [project]
 name = "echocv-ml"
 version = "0.1.0"
-description = "EchoCV training: custom YOLO26n behaviour detector (local RTX 3050 Ti) and score calibration"
+description = "EchoCV training: YOLO26n behaviour detector and Whisper filler fine-tune (local RTX 3050 Ti)"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = [
+    "accelerate>=1.15.0",
+    "ctranslate2>=4.8.2",
+    "faster-whisper>=1.2.1",
+    "huggingface-hub>=1.33.0",
+    "jiwer>=4.0.0",
+    "librosa>=1.0.0",
+    "onnx>=1.23.2",
+    "onnxruntime>=1.30.0",
+    "peft>=0.21.2",
+    "pyarrow>=25.0.1",
+    "pycocotools>=2.0.11",
+    "python-dotenv>=1.2.4",
+    "soundfile>=0.14.0",
+    "tokenizers>=0.23.1",
     "torch",
     "torchvision",
+    "transformers>=5",
     "ultralytics",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "ruff>=0.16.10",
 ]
 
 [tool.uv]
 package = false
 
-# PyPI only ships CPU torch for Windows; pull CUDA builds for local YOLO training.
+# PyPI only ships CPU torch for Windows; pull CUDA builds for local training.
 [[tool.uv.index]]
 name = "pytorch-cu130"
 url = "https://download.pytorch.org/whl/cu130"
@@ -22,3 +43,14 @@ explicit = true
 [tool.uv.sources]
 torch = [{ index = "pytorch-cu130", marker = "sys_platform != 'darwin'" }]
 torchvision = [{ index = "pytorch-cu130", marker = "sys_platform != 'darwin'" }]
+
+[tool.ruff]
+line-length = 100
+extend-exclude = ["data", "calibration", ".cache"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

@@ -1,0 +1,32 @@
+[project]
+name = "echocv-calibration"
+version = "0.1.0"
+description = "EchoCV eye-contact and smile threshold calibration (MediaPipe Face Landmarker)"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "mediapipe>=1.0.1",
+    "numpy>=2.5.3",
+    "pandas>=3.0.6",
+    "pillow>=12.3.0",
+    "scikit-learn>=1.9.1",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "ruff>=0.16.10",
+]
+
+# Separate from ml/: mediapipe needs opencv-contrib-python, which clashes with ultralytics' opencv-python.
+[tool.uv]
+package = false
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

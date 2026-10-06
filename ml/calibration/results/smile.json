@@ -1,0 +1,14 @@
+{
+  "dataset": "GENKI-4K",
+  "images": 4000,
+  "face_detection_rate": 0.9915,
+  "score": "mean(mouthSmileLeft, mouthSmileRight)",
+  "auc": 0.980553547438439,
+  "threshold": 0.31834736466407776,
+  "threshold_rule": "max Youden J (TPR - FPR)",
+  "at_threshold": {
+    "tpr": 0.9416977611940298,
+    "fpr": 0.062019758507135016,
+    "accuracy": 0.9399899142713061
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://echocv/schemas/visual-metrics.schema.json",
+  "title": "VisualMetrics",
+  "description": "Per-answer face and body metrics computed in the browser (live mode) or by services/speech (upload mode). Numbers only, never video.",
+  "type": "object",
+  "required": ["answerIndex", "durationMs", "eyeContactPct", "smilePct", "events"],
+  "additionalProperties": false,
+  "properties": {
+    "answerIndex": { "type": "integer", "minimum": 0 },
+    "durationMs": { "type": "integer", "minimum": 0 },
+    "eyeContactPct": { "type": "number", "minimum": 0, "maximum": 100 },
+    "smilePct": { "type": "number", "minimum": 0, "maximum": 100 },
+    "events": {
+      "type": "array",
+      "description": "Behaviour intervals; types match shared/labels.json behaviourClasses.",
+      "items": {
+        "type": "object",
+        "required": ["type", "startMs", "endMs"],
+        "additionalProperties": false,
+        "properties": {
+          "type": { "enum": ["touching_face", "arms_crossed", "reading_notes", "slouching"] },
+          "startMs": { "type": "integer", "minimum": 0 },
+          "endMs": { "type": "integer", "minimum": 0 }
+        }
+      }
+    }
+  }
+}

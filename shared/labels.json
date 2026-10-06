@@ -1,0 +1,10 @@
+{
+  "version": "0.1.0",
+  "behaviourClasses": ["touching_face", "arms_crossed", "reading_notes", "slouching"],
+  "fillerTokens": ["[EEE]", "[HMM]", "[UM]"],
+  "lexicalFillers": {
+    "note": "Real words Whisper transcribes anyway; count them with transcript rules or the LLM, not the acoustic model.",
+    "id": ["apa", "kayak", "gitu", "anu", "jadi", "seperti"],
+    "en": []
+  }
+}

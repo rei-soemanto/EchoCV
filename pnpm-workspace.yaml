@@ -1,0 +1,7 @@
+packages:
+  - apps/*
+  - shared
+
+allowBuilds:
+  sharp: false
+  unrs-resolver: false

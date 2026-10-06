@@ -1,0 +1,24 @@
+[project]
+name = "echocv-ml"
+version = "0.1.0"
+description = "EchoCV training: custom YOLO26n behaviour detector (local RTX 3050 Ti) and score calibration"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "torch",
+    "torchvision",
+    "ultralytics",
+]
+
+[tool.uv]
+package = false
+
+# PyPI only ships CPU torch for Windows; pull CUDA builds for local YOLO training.
+[[tool.uv.index]]
+name = "pytorch-cu130"
+url = "https://download.pytorch.org/whl/cu130"
+explicit = true
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-cu130", marker = "sys_platform != 'darwin'" }]
+torchvision = [{ index = "pytorch-cu130", marker = "sys_platform != 'darwin'" }]

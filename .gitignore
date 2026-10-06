@@ -1,0 +1,51 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+coverage/
+playwright-report/
+test-results/
+.pnpm-debug.log*
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Model weights (versioned on Hugging Face Hub instead)
+*.pt
+*.pth
+*.onnx
+*.tflite
+*.safetensors
+*.ckpt
+*.bin
+ct2-*/
+runs/
+apps/web/public/models/*
+!apps/web/public/models/.gitkeep
+
+# Datasets and recordings (large and/or personal data)
+ml/data/**
+!ml/data/README.md
+!ml/data/*.py
+!ml/data/*.sh
+recordings/
+*.wav
+*.mp4
+*.webm
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json

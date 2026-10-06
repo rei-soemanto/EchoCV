@@ -1,0 +1,11 @@
+{
+  "name": "echocv",
+  "private": true,
+  "scripts": {
+    "dev:web": "pnpm --filter web dev",
+    "build": "pnpm --filter web build",
+    "lint": "pnpm --filter web lint",
+    "test": "pnpm --filter web test"
+  },
+  "packageManager": "pnpm@11.2.2"
+}

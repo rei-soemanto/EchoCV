@@ -1,0 +1,11 @@
+# Custom YOLO26n behaviour detector. Class names must match shared/labels.json behaviourClasses.
+# Images and labels come from Roboflow exports and stay out of git (see ml/data/).
+path: ../data/behaviour
+train: images/train
+val: images/val
+
+names:
+  0: touching_face
+  1: arms_crossed
+  2: reading_notes
+  3: slouching

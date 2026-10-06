@@ -1,0 +1,14 @@
+{
+  "version": "0.1.0",
+  "note": "Placeholder equal weights. Calibrate against HR practitioner ratings in ml/eval before relying on the overall score.",
+  "dimensions": [
+    { "id": "eye_contact", "label": { "en": "Eye contact", "id": "Kontak mata" }, "source": "vision", "weight": 0.125 },
+    { "id": "smile", "label": { "en": "Smile", "id": "Senyum" }, "source": "vision", "weight": 0.125 },
+    { "id": "posture", "label": { "en": "Posture", "id": "Postur" }, "source": "vision", "weight": 0.125 },
+    { "id": "fillers", "label": { "en": "Filler words", "id": "Kata pengisi" }, "source": "speech", "weight": 0.125 },
+    { "id": "pace", "label": { "en": "Speaking pace", "id": "Kecepatan bicara" }, "source": "speech", "weight": 0.125 },
+    { "id": "pauses", "label": { "en": "Pauses", "id": "Jeda" }, "source": "speech", "weight": 0.125 },
+    { "id": "voice", "label": { "en": "Voice (pitch and volume)", "id": "Suara (nada dan volume)" }, "source": "speech", "weight": 0.125 },
+    { "id": "content", "label": { "en": "Answer content (STAR, relevance)", "id": "Isi jawaban (STAR, relevansi)" }, "source": "llm", "weight": 0.125 }
+  ]
+}

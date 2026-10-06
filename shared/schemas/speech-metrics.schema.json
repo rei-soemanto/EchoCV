@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://echocv/schemas/speech-metrics.schema.json",
+  "title": "SpeechMetrics",
+  "description": "Per-answer speech metrics returned by services/speech /analyze. Mirrored by services/speech/app/schemas.py.",
+  "type": "object",
+  "required": ["answerIndex", "language", "transcript", "fillers", "pauses", "speakingRateWps", "prosody"],
+  "additionalProperties": false,
+  "properties": {
+    "answerIndex": { "type": "integer", "minimum": 0 },
+    "language": { "enum": ["id", "en"] },
+    "transcript": { "type": "string" },
+    "fillers": {
+      "type": "array",
+      "description": "Vocalised fillers (shared/labels.json fillerTokens) and lexical fillers found in the transcript.",
+      "items": {
+        "type": "object",
+        "required": ["token", "startMs"],
+        "additionalProperties": false,
+        "properties": {
+          "token": { "type": "string" },
+          "startMs": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "pauses": {
+      "type": "array",
+      "description": "Silero VAD gaps longer than the pause threshold.",
+      "items": {
+        "type": "object",
+        "required": ["startMs", "endMs"],
+        "additionalProperties": false,
+        "properties": {
+          "startMs": { "type": "integer", "minimum": 0 },
+          "endMs": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "speakingRateWps": { "type": "number", "minimum": 0, "description": "Words per second of speech." },
+    "prosody": {
+      "type": "object",
+      "required": ["pitchMeanHz", "pitchStdHz", "volumeMeanDb"],
+      "additionalProperties": false,
+      "properties": {
+        "pitchMeanHz": { "type": "number", "minimum": 0 },
+        "pitchStdHz": { "type": "number", "minimum": 0 },
+        "volumeMeanDb": { "type": "number" }
+      }
+    }
+  }
+}

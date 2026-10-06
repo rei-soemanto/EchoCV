@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://echocv/schemas/report.schema.json",
+  "title": "Report",
+  "description": "Session report built by apps/web from visual metrics, speech metrics and LLM content scores.",
+  "type": "object",
+  "required": ["sessionId", "createdAt", "overallScore", "dimensionScores", "feedback"],
+  "additionalProperties": false,
+  "properties": {
+    "sessionId": { "type": "string" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "overallScore": { "type": "number", "minimum": 0, "maximum": 100 },
+    "dimensionScores": {
+      "type": "array",
+      "description": "One entry per shared/rubric.json dimension.",
+      "items": {
+        "type": "object",
+        "required": ["id", "score"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "score": { "type": "number", "minimum": 0, "maximum": 100 }
+        }
+      }
+    },
+    "feedback": {
+      "type": "array",
+      "description": "Time-stamped comments shown on the report page.",
+      "items": {
+        "type": "object",
+        "required": ["answerIndex", "dimension", "message"],
+        "additionalProperties": false,
+        "properties": {
+          "answerIndex": { "type": "integer", "minimum": 0 },
+          "atMs": { "type": "integer", "minimum": 0 },
+          "dimension": { "type": "string" },
+          "message": { "type": "string" }
+        }
+      }
+    }
+  }
+}

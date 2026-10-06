@@ -247,9 +247,12 @@ echocv/
 │
 ├── .github/workflows/               # CI: lint + tests for web and speech
 ├── .gitignore                       # weights, datasets, recordings, .env
-├── docker-compose.yml               # Local: web + speech + postgres
+├── package.json, pnpm-workspace.yaml # pnpm workspace: apps/* + shared
+├── .env.example                     # Variable names only, no secrets
 └── README.md
 ```
+
+**Local development runs natively, without Docker:** Next.js through pnpm and the speech service through uv, with a cloud Postgres. `services/speech/Dockerfile` is only for deployment.
 
 **Never commit:**
 - model weights (keep them on Hugging Face Hub)
@@ -296,4 +299,4 @@ These are skills for an AI coding agent (Claude Code or similar) that speed up t
 - [jezweb FastAPI skill](https://skills.sh/jezweb/claude-skills/fastapi)
 - [Hugging Face skills repo](https://github.com/huggingface/skills)
 - [Hugging Face model trainer skill](https://www.mdskills.ai/skills/hugging-face-model-trainer)
-- Tech-stack sources: see `EchoCV tech stack and datasets.md`
+- Tech-stack sources: see `docs/tech-stack-and-datasets.md`

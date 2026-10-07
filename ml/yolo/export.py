@@ -28,7 +28,14 @@ def main() -> None:
     onnx_path = Path(pt.export(format="onnx", imgsz=640, simplify=True))
     onnx = YOLO(onnx_path, task="detect")
 
-    images = (DATA / "behaviour" / "lists" / "test_rf.txt").read_text().split("\n")[:N_IMAGES]
+    # Images that have labels, so the comparison isn't vacuous (most test images are negatives).
+    labelled = []
+    for name in ("test_rf", "test_coco"):
+        for img in (DATA / "behaviour" / "lists" / f"{name}.txt").read_text().split("\n"):
+            lbl = Path(img.replace("\\images\\", "\\labels\\").replace("/images/", "/labels/"))
+            if img and lbl.with_suffix(".txt").read_text().strip():
+                labelled.append(img)
+    images = labelled[:: max(1, len(labelled) // N_IMAGES)][:N_IMAGES]
     matched = total = 0
     max_conf_diff = 0.0
     for img in images:

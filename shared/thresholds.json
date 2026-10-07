@@ -1,0 +1,42 @@
+{
+  "version": "0.1.0",
+  "eyeContact": {
+    "kX": 238.73578117086348,
+    "kY": 619.2867983815654,
+    "verticalFeature": "iris_y_corner",
+    "toleranceDeg": 11.0,
+    "rule": "hypot((yaw-baseYaw) + kX*(irisX-baseIrisX), (pitch-basePitch) + kY*(irisY-baseIrisY)) <= toleranceDeg; baselines come from the 5-second look-at-camera calibration",
+    "features": "yaw/pitch (deg) from the facial transformation matrix (R = Ry Rx Rz); irisX = iris offset along the eye-corner axis, irisY = offset perpendicular to the corner line (not the eyelids, which move with gaze); both in eye-width units, image-right/down positive, averaged over both eyes",
+    "positiveDefinition": "vertical gaze 0 and |horizontal gaze| <= 5 deg",
+    "evaluation": {
+      "columbia_cv_f1": 0.43597367941259346,
+      "columbia_head_pose_within_15deg": {
+        "f1": 0.5218680504077094,
+        "precision": 0.390677025527192,
+        "recall": 0.7857142857142857,
+        "n": 3472,
+        "positives": 448
+      },
+      "mpiifacegaze_contact_rate_by_true_angle_deg": {
+        "(0, 5]": 0.774,
+        "(5, 10]": 0.587,
+        "(10, 15]": 0.269,
+        "(15, 20]": 0.099,
+        "(20, 30]": 0.028,
+        "(30, 90]": 0.019
+      }
+    },
+    "provenance": "Constants chosen on Columbia Gaze (non-commercial, evaluation only); false-positive check on MPIIFaceGaze (CC BY-NC-SA, evaluation only)."
+  },
+  "smile": {
+    "score": "mean(mouthSmileLeft, mouthSmileRight)",
+    "threshold": 0.31834736466407776,
+    "evaluation": {
+      "genki4k_auc": 0.980553547438439,
+      "tpr": 0.9416977611940298,
+      "fpr": 0.062019758507135016,
+      "accuracy": 0.9399899142713061
+    },
+    "provenance": "GENKI-4K (public use, attribution required)."
+  }
+}

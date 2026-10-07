@@ -19,10 +19,19 @@ def main() -> None:
             "(pitch-basePitch) + kY*(irisY-baseIrisY)) <= toleranceDeg; "
             "baselines come from the 5-second look-at-camera calibration",
             "features": "yaw/pitch (deg) from the facial transformation matrix (R = Ry Rx Rz); "
-            "iris offsets in eye-width units along the eye axis (image-right/down positive)",
+            "irisX = iris offset along the eye-corner axis, irisY = offset perpendicular to the "
+            "corner line (not the eyelids, which move with gaze); both in eye-width units, "
+            "image-right/down positive, averaged over both eyes",
+            "positiveDefinition": eye["positive_definition"],
             "evaluation": {
                 "columbia_cv_f1": eye["cv_test_f1_mean"],
                 "columbia_head_pose_within_15deg": eye["head_pose_within_15deg"],
+                "mpiifacegaze_contact_rate_by_true_angle_deg": {
+                    k: round(v["rate"], 3)
+                    for k, v in eye["mpiifacegaze"][
+                        "predicted_contact_rate_by_true_angle_deg"
+                    ].items()
+                },
             },
             "provenance": "Constants chosen on Columbia Gaze (non-commercial, evaluation only); "
             "false-positive check on MPIIFaceGaze (CC BY-NC-SA, evaluation only).",

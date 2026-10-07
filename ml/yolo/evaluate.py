@@ -15,13 +15,12 @@ from yolo.build_dataset import CLASSES
 from yolo.train import RUNS
 
 OUT = ARTIFACTS / "yolo" / "v0"
+A_MARGIN = 0.02
 BEHAVIOUR = DATA / "behaviour"
 RF_SOURCES = [
     "rf_body_language",
     "rf_sitting_posture_cls",
-    "rf_sitting_posture_hanin",
     "rf_face_gesture",
-    "rf_face_hand",
 ]
 
 
@@ -44,11 +43,16 @@ def main() -> None:
         weights = RUNS / f"v0_{variant}" / "weights" / "best.pt"
         if weights.exists():
             results[variant] = {"weights": weights, "val_rf": _metrics(YOLO(weights), "val_rf")}
-    best = max(results, key=lambda v: results[v]["val_rf"]["mAP50-95"])
+    # reading_notes only exists in the COCO-derived data, so run A can never detect it. Keep B
+    # unless A is clearly better on the classes both runs share.
+    best = "B" if "B" in results else "A"
+    if "A" in results and "B" in results:
+        gap = results["A"]["val_rf"]["mAP50-95"] - results["B"]["val_rf"]["mAP50-95"]
+        best = "A" if gap > A_MARGIN else "B"
     model = YOLO(results[best]["weights"])
     report = {
         "selected_variant": best,
-        "selection_metric": "val_rf mAP50-95",
+        "selection_metric": f"val_rf mAP50-95; B unless A leads by > {A_MARGIN}",
         "val_rf": {v: r["val_rf"] for v, r in results.items()},
         "test_rf": _metrics(model, "test_rf"),
         "test_coco": _metrics(model, "test_coco"),

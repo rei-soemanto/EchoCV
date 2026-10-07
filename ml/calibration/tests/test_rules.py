@@ -35,13 +35,13 @@ def _eyes(iris_dx=0.0, iris_dy=0.0, swap=False):
 
 
 def test_iris_offsets_centred_and_shifted():
-    assert iris_offsets(_eyes()) == (0.0, 0.0)
-    x, y = iris_offsets(_eyes(iris_dx=8, iris_dy=4))
-    assert (round(x, 6), round(y, 6)) == (0.2, 0.1)
+    assert iris_offsets(_eyes()) == (0.0, 0.0, 0.0)
+    x, y_lid, y_corner = iris_offsets(_eyes(iris_dx=8, iris_dy=4))
+    assert (round(x, 6), round(y_lid, 6), round(y_corner, 6)) == (0.2, 0.1, 0.1)
 
 
 def test_iris_offsets_handles_swapped_iris_indices():
-    x, _ = iris_offsets(_eyes(iris_dx=8, swap=True))
+    x, _, _ = iris_offsets(_eyes(iris_dx=8, swap=True))
     assert round(x, 6) == 0.2
 
 

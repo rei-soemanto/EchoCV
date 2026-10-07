@@ -13,6 +13,11 @@ def test_hand_grazing_face_box_is_not_touching_face():
     assert remap_boxes([("Face", (10, 10, 50, 50)), ("Hand", (40, 40, 70, 70))], RULES) == []
 
 
+def test_palm_raised_beside_face_is_not_touching_face():
+    # 30% of the hand box is on the face, but the hand's centre is beside it
+    assert remap_boxes([("Face", (10, 10, 50, 50)), ("Hand", (41, 10, 71, 40))], RULES) == []
+
+
 def test_keep_negative_subsamples_train_only():
     names = [f"img{i}" for i in range(2000)]
     kept = sum(keep_negative(n, "train", 0.3) for n in names)

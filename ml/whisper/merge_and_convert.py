@@ -34,6 +34,9 @@ def main() -> None:
     model = PeftModel.from_pretrained(model, V0 / "lora").merge_and_unload()
     model.save_pretrained(merged)
     processor.save_pretrained(merged)
+    # transformers v5 writes processor_config.json; the CTranslate2 converter and faster-whisper
+    # read preprocessor_config.json (n_mels etc.), which is unchanged from the base model.
+    shutil.copyfile(WHISPER_BASE / "preprocessor_config.json", merged / "preprocessor_config.json")
 
     if ct2.exists():
         shutil.rmtree(ct2)

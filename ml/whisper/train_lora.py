@@ -204,12 +204,10 @@ def main() -> None:
         log.write(json.dumps(rec) + "\n")
         log.flush()
         print(json.dumps({k: rec[k] for k in ("step", "val_filler_f1", "val_fleurs_wer")}))
-        if rec["val_filler_f1"] > best_f1:
-            best_f1 = rec["val_filler_f1"]
-            model.save_pretrained(out / "lora")
-            (out / "lora" / "val_metrics.json").write_text(
-                json.dumps(rec, indent=2), encoding="utf-8"
-            )
+        # Keep every checkpoint (17 MB each); select_checkpoint.py picks the final one with a
+        # WER guard, since the best filler F1 alone can coincide with hallucination loops.
+        model.save_pretrained(out / "lora_steps" / f"step{step}")
+        best_f1 = max(best_f1, rec["val_filler_f1"])
 
     model.train()
     t0, running, micro = time.time(), 0.0, 0

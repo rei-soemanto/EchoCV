@@ -38,8 +38,8 @@ def _one(path: str) -> dict:
         return {"path": path, "detected": False}
     pts = np.array([(lm.x * w, lm.y * h) for lm in res.face_landmarks[0]])
     yaw, pitch, roll = head_angles(res.facial_transformation_matrixes[0])
-    ix, iy = iris_offsets(pts)
-    shapes = {c.category_name: c.score for c in res.face_blendshapes[0]}
+    ix, iy_lid, iy_corner = iris_offsets(pts)
+    s = {c.category_name: c.score for c in res.face_blendshapes[0]}
     return {
         "path": path,
         "detected": True,
@@ -47,8 +47,12 @@ def _one(path: str) -> dict:
         "pitch": pitch,
         "roll": roll,
         "iris_x": ix,
-        "iris_y": iy,
-        "smile": (shapes["mouthSmileLeft"] + shapes["mouthSmileRight"]) / 2,
+        "iris_y_lid": iy_lid,
+        "iris_y_corner": iy_corner,
+        # MediaPipe's own gaze blendshapes; down-positive to match image coordinates
+        "look_v": (s["eyeLookDownLeft"] + s["eyeLookDownRight"]) / 2
+        - (s["eyeLookUpLeft"] + s["eyeLookUpRight"]) / 2,
+        "smile": (s["mouthSmileLeft"] + s["mouthSmileRight"]) / 2,
     }
 
 

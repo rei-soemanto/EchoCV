@@ -1,0 +1,120 @@
+{
+  "dataset": "Columbia Gaze (non-commercial; evaluation and constant choice only)",
+  "subjects": 56,
+  "positive_definition": "vertical gaze 0 and |horizontal gaze| <= 5 deg",
+  "frontal_feature_correlations": {
+    "iris_x_vs_H": 0.9382869953050632,
+    "iris_y_corner_vs_V": -0.674930246601408,
+    "iris_y_lid_vs_V": -0.2506914415647653,
+    "look_v_vs_V": -0.504795601297629
+  },
+  "params": {
+    "kX": 238.73578117086348,
+    "kY": 619.2867983815654,
+    "verticalFeature": "iris_y_corner",
+    "toleranceDeg": 11.0
+  },
+  "cv_test_f1_mean": 0.43597367941259346,
+  "cv_folds": [
+    {
+      "params": {
+        "f1": 0.4676681907250163,
+        "kX": 238.73578117086348,
+        "kY": 619.2867983815654,
+        "verticalFeature": "iris_y_corner",
+        "toleranceDeg": 11.0
+      },
+      "test": {
+        "f1": 0.421301775147929,
+        "precision": 0.307426597582038,
+        "recall": 0.6691729323308271,
+        "n": 1976,
+        "positives": 266
+      }
+    },
+    {
+      "params": {
+        "f1": 0.45045045045045046,
+        "kX": 238.73578117086348,
+        "kY": 696.6976481792611,
+        "verticalFeature": "iris_y_corner",
+        "toleranceDeg": 11.0
+      },
+      "test": {
+        "f1": 0.4470588235294118,
+        "precision": 0.342685370741483,
+        "recall": 0.6428571428571429,
+        "n": 1976,
+        "positives": 266
+      }
+    },
+    {
+      "params": {
+        "f1": 0.45108695652173914,
+        "kX": 255.78833696878232,
+        "kY": 696.6976481792611,
+        "verticalFeature": "iris_y_corner",
+        "toleranceDeg": 11.0
+      },
+      "test": {
+        "f1": 0.43956043956043955,
+        "precision": 0.36363636363636365,
+        "recall": 0.5555555555555556,
+        "n": 1872,
+        "positives": 252
+      }
+    }
+  ],
+  "all_subjects_with_final_params": {
+    "f1": 0.4511784511784512,
+    "precision": 0.33668341708542715,
+    "recall": 0.6836734693877551,
+    "n": 5824,
+    "positives": 784
+  },
+  "head_pose_within_15deg": {
+    "f1": 0.5218680504077094,
+    "precision": 0.390677025527192,
+    "recall": 0.7857142857142857,
+    "n": 3472,
+    "positives": 448
+  },
+  "strict_gaze_lock_with_final_params": {
+    "f1": 0.1751101321585903,
+    "precision": 0.09987437185929648,
+    "recall": 0.7098214285714286,
+    "n": 5824,
+    "positives": 224
+  },
+  "head_yaw_vs_columbia_pose_corr": 0.9867908210411259,
+  "mpiifacegaze": {
+    "images": 14963,
+    "note": "Subjects look at on-screen targets; baseline = each person's 30 frames closest to the camera direction, so the smallest-angle bins are approximate.",
+    "predicted_contact_rate_by_true_angle_deg": {
+      "(0, 5]": {
+        "rate": 0.773955773955774,
+        "count": 814
+      },
+      "(5, 10]": {
+        "rate": 0.586692759295499,
+        "count": 2555
+      },
+      "(10, 15]": {
+        "rate": 0.26902439024390246,
+        "count": 4100
+      },
+      "(15, 20]": {
+        "rate": 0.09937590014402305,
+        "count": 4166
+      },
+      "(20, 30]": {
+        "rate": 0.02807570977917981,
+        "count": 3170
+      },
+      "(30, 90]": {
+        "rate": 0.0189873417721519,
+        "count": 158
+      }
+    }
+  }
+}

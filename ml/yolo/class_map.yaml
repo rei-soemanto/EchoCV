@@ -26,9 +26,8 @@ rf_face_gesture:
   Thumb_Up: hand
   Victory: hand
 
-rf_face_hand:
-  Face: face
-  Hand: hand
+# rf_face_hand is not used: its images are palms raised beside the face (gesture control) with
+# body-sized Face/Hand boxes, so overlap does not mean touching.
 
 rf_sitting_posture_cls:
   _neg_keep: 0.5

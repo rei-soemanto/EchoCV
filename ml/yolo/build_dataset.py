@@ -39,10 +39,18 @@ TOUCH_OVERLAP = 0.2  # share of the hand box that must lie on the face box
 
 
 def _hand_on_face(face, hand) -> bool:
+    """Hand box mostly on the face, with its centre on the face (a little extra room below for
+    chin rests). Rejects palms raised beside the face whose boxes merely clip the face box."""
     ix = max(0.0, min(face[2], hand[2]) - max(face[0], hand[0]))
     iy = max(0.0, min(face[3], hand[3]) - max(face[1], hand[1]))
     area = (hand[2] - hand[0]) * (hand[3] - hand[1])
-    return area > 0 and ix * iy / area >= TOUCH_OVERLAP
+    fw, fh = face[2] - face[0], face[3] - face[1]
+    cx, cy = (hand[0] + hand[2]) / 2, (hand[1] + hand[3]) / 2
+    centre_on_face = (
+        face[0] - 0.1 * fw <= cx <= face[2] + 0.1 * fw and face[1] <= cy <= face[3] + 0.3 * fh
+    )
+    hand_sized = area <= 3 * fw * fh  # some sources box a whole raised arm/person as "hand"
+    return area > 0 and ix * iy / area >= TOUCH_OVERLAP and centre_on_face and hand_sized
 
 
 def keep_negative(name: str, split: str, fraction: float) -> bool:
@@ -143,7 +151,8 @@ def roboflow_classification(source: str, rules: dict, lists: dict, person_model)
         name = f"{source}_{img.parent.name}_{img.stem}"[:150]
         if role not in CLASSES and not keep_negative(name, split, rules.get("_neg_keep", 1.0)):
             continue
-        res = person_model.predict(img, classes=[0], conf=0.35, verbose=False)[0]
+        # CPU: the 4 GB GPU is kept for one training/inference job at a time.
+        res = person_model.predict(img, classes=[0], conf=0.35, verbose=False, device="cpu")[0]
         if not len(res.boxes):
             continue
         areas = (res.boxes.xyxy[:, 2] - res.boxes.xyxy[:, 0]) * (

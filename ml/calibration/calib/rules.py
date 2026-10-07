@@ -22,9 +22,11 @@ def head_angles(matrix: np.ndarray) -> tuple[float, float, float]:
 
 
 def _eye_offset(pts: np.ndarray, eye: dict, iris: int) -> tuple[float, float, bool]:
-    """Iris offset from the eye centre in eye-width units, along the eye axis (x, image-right
-    positive) and perpendicular to it (y, image-down positive). Also returns whether the iris
-    lies between the corners (used to catch swapped iris indices)."""
+    """Iris offset in eye-width units: along the eye axis (x, image-right positive), and
+    perpendicular to it (image-down positive) measured from the eyelid midpoint (y_lid) and from
+    the corner line (y_corner). Eyelids follow vertical gaze, so y_lid carries little vertical
+    signal; the corners do not move. Also returns whether the iris lies between the corners
+    (used to catch swapped iris indices)."""
     a, b = pts[eye["corner_a"]], pts[eye["corner_b"]]
     left, right = (a, b) if a[0] <= b[0] else (b, a)
     axis = right - left
@@ -35,20 +37,23 @@ def _eye_offset(pts: np.ndarray, eye: dict, iris: int) -> tuple[float, float, bo
     lid_mid = (pts[eye["upper"]] + pts[eye["lower"]]) / 2
     d = pts[iris] - centre
     inside = 0.0 <= float(np.dot(pts[iris] - left, ux)) <= width
-    return float(np.dot(d, ux)) / width, float(np.dot(pts[iris] - lid_mid, uy)) / width, inside
+    x = float(np.dot(d, ux)) / width
+    y_lid = float(np.dot(pts[iris] - lid_mid, uy)) / width
+    y_corner = float(np.dot(d, uy)) / width
+    return x, y_lid, y_corner, inside
 
 
-def iris_offsets(pts: np.ndarray) -> tuple[float, float]:
-    """Average iris offset of both eyes. pts: (478, 2) landmark pixel coordinates."""
+def iris_offsets(pts: np.ndarray) -> tuple[float, float, float]:
+    """Average (x, y_lid, y_corner) iris offset of both eyes. pts: (478, 2) pixel coordinates."""
     for r_iris, l_iris in (
         (RIGHT_EYE["iris"], LEFT_EYE["iris"]),
         (LEFT_EYE["iris"], RIGHT_EYE["iris"]),
     ):
-        rx, ry, r_in = _eye_offset(pts, RIGHT_EYE, r_iris)
-        lx, ly, l_in = _eye_offset(pts, LEFT_EYE, l_iris)
+        *r, r_in = _eye_offset(pts, RIGHT_EYE, r_iris)
+        *lft, l_in = _eye_offset(pts, LEFT_EYE, l_iris)
         if r_in and l_in:
-            return (rx + lx) / 2, (ry + ly) / 2
-    return (rx + lx) / 2, (ry + ly) / 2
+            break
+    return tuple((p + q) / 2 for p, q in zip(r, lft, strict=True))
 
 
 def gaze_error(

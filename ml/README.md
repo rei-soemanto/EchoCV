@@ -46,6 +46,7 @@ uv run python -m whisper.prepare_data
 uv run python -m whisper.evaluate --model base  # baseline
 uv run python -m whisper.train_lora --smoke     # VRAM check
 uv run python -m whisper.train_lora             # resumes from artifacts/whisper/v0/lora_last
+uv run python -m whisper.select_checkpoint      # best filler F1 within the WER guard -> lora/
 uv run python -m whisper.evaluate --model lora
 uv run python -m whisper.merge_and_convert      # CTranslate2 int8 + parity check
 
@@ -53,4 +54,10 @@ uv run python -m whisper.merge_and_convert      # CTranslate2 int8 + parity chec
 uv run python -m calib.smile
 uv run python -m calib.eye_contact
 uv run python -m calib.export_thresholds        # -> shared/thresholds.json
+
+# 5. Report (from ml/)
+uv run python report.py                         # -> docs/model-report-v0.md
 ```
+
+Run GPU jobs one at a time: on the 4 GB card a second CUDA process spills into shared system
+memory and both slow to a crawl (or crash).

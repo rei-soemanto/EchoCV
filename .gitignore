@@ -31,7 +31,6 @@ __pycache__/
 ct2-*/
 runs/
 *.task
-ml/artifacts/
 ml/.cache/
 ml/calibration/results/raw/
 apps/web/public/models/*

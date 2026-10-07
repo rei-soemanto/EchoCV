@@ -1,0 +1,32 @@
+{
+  "created": "2026-10-07T05:07:07+00:00",
+  "base_model": "openai/whisper-large-v3-turbo (MIT)",
+  "commercially_safe_training_data": true,
+  "datasets": [
+    {
+      "name": "AMI Meeting Corpus (IHM)",
+      "url": "https://huggingface.co/datasets/edinburghcstr/ami",
+      "licence": "CC BY 4.0",
+      "commercial": true,
+      "use": "train",
+      "caveat": ""
+    },
+    {
+      "name": "DisfluencySpeech",
+      "url": "https://huggingface.co/datasets/amaai-lab/DisfluencySpeech",
+      "licence": "Apache-2.0",
+      "commercial": true,
+      "use": "train",
+      "caveat": "Transcript text appears to derive from Switchboard; re-check before a commercial launch."
+    },
+    {
+      "name": "FLEURS id_id",
+      "url": "https://huggingface.co/datasets/google/fleurs",
+      "licence": "CC BY 4.0",
+      "commercial": true,
+      "use": "train",
+      "caveat": ""
+    }
+  ],
+  "notes": "Synthetic Indonesian fillers: AMI filler clips spliced into FLEURS id_id."
+}

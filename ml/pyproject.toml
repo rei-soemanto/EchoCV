@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "accelerate>=1.15.0",
+    "av>=16,<17",  # faster-whisper 1.2.1 passes av.open(metadata_errors=...), gone in av 17+
     "ctranslate2>=4.8.2",
     "faster-whisper>=1.2.1",
     "huggingface-hub>=1.33.0",

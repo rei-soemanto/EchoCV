@@ -22,6 +22,7 @@ from whisper.audio import load
 from whisper.common import read_manifest
 from whisper.evaluate import TEST_SETS, V0
 from whisper.infer import score, transcribe
+from whisper.tokens import filler_safe_suppress
 
 PARITY_ROWS = 25  # per test set -> 100 utterances
 TOLERANCE = 0.02
@@ -57,8 +58,11 @@ def main() -> None:
         ],
         check=True,
     )
-    suppress = json.loads((V0 / "suppress_tokens.json").read_text(encoding="utf-8"))
-    shutil.copyfile(V0 / "suppress_tokens.json", ct2 / "suppress_tokens.json")
+    suppress = filler_safe_suppress(
+        processor.tokenizer, list(model.generation_config.suppress_tokens)
+    )
+    for d in (V0, ct2):
+        (d / "suppress_tokens.json").write_text(json.dumps(suppress), encoding="utf-8")
 
     rows = [r for name in TEST_SETS for r in read_manifest(name)[:PARITY_ROWS]]
     hf_model = model.to("cuda", torch.bfloat16)

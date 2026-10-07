@@ -22,7 +22,6 @@ __pycache__/
 .ipynb_checkpoints/
 
 # Model weights (versioned on Hugging Face Hub instead)
-*.pt
 *.pth
 *.onnx
 *.tflite

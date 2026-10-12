@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>EchoCV Consent Form</title>
+<style>
+  @page id {
+    size: A4;
+    margin: 16mm 18mm 20mm;
+    @bottom-left { content: "Formulir Persetujuan EchoCV  ·  v1.0  ·  halaman " counter(page);
+      font: 8pt "Segoe UI", Arial, sans-serif; color: #6b7280; }
+    @bottom-right { content: "Paraf peserta: ____________";
+      font: 8pt "Segoe UI", Arial, sans-serif; color: #6b7280; }
+  }
+  @page en {
+    size: A4;
+    margin: 16mm 18mm 20mm;
+    @bottom-left { content: "EchoCV Consent Form  ·  v1.0  ·  page " counter(page);
+      font: 8pt "Segoe UI", Arial, sans-serif; color: #6b7280; }
+    @bottom-right { content: "Participant initials: ____________";
+      font: 8pt "Segoe UI", Arial, sans-serif; color: #6b7280; }
+  }
+  :root { --ink: #1f2937; --muted: #6b7280; --accent: #0f5c6e; --tint: #e8f3f5; --line: #d1d5db; }
+  body { margin: 0; background: #fff; color: var(--ink);
+    font: 9.6pt/1.4 "Segoe UI", Arial, sans-serif; }
+  .lang-id { page: id; }
+  .lang-en { page: en; }
+  h1 { font-size: 17pt; color: var(--accent); margin: 0; letter-spacing: -0.2px; }
+  .subtitle { font-size: 11pt; color: var(--muted); margin: 0.5mm 0 3mm; }
+  h2 { font-size: 10.6pt; color: var(--accent); margin: 3.6mm 0 1.2mm; break-after: avoid; }
+  p { margin: 0.8mm 0 1.6mm; }
+  ul { margin: 0.8mm 0 1.6mm; padding-left: 6mm; }
+  li { margin: 0.5mm 0; }
+  .meta { border-collapse: collapse; width: 100%; margin: 0 0 2mm; }
+  .meta td { padding: 1.6mm 0 0.8mm; vertical-align: bottom; }
+  .meta td:first-child { width: 46%; font-weight: 600; padding-right: 3mm; }
+  .fill { display: block; border-bottom: 1px solid var(--ink); height: 5mm; }
+  .hint { font-size: 8pt; color: var(--muted); font-weight: 400; }
+  .inline-fill { display: inline-block; min-width: 45mm; border-bottom: 1px solid var(--ink); }
+  .box { display: inline-block; width: 3.6mm; height: 3.6mm; border: 1.3px solid var(--ink);
+    border-radius: 0.6mm; }
+  ul.check { list-style: none; padding-left: 0; }
+  ul.check li { display: flex; gap: 3mm; margin: 1.6mm 0; break-inside: avoid; }
+  ul.check li .box { flex: none; margin-top: 0.6mm; }
+  .required { background: var(--tint); border-left: 4px solid var(--accent); padding: 2mm 3.5mm; }
+  .keep { break-inside: avoid; }
+  .sign { border-collapse: collapse; width: 100%; margin-top: 2.5mm; break-inside: avoid; }
+  .sign th, .sign td { border: 1px solid var(--line); padding: 1.5mm 2.5mm; text-align: left; vertical-align: top; }
+  .sign th { background: var(--tint); }
+  .sign td:first-child { width: 30%; font-weight: 600; }
+  .sign tr.tall td { height: 17mm; }
+</style>
+</head>
+<body>
+
+<!-- ===================== BAHASA INDONESIA ===================== -->
+<section class="lang-id">
+  <h1>Formulir Persetujuan Partisipan</h1>
+  <p class="subtitle">Perekaman Data EchoCV</p>
+
+  <table class="meta">
+    <tr><td>Pengendali data <span class="hint">(nama tim / program studi / kampus)</span></td><td><span class="fill"></span></td></tr>
+    <tr><td>Penanggung jawab</td><td><span class="fill"></span></td></tr>
+    <tr><td>Kontak <span class="hint">(email dan nomor WhatsApp)</span></td><td><span class="fill"></span></td></tr>
+    <tr><td>Versi formulir</td><td>v1.0 (12 Oktober 2026)</td></tr>
+  </table>
+
+  <div class="section">
+    <h2>1. Tentang EchoCV dan alasan perekaman</h2>
+    <p>EchoCV adalah aplikasi pelatih wawancara berbasis AI untuk mahasiswa dan lulusan baru bidang IT
+    di Indonesia. Aplikasi ini memberi masukan tentang cara Anda menyampaikan jawaban: kontak mata,
+    senyum, postur, kata pengisi (seperti "eee", "hmm"), kecepatan bicara, jeda, dan suara. Agar model
+    AI di dalamnya bekerja dengan baik pada kamera laptop dan bahasa Indonesia, kami membutuhkan
+    rekaman dari orang-orang yang bersedia secara sukarela.</p>
+  </div>
+
+  <div class="section">
+    <h2>2. Apa yang direkam</h2>
+    <ul>
+      <li><b>Video</b> wajah dan tubuh bagian atas Anda dari kamera laptop, saat Anda memperagakan
+        gerakan tertentu (misalnya menyilangkan tangan atau menyentuh wajah) dan saat menjawab
+        pertanyaan wawancara latihan.</li>
+      <li><b>Suara</b> Anda dan <b>isi jawaban</b> Anda, termasuk transkripnya.</li>
+      <li><b>Data sesi:</b> tanggal, jenis ruangan dan pencahayaan, jenis laptop, serta catatan
+        penampilan seperti memakai kacamata atau hijab.</li>
+    </ul>
+    <p>Rekaman wajah dan suara dapat termasuk <b>data biometrik</b>. Menurut Undang-Undang Nomor 27
+    Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP), data biometrik adalah <b>data pribadi yang
+    bersifat spesifik</b>. Karena itu kami meminta persetujuan Anda secara tertulis dan eksplisit.</p>
+  </div>
+
+  <div class="section">
+    <h2>3. Bagaimana data digunakan</h2>
+    <ul>
+      <li>Untuk <b>melatih dan menguji model AI EchoCV</b>: pendeteksi perilaku (menyentuh wajah,
+        menyilangkan tangan, membaca catatan, membungkuk), pengenal kata pengisi, serta ambang kontak
+        mata, senyum, dan postur.</li>
+      <li>Model yang dihasilkan dapat digunakan di dalam aplikasi EchoCV, <b>termasuk jika EchoCV kelak
+        dikembangkan menjadi produk komersial (berbayar)</b>.</li>
+      <li>Kode EchoCV bersifat terbuka (open source), sehingga <b>model hasil pelatihan dapat
+        dipublikasikan</b>. Model hanya berisi parameter angka hasil pelatihan, bukan rekaman Anda.
+        <b>Rekaman Anda sendiri tidak akan pernah dipublikasikan.</b></li>
+      <li>Rekaman <b>tidak dijual</b>, <b>tidak dibagikan ke luar tim</b> (kecuali Anda menyetujui
+        pilihan opsional di bawah), dan <b>tidak digunakan untuk pengenalan wajah</b> atau untuk
+        mengidentifikasi siapa Anda.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>4. Persetujuan wajib</h2>
+    <p>Persetujuan ini diperlukan untuk ikut serta.</p>
+    <ul class="check required">
+      <li><span class="box"></span><span>Saya setuju rekaman saya digunakan oleh tim EchoCV untuk
+        melatih dan menguji model AI EchoCV, termasuk untuk produk yang mungkin bersifat komersial,
+        sesuai ketentuan formulir ini.</span></li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>5. Persetujuan opsional</h2>
+    <p>Setiap pilihan berdiri sendiri. Anda tetap dapat ikut serta meskipun tidak mencentang satu pun.</p>
+    <ul class="check">
+      <li><span class="box"></span><span>Kutipan transkrip jawaban saya yang sudah dianonimkan boleh
+        dimuat dalam laporan atau dokumen tim.</span></li>
+      <li><span class="box"></span><span>Gambar diam atau potongan video singkat saya (wajah saya akan
+        terlihat) boleh ditampilkan dalam presentasi, laporan lomba, atau demo EchoCV.</span></li>
+      <li><span class="box"></span><span>Rekaman jawaban saya boleh dinilai oleh praktisi HR di luar tim
+        yang terikat kewajiban menjaga kerahasiaan.</span></li>
+      <li><span class="box"></span><span>Transkrip jawaban saya (teks saja, tanpa nama, tanpa video)
+        boleh diproses oleh layanan AI pihak ketiga berbayar untuk menguji penilaian isi jawaban.</span></li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>6. Penyimpanan dan keamanan</h2>
+    <ul>
+      <li>Rekaman diberi <b>kode peserta</b> (misalnya p01), bukan nama. Formulir ini adalah
+        satu-satunya dokumen yang menghubungkan nama Anda dengan kode tersebut, dan disimpan
+        <b>terpisah</b> dari rekaman.</li>
+      <li>Rekaman disimpan di folder dengan akses terbatas (Google Drive atau dataset privat) yang
+        hanya dapat dibuka anggota tim yang ditunjuk, serta di komputer tim untuk pelatihan model.</li>
+      <li>Rekaman tidak pernah disimpan di repositori kode publik dan tidak dikirim melalui aplikasi chat.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>7. Masa simpan</h2>
+    <p>Rekaman dan semua turunannya (potongan gambar, label, transkrip) disimpan sampai proyek selesai,
+    <b>paling lama 3 tahun sejak rekaman terakhir Anda</b>, lalu dihapus. Model yang sudah dilatih
+    dapat terus digunakan.</p>
+  </div>
+
+  <div class="section">
+    <h2>8. Sukarela dan penarikan persetujuan</h2>
+    <ul>
+      <li>Keikutsertaan <b>sepenuhnya sukarela</b>. Menolak atau mengundurkan diri <b>tidak
+        berpengaruh</b> pada nilai, status akademik, hubungan Anda dengan tim, atau hal lain apa pun.</li>
+      <li>Selama perekaman, Anda boleh berhenti kapan saja dan meminta rekaman tertentu dihapus.</li>
+      <li>Anda dapat <b>menarik persetujuan kapan saja tanpa memberi alasan</b> dengan menghubungi
+        kontak di atas. Rekaman dan semua turunannya akan <b>dihapus dalam 30 hari</b>, dan kami akan
+        mengonfirmasi penghapusannya kepada Anda.</li>
+      <li>Model yang sudah dilatih sebelum Anda menarik persetujuan tidak dapat ditarik kembali, tetapi
+        <b>data Anda tidak akan digunakan untuk versi model berikutnya</b>.</li>
+      <li>Anda juga dapat menarik persetujuan opsional saja dan tetap menjadi peserta.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>9. Hak Anda</h2>
+    <p>Sesuai UU PDP, Anda berhak mendapatkan informasi tentang pemrosesan data Anda, mengakses dan
+    meminta salinan data Anda, memperbaiki data yang keliru, meminta penghapusan, dan menarik
+    persetujuan. Hubungi kontak di atas untuk menggunakan hak-hak ini.</p>
+  </div>
+
+  <div class="section">
+    <h2>10. Risiko dan manfaat</h2>
+    <ul>
+      <li><b>Risiko:</b> kecil. Rekaman memuat wajah dan suara Anda, sehingga jika terjadi kebocoran
+        data, Anda dapat dikenali. Kami membatasi akses untuk mengurangi risiko ini, dan jika terjadi
+        kebocoran, kami akan segera memberi tahu Anda.</li>
+      <li><b>Manfaat:</b> Anda membantu membangun alat latihan wawancara untuk mahasiswa Indonesia.</li>
+      <li><b>Imbalan:</b> <span class="inline-fill"></span> <span class="hint">(tulis "tidak ada" jika tidak ada)</span></li>
+    </ul>
+  </div>
+
+  <div class="section keep">
+    <h2>11. Pernyataan dan tanda tangan</h2>
+    <p>Saya menyatakan bahwa saya berusia <b>18 tahun atau lebih</b>, telah membaca dan memahami
+    formulir ini, telah mendapat kesempatan untuk bertanya, dan ikut serta secara sukarela.</p>
+    <table class="sign">
+      <tr><th></th><th>Peserta</th><th>Perwakilan tim</th></tr>
+      <tr><td>Nama</td><td></td><td></td></tr>
+      <tr><td>Kode peserta (diisi tim)</td><td></td><td></td></tr>
+      <tr class="tall"><td>Tanda tangan</td><td></td><td></td></tr>
+      <tr><td>Tanggal</td><td></td><td></td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ========================= ENGLISH ========================= -->
+<section class="lang-en" lang="en">
+  <h1>Participant Consent Form</h1>
+  <p class="subtitle">EchoCV Data Recording</p>
+
+  <table class="meta">
+    <tr><td>Data controller <span class="hint">(team / study programme / campus name)</span></td><td><span class="fill"></span></td></tr>
+    <tr><td>Person responsible</td><td><span class="fill"></span></td></tr>
+    <tr><td>Contact <span class="hint">(email and WhatsApp number)</span></td><td><span class="fill"></span></td></tr>
+    <tr><td>Form version</td><td>v1.0 (12 October 2026)</td></tr>
+  </table>
+
+  <div class="section">
+    <h2>1. About EchoCV and why we record</h2>
+    <p>EchoCV is an AI interview coach for Indonesian IT students and fresh graduates. It gives
+    feedback on how you deliver an answer: eye contact, smile, posture, filler words (such as "eee",
+    "hmm"), speaking pace, pauses and voice. For its AI models to work well on laptop webcams and in
+    Indonesian, we need recordings from people who volunteer.</p>
+  </div>
+
+  <div class="section">
+    <h2>2. What is recorded</h2>
+    <ul>
+      <li><b>Video</b> of your face and upper body from a laptop webcam, while you act out certain
+        behaviours (for example crossing your arms or touching your face) and while you answer
+        practice interview questions.</li>
+      <li><b>Your voice</b> and <b>the content of your answers</b>, including transcripts.</li>
+      <li><b>Session details:</b> date, room type and lighting, laptop model, and appearance notes
+        such as glasses or hijab.</li>
+    </ul>
+    <p>Recordings of your face and voice can count as <b>biometric data</b>. Under Indonesia's Personal
+    Data Protection Law (Law No. 27 of 2022, UU PDP), biometric data is <b>specific personal data</b>
+    ("data pribadi yang bersifat spesifik"). That is why we ask for your explicit written consent.</p>
+  </div>
+
+  <div class="section">
+    <h2>3. How the data is used</h2>
+    <ul>
+      <li>To <b>train and test EchoCV's AI models</b>: the behaviour detector (touching face, arms
+        crossed, reading notes, slouching), the filler-word recogniser, and the eye-contact, smile and
+        posture thresholds.</li>
+      <li>The resulting models may be used in the EchoCV app, <b>including if EchoCV later becomes a
+        commercial (paid) product</b>.</li>
+      <li>EchoCV's code is open source, so <b>trained models may be published</b>. A model holds only
+        numeric parameters learned in training, not your recordings. <b>Your recordings themselves
+        will never be published.</b></li>
+      <li>Recordings are <b>not sold</b>, <b>not shared outside the team</b> (unless you agree to an
+        optional item below), and <b>not used for face recognition</b> or to identify who you are.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>4. Required consent</h2>
+    <p>You need to give this consent to take part.</p>
+    <ul class="check required">
+      <li><span class="box"></span><span>I agree that the EchoCV team may use my recordings to train
+        and test EchoCV's AI models, including for a product that may be commercial, as described in
+        this form.</span></li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>5. Optional consent</h2>
+    <p>Each item is separate. You can take part without ticking any of them.</p>
+    <ul class="check">
+      <li><span class="box"></span><span>Anonymised quotes from my answer transcripts may appear in
+        team reports or documents.</span></li>
+      <li><span class="box"></span><span>Still images or short clips of me (my face will be visible)
+        may be shown in presentations, competition reports or EchoCV demos.</span></li>
+      <li><span class="box"></span><span>My answer recordings may be rated by HR practitioners outside
+        the team who are bound to confidentiality.</span></li>
+      <li><span class="box"></span><span>My answer transcripts (text only, no name, no video) may be
+        processed by a paid third-party AI service to test the scoring of answer content.</span></li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>6. Storage and security</h2>
+    <ul>
+      <li>Recordings carry a <b>participant code</b> (for example p01), not your name. This form is the
+        only document that links your name to that code, and it is stored <b>separately</b> from the
+        recordings.</li>
+      <li>Recordings are stored in an access-restricted folder (Google Drive or a private dataset)
+        that only named team members can open, and on team computers for model training.</li>
+      <li>Recordings are never stored in a public code repository and never sent through chat apps.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>7. Retention</h2>
+    <p>Recordings and everything derived from them (extracted images, labels, transcripts) are kept
+    until the project ends, and <b>no longer than 3 years after your last recording</b>, then deleted.
+    Trained models may continue to be used.</p>
+  </div>
+
+  <div class="section">
+    <h2>8. Voluntary participation and withdrawal</h2>
+    <ul>
+      <li>Taking part is <b>completely voluntary</b>. Declining or withdrawing has <b>no effect</b> on
+        your grades, academic standing, relationship with the team, or anything else.</li>
+      <li>During recording you may stop at any time and ask for any recording to be deleted.</li>
+      <li>You may <b>withdraw your consent at any time without giving a reason</b> by contacting the
+        person above. Your recordings and everything derived from them will be <b>deleted within 30
+        days</b>, and we will confirm the deletion to you.</li>
+      <li>Models trained before you withdraw cannot be recalled, but <b>your data will not be used for
+        any later version of the models</b>.</li>
+      <li>You may also withdraw only the optional consents and remain a participant.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>9. Your rights</h2>
+    <p>Under UU PDP you have the right to be informed about how your data is processed, to access and
+    get a copy of your data, to correct inaccurate data, to ask for deletion, and to withdraw consent.
+    Contact the person above to use these rights.</p>
+  </div>
+
+  <div class="section">
+    <h2>10. Risks and benefits</h2>
+    <ul>
+      <li><b>Risk:</b> small. The recordings show your face and voice, so if a data breach happened
+        you could be recognised. We limit access to reduce this risk, and if a breach happens we will
+        tell you promptly.</li>
+      <li><b>Benefit:</b> you help build an interview-practice tool for Indonesian students.</li>
+      <li><b>Compensation:</b> <span class="inline-fill"></span> <span class="hint">(write "none" if none)</span></li>
+    </ul>
+  </div>
+
+  <div class="section keep">
+    <h2>11. Declaration and signatures</h2>
+    <p>I confirm that I am <b>18 years of age or older</b>, have read and understood this form, have
+    had the chance to ask questions, and take part voluntarily.</p>
+    <table class="sign">
+      <tr><th></th><th>Participant</th><th>Team representative</th></tr>
+      <tr><td>Name</td><td></td><td></td></tr>
+      <tr><td>Participant code (filled in by the team)</td><td></td><td></td></tr>
+      <tr class="tall"><td>Signature</td><td></td><td></td></tr>
+      <tr><td>Date</td><td></td><td></td></tr>
+    </table>
+  </div>
+</section>
+
+</body>
+</html>

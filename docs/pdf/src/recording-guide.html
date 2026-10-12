@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>EchoCV Recording Guide</title>
+<style>
+  @page {
+    size: A4;
+    margin: 16mm 16mm 18mm;
+    @bottom-center {
+      content: "EchoCV Recording Guide  ·  page " counter(page);
+      font: 8pt "Segoe UI", Arial, sans-serif;
+      color: #6b7280;
+    }
+  }
+  :root {
+    --ink: #1f2937; --muted: #6b7280; --accent: #0f5c6e; --tint: #e8f3f5;
+    --line: #d1d5db; --warn: #fff4e5; --warnline: #e8a33d;
+  }
+  body { margin: 0; background: #fff; color: var(--ink);
+    font: 10pt/1.45 "Segoe UI", Arial, sans-serif; }
+  h1 { font-size: 23pt; color: var(--accent); margin: 0 0 1mm; letter-spacing: -0.3px; }
+  .subtitle { font-size: 12pt; color: var(--muted); margin: 0 0 5mm; }
+  h2 { font-size: 13.5pt; color: var(--accent); border-bottom: 1.5px solid var(--accent);
+    padding-bottom: 1mm; margin: 7mm 0 3mm; break-after: avoid; }
+  h3 { font-size: 11pt; margin: 5mm 0 1.5mm; break-after: avoid; }
+  p { margin: 1.5mm 0 2.5mm; }
+  ul, ol { margin: 1.5mm 0 3mm; padding-left: 6mm; }
+  li { margin: 0.8mm 0; }
+  table { border-collapse: collapse; width: 100%; margin: 2mm 0 4mm; font-size: 9pt; }
+  th, td { border: 1px solid var(--line); padding: 1.5mm 2mm; vertical-align: top; text-align: left; }
+  th { background: var(--tint); }
+  tr { break-inside: avoid; }
+  thead { display: table-header-group; }
+  .fn { font-family: Consolas, "Courier New", monospace; font-size: 8.8pt; background: #f1f5f9;
+    padding: 0 1mm; border-radius: 2px; white-space: nowrap; }
+  .box { display: inline-block; width: 3.3mm; height: 3.3mm; border: 1.2px solid var(--ink);
+    border-radius: 0.6mm; vertical-align: -0.6mm; }
+  ul.check { list-style: none; padding-left: 0; }
+  ul.check li { display: flex; gap: 2.5mm; margin: 1.4mm 0; }
+  ul.check li .box { flex: none; margin-top: 0.9mm; }
+  .callout { background: var(--tint); border-left: 4px solid var(--accent); padding: 2.5mm 4mm;
+    margin: 3mm 0; break-inside: avoid; }
+  .callout > :first-child { margin-top: 0; }
+  .callout > :last-child { margin-bottom: 0; }
+  .warn { background: var(--warn); border-left-color: var(--warnline); }
+  .info { display: flex; gap: 8mm; flex-wrap: wrap; }
+  .fill { display: inline-block; min-width: 38mm; border-bottom: 1px solid var(--ink); }
+  .figures { display: flex; gap: 6mm; margin: 3mm 0; break-inside: avoid; }
+  .figures figure { flex: 1; margin: 0; text-align: center; }
+  .figures svg { width: 100%; height: auto; }
+  figcaption { font-size: 8.8pt; color: var(--muted); margin-top: 1mm; }
+  .pattern { font-family: Consolas, "Courier New", monospace; font-size: 9.5pt; background: #f1f5f9;
+    border: 1px solid var(--line); border-radius: 3px; padding: 2.5mm 4mm; margin: 2mm 0 3mm; }
+  .page-break { break-before: page; }
+  .avoid { break-inside: avoid; }
+  .card td, .card th { text-align: center; padding: 1.2mm 2mm; }
+  .card td:first-child, .card th:first-child { text-align: left; }
+  .muted { color: var(--muted); }
+</style>
+</head>
+<body>
+
+<h1>EchoCV Recording Guide</h1>
+<p class="subtitle">How to record your sessions for the EchoCV dataset</p>
+
+<div class="callout info">
+  <span><b>Your participant code:</b> <span class="fill" style="min-width:18mm"></span></span>
+  <span><b>Coordinator:</b> <span class="fill"></span></span>
+  <span><b>Shared folder:</b> <span class="fill" style="min-width:50mm"></span></span>
+</div>
+
+<h2>Why we record</h2>
+<p>EchoCV is our AI interview coach. To work well on a real laptop webcam, it has to learn from
+people like its users. Your recordings teach it to:</p>
+<ul>
+  <li>spot behaviours such as <b>touching your face, crossing your arms, slouching and reading notes</b>;</li>
+  <li>hear Indonesian filler sounds like <b>"eee", "hmm" and "em"</b>;</li>
+  <li>check <b>eye contact, smiling and posture</b>.</li>
+</ul>
+<p>No public dataset shows these from a laptop webcam, so we record our own.</p>
+
+<h2>At a glance</h2>
+<div class="callout">
+  <ul>
+    <li><b>3 sessions per person</b>, on different days, about <b>30 minutes</b> each.</li>
+    <li>Each session has two parts:
+      <ul>
+        <li><b>Part A:</b> 10 short clips of 30 seconds, acting out one behaviour per clip.</li>
+        <li><b>Part B:</b> 4 interview answers of 1–2 minutes, answered naturally.</li>
+      </ul>
+    </li>
+    <li><b>Rename every file</b> right after you record it.</li>
+    <li><b>Upload only to the team's shared folder.</b> Never through WhatsApp, email or anything public.</li>
+  </ul>
+</div>
+
+<h2>Before your first session</h2>
+<ul class="check">
+  <li><span class="box"></span><span>Sign the consent form (once).</span></li>
+  <li><span class="box"></span><span>Get your participant code from the coordinator (for example <span class="fn">p01</span>).</span></li>
+  <li><span class="box"></span><span>Read this guide once from start to finish.</span></li>
+</ul>
+
+<h2>1. Set up your laptop</h2>
+
+<h3>Camera and microphone</h3>
+<ul>
+  <li><b>Use your laptop's built-in webcam</b>, with the laptop on a desk where you would normally
+    use it. That is the camera EchoCV runs on.</li>
+  <li>Don't use a phone or a camera on a tripod. Use an external webcam only if that's what you
+    really use for online interviews, and tell the coordinator.</li>
+  <li><b>Use the built-in microphone.</b> Earphones or a headset mic are fine if that's what you
+    normally use; tell the coordinator.</li>
+</ul>
+
+<h3>Recording app</h3>
+<table>
+  <tr><th style="width:15%">Laptop</th><th style="width:35%">App</th><th>Settings</th></tr>
+  <tr><td>Windows</td><td><b>Camera</b> (built in), switched to <b>Video</b> mode</td>
+    <td>Settings (gear icon) › Video quality: <b>1080p 30 fps</b>, or 720p 30 fps if 1080p isn't
+      offered. Videos are saved in Pictures › Camera Roll.</td></tr>
+  <tr><td>Mac</td><td>QuickTime Player › File › New Movie Recording (or Photo Booth)</td>
+    <td>Quality: High</td></tr>
+  <tr><td>Any</td><td>OBS Studio</td><td>MP4, 1280×720 or 1920×1080, 30 fps, audio on</td></tr>
+</table>
+
+<h3>Turn off all camera effects</h3>
+<div class="callout warn">
+  <p>Effects that change your face or the picture ruin the recording. <b>"Eye contact" correction is
+  the worst:</b> it makes you look at the camera when you aren't, which is exactly what EchoCV measures.</p>
+</div>
+<ul class="check">
+  <li><span class="box"></span><span><b>Windows Studio Effects</b> (Settings › Bluetooth &amp; devices ›
+    Cameras › your camera): turn off Eye contact, Background effects (blur), Automatic framing,
+    Portrait light, Creative filters and Voice focus. Also check the Studio effects tile in Quick Settings.</span></li>
+  <li><span class="box"></span><span><b>Laptop brand camera apps</b> (Lenovo, ASUS, HP, Dell and others):
+    turn off auto-framing, eye correction, beautify and background effects.</span></li>
+  <li><span class="box"></span><span><b>NVIDIA Broadcast or AMD camera effects:</b> turn them off or close the app.</span></li>
+  <li><span class="box"></span><span><b>Mac:</b> Control Center › Video Effects: turn off Center Stage,
+    Portrait, Studio Light and Reactions.</span></li>
+  <li><span class="box"></span><span>Close video-call apps and browser tabs that use the camera.</span></li>
+</ul>
+
+<h3>Framing, light and privacy</h3>
+<div class="figures">
+  <figure>
+    <svg viewBox="0 0 320 196" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Webcam framing: head to mid-chest">
+      <rect x="10" y="8" width="300" height="169" rx="6" fill="#f8fafc" stroke="#0f5c6e" stroke-width="2.5"/>
+      <circle cx="160" cy="78" r="30" fill="#9ca3af"/>
+      <rect x="149" y="100" width="22" height="20" fill="#9ca3af"/>
+      <path d="M 82 177 C 82 140 112 120 160 120 C 208 120 238 140 238 177 Z" fill="#9ca3af"/>
+      <line x1="250" y1="10" x2="250" y2="47" stroke="#e8a33d" stroke-width="1.5" stroke-dasharray="3 2"/>
+      <text x="256" y="33" font-size="10" fill="#374151" font-family="Segoe UI, Arial">space</text>
+      <line x1="40" y1="174" x2="280" y2="174" stroke="#e8a33d" stroke-width="1.5" stroke-dasharray="3 2"/>
+      <text x="160" y="192" font-size="10" fill="#374151" text-anchor="middle" font-family="Segoe UI, Arial">frame ends around mid-chest</text>
+    </svg>
+    <figcaption>Head to mid-chest, a little space above your head.</figcaption>
+  </figure>
+  <figure>
+    <svg viewBox="0 0 320 196" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Laptop with a sticker next to the webcam lens">
+      <text x="160" y="13" font-size="10.5" fill="#374151" text-anchor="middle" font-family="Segoe UI, Arial">look here: the sticker next to the lens</text>
+      <line x1="171" y1="18" x2="171" y2="31" stroke="#e8a33d" stroke-width="1.5"/>
+      <rect x="22" y="26" width="276" height="148" rx="8" fill="#ffffff" stroke="#374151" stroke-width="2.5"/>
+      <rect x="36" y="44" width="248" height="120" fill="#e5e7eb"/>
+      <circle cx="160" cy="35" r="3.2" fill="#111827"/>
+      <circle cx="171" cy="35" r="4.2" fill="#f59e0b"/>
+      <path d="M 6 176 L 314 176 L 298 190 L 22 190 Z" fill="#d1d5db" stroke="#374151" stroke-width="1.5"/>
+    </svg>
+    <figcaption>"Look at the camera" always means the lens, not your face on the screen.</figcaption>
+  </figure>
+</div>
+<ul>
+  <li>Sit <b>50–80 cm</b> from the screen, with the screen tilted as you normally use it.</li>
+  <li>The picture shows your <b>whole head down to mid-chest</b>. Don't zoom and don't lean in.</li>
+  <li>Crossed arms and notes held at your chest should show at least partly at the bottom. If they
+    don't, tilt the screen back a little once, then keep it there for the whole session.</li>
+  <li>Put a <b>small sticker right next to the webcam lens</b> and look at it whenever you're asked to look at the camera.</li>
+  <li>Your face must be clearly visible. A dim room or a window behind you is fine for one session at most.</li>
+  <li><b>Privacy:</b> no other people in view or audible, since they haven't agreed to be recorded.
+    Nothing readable that identifies anyone: no ID or student cards, letters, or chat windows behind you.</li>
+</ul>
+
+<h2>2. Make each session different</h2>
+<p>Change <b>at least two</b> of these between sessions. A model that only ever sees one room and
+one shirt learns that room and that shirt.</p>
+<table>
+  <tr><th style="width:16%"></th><th>Session 1</th><th>Session 2</th><th>Session 3</th></tr>
+  <tr><td><b>Day</b></td><td>Day 1</td><td>Another day</td><td>Another day</td></tr>
+  <tr><td><b>Place</b></td><td>Bedroom or study desk</td><td>Another room (living room, kos common area, a friend's desk)</td><td>Campus or library, in a quiet corner with nobody behind you</td></tr>
+  <tr><td><b>Light</b></td><td>Daylight from the front</td><td>Evening, ceiling lamp or a desk lamp from the side</td><td>Whatever is there; dimmer is fine</td></tr>
+  <tr><td><b>Clothes</b></td><td>T-shirt</td><td>Shirt or batik</td><td>Jacket, hoodie or a different colour</td></tr>
+  <tr><td><b>Glasses, cap or head covering</b></td><td>As usual</td><td>Switch if you can (glasses on/off)</td><td>As usual</td></tr>
+  <tr><td><b>Chair</b></td><td>Desk chair</td><td>A different chair or stool</td><td>Whatever is there</td></tr>
+</table>
+
+<h2>3. Before you press record (every session)</h2>
+<ul class="check">
+  <li><span class="box"></span><span>Laptop plugged in, on a desk, screen at its normal angle.</span></li>
+  <li><span class="box"></span><span>All camera effects off.</span></li>
+  <li><span class="box"></span><span>Sticker next to the lens; the picture shows head to mid-chest.</span></li>
+  <li><span class="box"></span><span>Quiet room, nobody else in view, phone on silent.</span></li>
+  <li><span class="box"></span><span>Props within reach: a sheet of paper with notes (print or copy the
+    question list, nothing personal), your phone, and a book or notebook.</span></li>
+  <li><span class="box"></span><span>A 3-second test video plays back with sound. Delete it afterwards.</span></li>
+</ul>
+
+<h2>4. Part A: 10 behaviour clips</h2>
+<ol>
+  <li>Press record and sit still for <b>2 seconds</b>.</li>
+  <li>Do the behaviour for <b>30 seconds</b> (watch the app's timer).
+    <ul>
+      <li><b>Keep talking the whole time:</b> describe your day, explain a recipe, or count slowly.
+        Your mouth moves in a real interview, so it should here too.</li>
+      <li><b>Change the variation every ~5 seconds:</b> other hand, higher, lower, stronger, weaker.
+        Thirty seconds of one frozen pose teaches EchoCV only one picture.</li>
+    </ul>
+  </li>
+  <li>Stop, then <b>rename the file straight away</b> (see section 6).</li>
+</ol>
+<div class="callout">
+  <p><b>One behaviour per clip.</b> The file name tells EchoCV what is in the clip, so a mixed clip
+  teaches it the wrong thing. If you mix by mistake, delete the clip and record it again.</p>
+</div>
+
+<table>
+  <thead><tr><th style="width:4%">#</th><th style="width:20%">File name</th><th style="width:46%">Do (switch between these)</th><th>Don't</th></tr></thead>
+  <tr><td>1</td><td><span class="fn">upright</span></td><td>Sit up straight but relaxed, as in a good interview. Look at the sticker most of the time; a short glance away is natural. Neutral, friendly face.</td><td>Don't slouch, cross your arms, touch your face or hold anything. Don't force a big smile.</td></tr>
+  <tr><td>2</td><td><span class="fn">looking_away</span></td><td>Keep sitting upright but look <b>away from the lens</b>: at your face on the screen, the keyboard, left, right, up as if thinking, at the door. Switch every 3–5 seconds.</td><td>Don't look at the lens. Don't touch your face.</td></tr>
+  <tr><td>3</td><td><span class="fn">smile</span></td><td>Talk about something pleasant while looking at the lens. Smile naturally: small closed-mouth smile, open smile with teeth, a short laugh.</td><td>Don't cover your mouth or touch your face.</td></tr>
+  <tr><td>4</td><td><span class="fn">gestures</span></td><td>Explain something with your hands: count on your fingers, open palms, point, draw shapes in the air. Hands may come <b>near</b> your face (pointing at yourself, a wave).</td><td>Don't let your hands <b>touch</b> your face or neck. Don't cross your arms.</td></tr>
+  <tr><td>5</td><td><span class="fn">desk_hands</span></td><td>Hands busy below your face: clasped on the desk, typing, holding or clicking a pen, hand on the mouse, hands in your lap, forearms resting on the desk.</td><td>Don't hold paper, a phone or a book. Don't cross your arms or slouch.</td></tr>
+  <tr><td>6</td><td><span class="fn">touching_face</span></td><td>Chin resting on your hand (the "thinking" pose), touch or scratch your nose, cheek on your palm, hand over your mouth, rub an eye, touch your temple or forehead, adjust your glasses, touch your neck or throat. Switch hands.</td><td>Don't hold one touch for the whole clip. Don't cross your arms or slouch while doing it.</td></tr>
+  <tr><td>7</td><td><span class="fn">arms_crossed</span></td><td>Classic crossed arms with hands tucked in, crossed high near the chest, low and loose near the stomach, hugging yourself (hands on opposite upper arms), one arm across your body holding the other arm. Keep looking at the lens and talking.</td><td>Don't touch your face. Don't slouch heavily (a little lean back is fine).</td></tr>
+  <tr><td>8</td><td><span class="fn">slouching</span></td><td>Slide down in the chair, round your shoulders and let your chest sink, push your head and chin forward toward the screen, lean forward on your forearms, lean back lazily, lean to one side. Go from mild to strong.</td><td>Keep your hands away from your face. Don't cross your arms or hold anything.</td></tr>
+  <tr><td>9</td><td><span class="fn">reading_notes_held</span></td><td>Hold the paper, phone or book <b>in front of your chest</b> so it shows in the picture. Read from it, look down, look up at the lens, look back down, turn a page, switch objects.</td><td>Don't hold it at your ear (a phone call isn't reading). Don't hide your face behind it.</td></tr>
+  <tr><td>10</td><td><span class="fn">reading_notes_desk</span></td><td>Put your notes flat on the desk or keyboard, <b>below the picture</b>. Read your answer from them as if cheating in an interview: look down, read a line, look up, look down again.</td><td>Don't hold the notes up. Don't rest your chin on your hand.</td></tr>
+</table>
+<p class="muted">Clip 10 shows no notes on purpose. It teaches EchoCV to notice when your eyes keep dropping to notes.</p>
+
+<h2>5. Part B: 4 interview answers</h2>
+<div class="callout">
+  <p><b>Be yourself here.</b> Don't act out behaviours and don't hide them. If you normally say "eee",
+  touch your chin or cross your arms, that's fine. These answers show how EchoCV does in a real interview.</p>
+</div>
+<p>For each answer:</p>
+<ol>
+  <li>Read the question on your screen. Take a few seconds to think if you like.</li>
+  <li>Press record and look at the lens for <b>2 seconds</b>.</li>
+  <li>Answer in <b>1–2 minutes</b>, talking to the lens as if the interviewer were behind it. No
+    script and no reading. "Eee", "hmm" and pauses are fine; they're exactly what we need.</li>
+  <li>Stop and rename the file.</li>
+</ol>
+<ul>
+  <li><b>Language:</b> answer most questions in Indonesian. If you're comfortable, answer one per
+    session in English. Mixing Indonesian and English naturally is fine.</li>
+  <li><b>Keep it private:</b> no real names (yours or anyone else's), addresses, phone numbers, NIK,
+    student numbers or company secrets. Say "teman saya" or "dosen saya" instead of names.
+    Making up details is fine; it's practice.</li>
+  <li><b>Which questions:</b> session 1 answers <b>q01–q04</b>, session 2 answers <b>q05–q08</b>,
+    session 3 answers <b>q09–q12</b>.</li>
+</ul>
+<table>
+  <thead><tr><th style="width:7%">Code</th><th style="width:48%">Bahasa Indonesia</th><th>English</th></tr></thead>
+  <tr><td>q01</td><td>Perkenalkan diri Anda dan ceritakan latar belakang pendidikan Anda.</td><td>Introduce yourself and your educational background.</td></tr>
+  <tr><td>q02</td><td>Mengapa Anda tertarik bekerja di bidang IT?</td><td>Why do you want to work in IT?</td></tr>
+  <tr><td>q03</td><td>Ceritakan proyek paling menantang yang pernah Anda kerjakan. Apa peran Anda dan bagaimana hasilnya?</td><td>Tell me about the most challenging project you have worked on. What was your role and what was the result?</td></tr>
+  <tr><td>q04</td><td>Ceritakan saat Anda berbeda pendapat dengan anggota tim. Bagaimana Anda menyelesaikannya?</td><td>Tell me about a time you disagreed with a teammate. How did you resolve it?</td></tr>
+  <tr><td>q05</td><td>Ceritakan pengalaman ketika Anda gagal atau melakukan kesalahan. Apa yang Anda pelajari?</td><td>Tell me about a time you failed or made a mistake. What did you learn?</td></tr>
+  <tr><td>q06</td><td>Bagaimana Anda menangani tenggat waktu yang sangat ketat dengan banyak tugas sekaligus?</td><td>How would you handle a very tight deadline with several tasks at once?</td></tr>
+  <tr><td>q07</td><td>Ceritakan bagaimana Anda mempelajari teknologi baru dalam waktu singkat.</td><td>Tell me how you learned a new technology in a short time.</td></tr>
+  <tr><td>q08</td><td>Apa kelebihan dan kekurangan terbesar Anda?</td><td>What are your greatest strengths and weaknesses?</td></tr>
+  <tr><td>q09</td><td>Jelaskan perbedaan database SQL dan NoSQL, dan kapan Anda memilih masing-masing.</td><td>Explain the difference between SQL and NoSQL databases and when you would choose each.</td></tr>
+  <tr><td>q10</td><td>Jelaskan apa yang terjadi ketika Anda mengetik alamat sebuah situs web di browser.</td><td>Explain what happens when you type a website address into a browser.</td></tr>
+  <tr><td>q11</td><td>Aplikasi yang Anda buat tiba-tiba error di production. Apa langkah-langkah Anda?</td><td>An app you built suddenly fails in production. What do you do?</td></tr>
+  <tr><td>q12</td><td>Di mana Anda melihat diri Anda lima tahun ke depan?</td><td>Where do you see yourself in five years?</td></tr>
+</table>
+
+<h2>6. Name your files</h2>
+<p>Rename each file <b>as soon as you stop recording</b>. Windows Camera names files by time
+(<span class="fn">WIN_20261012_14_33_10_Pro.mp4</span>), and after ten clips you won't know which is which.</p>
+<div class="pattern">
+  Part A:&nbsp; code_session_clip &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; → p01_s1_upright.mp4<br>
+  Part B:&nbsp; code_session_answerNN_question_language → p01_s1_answer01_q01_id.mp4
+</div>
+<table class="avoid">
+  <tr><th style="width:28%">What</th><th style="width:38%">Example</th><th>Notes</th></tr>
+  <tr><td>Part A clip</td><td><span class="fn">p01_s1_arms_crossed.mp4</span></td><td>Clip name exactly as in the Part A table</td></tr>
+  <tr><td>Part B answer in Indonesian</td><td><span class="fn">p01_s1_answer01_q01_id.mp4</span></td><td>answer01, answer02, … count within the session</td></tr>
+  <tr><td>Part B answer in English</td><td><span class="fn">p01_s1_answer04_q03_en.mp4</span></td><td>Language: <b>id</b>, <b>en</b>, or <b>mix</b></td></tr>
+  <tr><td>Recorded on a Mac</td><td><span class="fn">p01_s2_slouching.mov</span></td><td>Keep the .mov ending; don't convert</td></tr>
+</table>
+<ul>
+  <li><b>Retakes:</b> delete the bad take and keep only the final one under the normal name. No "_v2" or "_final".</li>
+  <li><b>Folders:</b> one folder per session, inside a folder with your code (for example <b>p01 › s1</b>).
+    Put that session's 10 clips and 4 answers in it, and nothing else.</li>
+</ul>
+
+<h2>7. Send your session details</h2>
+<p>After each session, send the coordinator these details. A chat message is fine (text only, never the videos).</p>
+<table>
+  <thead><tr><th style="width:38%">Detail</th><th>Example</th></tr></thead>
+  <tr><td>Date</td><td>14 October 2026</td></tr>
+  <tr><td>Place</td><td>bedroom desk</td></tr>
+  <tr><td>Light</td><td>daylight from the front</td></tr>
+  <tr><td>Clothes</td><td>black T-shirt</td></tr>
+  <tr><td>Glasses, cap or head covering</td><td>glasses, no cap</td></tr>
+  <tr><td>Laptop model</td><td>ASUS TUF F15</td></tr>
+  <tr><td>Video quality</td><td>1080p</td></tr>
+  <tr><td>Microphone</td><td>built-in</td></tr>
+  <tr><td>All camera effects off?</td><td>yes</td></tr>
+  <tr><td>What you recorded</td><td>10 clips, 4 answers</td></tr>
+  <tr><td>Anything unusual</td><td>fan noise; arms partly out of the picture in arms_crossed</td></tr>
+</table>
+
+<h2>8. Check before you upload</h2>
+<p><b>Re-record instead of trimming or editing.</b> Editing apps re-encode the video and can shift the sound.</p>
+<ul class="check">
+  <li><span class="box"></span><span>Every file plays to the end <b>with sound</b>.</span></li>
+  <li><span class="box"></span><span>Part A clips are at least 32 seconds (2 seconds still + 30 seconds). Answers are 1–2 minutes.</span></li>
+  <li><span class="box"></span><span>Your whole face is in the picture the whole time (brief turns are fine).</span></li>
+  <li><span class="box"></span><span>File names follow the pattern exactly; 10 clips and 4 answers in the session folder.</span></li>
+  <li><span class="box"></span><span>Nobody else is visible or audible, and nothing identifying is readable.</span></li>
+  <li><span class="box"></span><span>Camera effects were off (the background is sharp, not blurred).</span></li>
+  <li><span class="box"></span><span>Each Part A clip shows only its own behaviour.</span></li>
+</ul>
+
+<h2>9. Upload</h2>
+<ul>
+  <li>Upload the whole session folder to the <b>team's shared folder</b> (link from the coordinator).</li>
+  <li><b>Never</b> send recordings through WhatsApp, Telegram or other chat apps (they shrink the
+    video and leave copies on phones), by email, to GitHub, or through any public link or social media.</li>
+  <li>Once the coordinator confirms your upload arrived, delete the videos from your laptop,
+    including Camera Roll and the Recycle Bin.</li>
+</ul>
+
+<h2>10. Your privacy</h2>
+<ul>
+  <li>Your videos are labelled with your code, not your name.</li>
+  <li>They are kept in a restricted folder that only the team can open, and they are never published.</li>
+  <li>You can stop any recording, or ask for any clip to be deleted.</li>
+  <li>You can withdraw at any time, without giving a reason, by telling the coordinator. Your
+    recordings are then deleted within 30 days.</li>
+  <li>The full terms are in the consent form you signed.</li>
+</ul>
+
+<h2 class="page-break">Quick card</h2>
+<p>Print this page and tick each item as you go.</p>
+<table class="card">
+  <tr><th style="width:52%"></th><th>Session 1</th><th>Session 2</th><th>Session 3</th></tr>
+  <tr><td><b>Date</b></td><td></td><td></td><td></td></tr>
+  <tr><td>Camera effects off, sticker on, framing checked</td><td><span class="box"></span></td><td><span class="box"></span></td><td><span class="box"></span></td></tr>
+  <tr><td colspan="4" style="text-align:left;background:#e8f3f5"><b>Part A: 10 clips</b> (2 s still, then 30 s, keep talking)</td></tr>
+  <tr><td>1 <span class="fn">upright</span></td><td><span class="box"></span></td><td><span class="box"></span></td><td><span class="box"></span></td></tr>
+  <tr><td>2 <span class="fn">looking_away</span></td><td><span class="box"></span></td><td><span class="box"></span></td><td><span class="box"></span></td></tr>
+  <tr><td>3 <span class="fn">smile</span></td><td><span class="box"></span></td><td><span class="box"></span></td><td><span class="box"></span></td></tr>
+  <tr><td>4 <span class="fn">gestures</span></td><td><span class="box"></span></td><td><span class="box"></span></td><td><span class="box"></span></td></tr>
+  <tr><td>5 <span class="fn">desk_hands</span></td><td><span class="box"></span></td><td><span class="box"></span></td><td><span class="box"></span></td></tr>
+  <tr><td>6 <span class="fn">touching_face</span></td><td><span class="box"></span></td><td><span class="box"></span></td><td><span class="box"></span></td></tr>
+  <tr><td>7 <span class="fn">arms_crossed</span></td><td><span class="box"></span></td><td><span class="box"></span></td><td><span class="box"></span></td></tr>
+  <tr><td>8 <span class="fn">slouching</span></td><td><span class="box"></span></td><td><span class="box"></span></td><td><span class="box"></span></td></tr>
+  <tr><td>9 <span class="fn">reading_notes_held</span></td><td><span class="box"></span></td><td><span class="box"></span></td><td><span class="box"></span></td></tr>
+  <tr><td>10 <span class="fn">reading_notes_desk</span></td><td><span class="box"></span></td><td><span class="box"></span></td><td><span class="box"></span></td></tr>
+  <tr><td colspan="4" style="text-align:left;background:#e8f3f5"><b>Part B: 4 answers</b> (2 s at the lens, then answer naturally)</td></tr>
+  <tr><td>Answer 1 <span class="muted">(q01 / q05 / q09)</span></td><td><span class="box"></span></td><td><span class="box"></span></td><td><span class="box"></span></td></tr>
+  <tr><td>Answer 2 <span class="muted">(q02 / q06 / q10)</span></td><td><span class="box"></span></td><td><span class="box"></span></td><td><span class="box"></span></td></tr>
+  <tr><td>Answer 3 <span class="muted">(q03 / q07 / q11)</span></td><td><span class="box"></span></td><td><span class="box"></span></td><td><span class="box"></span></td></tr>
+  <tr><td>Answer 4 <span class="muted">(q04 / q08 / q12)</span></td><td><span class="box"></span></td><td><span class="box"></span></td><td><span class="box"></span></td></tr>
+  <tr><td colspan="4" style="text-align:left;background:#e8f3f5"><b>After recording</b></td></tr>
+  <tr><td>All files renamed and in the session folder</td><td><span class="box"></span></td><td><span class="box"></span></td><td><span class="box"></span></td></tr>
+  <tr><td>Checked before upload (section 8)</td><td><span class="box"></span></td><td><span class="box"></span></td><td><span class="box"></span></td></tr>
+  <tr><td>Session details sent to the coordinator</td><td><span class="box"></span></td><td><span class="box"></span></td><td><span class="box"></span></td></tr>
+  <tr><td>Uploaded to the shared folder</td><td><span class="box"></span></td><td><span class="box"></span></td><td><span class="box"></span></td></tr>
+  <tr><td>Deleted from the laptop after the coordinator confirmed</td><td><span class="box"></span></td><td><span class="box"></span></td><td><span class="box"></span></td></tr>
+</table>
+
+</body>
+</html>

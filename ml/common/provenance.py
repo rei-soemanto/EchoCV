@@ -82,6 +82,14 @@ CATALOGUE = {
         True,
         "train",
     ),
+    "inhouse": Dataset(
+        "EchoCV team recordings (laptop webcam, Part A clips and Part B answers)",
+        "docs/data-collection-protocol.md",
+        "Own recordings, participant consent form v1.0 (UU PDP 27/2022)",
+        True,
+        "train",
+        "Personal data: kept off git; delete a participant's derived data on withdrawal.",
+    ),
     "genki4k": Dataset(
         "GENKI-4K",
         "https://mplab.ucsd.edu/398/",

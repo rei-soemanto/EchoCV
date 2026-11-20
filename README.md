@@ -14,6 +14,7 @@ pauses, voice) and on the answer's content.
 | `apps/web` | Next.js app: UI, API routes, in-browser vision | pnpm, Vitest, Playwright |
 | `services/speech` | FastAPI speech service (VAD, ASR, prosody, upload-mode vision) | uv, Python 3.12, pytest |
 | `ml` | YOLO training, Whisper fine-tune notebooks, score calibration | uv, Python 3.12, CUDA torch |
+| `supabase` | Supabase config and SQL migrations (database, row-level security, storage buckets) | Supabase CLI |
 | `shared` | Rubric, labels and JSON Schemas used by web and speech | pnpm package `@echocv/shared` |
 | `docs` | Design docs, data-collection protocol, consent form | — |
 
@@ -35,6 +36,9 @@ pnpm dev:web                              # http://localhost:3000
 pnpm test                                 # Vitest
 pnpm --filter web exec playwright install chromium   # once
 pnpm --filter web test:e2e                # Playwright
+
+npx supabase link --project-ref <your-project-ref>   # once, against the team Supabase project
+npx supabase db push                      # apply supabase/migrations
 
 cd services/speech
 uv sync
@@ -68,3 +72,19 @@ Data and admin:
 Team decisions (architecture doc §5):
 - [ ] Database / auth / storage provider.
 - [ ] Licence and repo visibility (Ultralytics YOLO is AGPL-3.0).
+
+## Features
+
+| Feature | Status |
+|---|---|
+| Database, row-level security and private storage for answer audio and videos | Done |
+
+## Progress so far
+
+- The database stores profiles, consents, practice sessions, questions, answers, uploads and reports. Every table has row-level security so a user only ever sees their own data, and answer audio and videos go to private storage buckets.
+
+## Contributors
+
+| Name | Work |
+|---|---|
+| Life | Set up the Supabase database, row-level security and private storage so each user's practice data stays their own. |

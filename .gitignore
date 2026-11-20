@@ -46,6 +46,18 @@ recordings/
 *.mp4
 *.webm
 
+# Local-only agent and team files (shared by zip, never committed)
+/AGENTS.md
+/CLAUDE.md
+/DESIGN.md
+/PRODUCT.md
+/owners.txt
+/schedule.txt
+/plan/
+/graphify-out/
+.mcp.json
+.claude/
+
 # OS / editor
 .DS_Store
 Thumbs.db

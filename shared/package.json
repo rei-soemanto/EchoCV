@@ -4,6 +4,7 @@
   "private": true,
   "description": "Rubric, labels and JSON Schemas shared by apps/web and services/speech",
   "exports": {
+    "./vision-models.json": "./vision-models.json",
     "./rubric.json": "./rubric.json",
     "./labels.json": "./labels.json",
     "./schemas/*": "./schemas/*"

@@ -1,0 +1,97 @@
+{
+  "version": "0.1.0",
+  "generatedBy": "ml/yolo/export_browser.py",
+  "conf": 0.25,
+  "padValue": 114,
+  "runtimes": {
+    "onnxruntimeWeb": "1.31.1",
+    "mediapipeTasksVision": "1.2.3"
+  },
+  "ortFiles": [
+    "ort-wasm-simd-threaded.jsep.mjs",
+    "ort-wasm-simd-threaded.jsep.wasm"
+  ],
+  "models": {
+    "pose": {
+      "file": "yolo26n-pose.onnx",
+      "task": "pose",
+      "inputSize": 640,
+      "stride": 32,
+      "output": [
+        "batch",
+        56,
+        "anchors"
+      ],
+      "sha256": "c4f057d1c443a02963a381f72ff78b3c6af927bca0e466d9d64f88b97605d031",
+      "bytes": 12986085,
+      "keypoints": 17
+    },
+    "objects": {
+      "file": "yolo26n-objects.onnx",
+      "task": "detect",
+      "inputSize": 640,
+      "stride": 32,
+      "output": [
+        "batch",
+        84,
+        "anchors"
+      ],
+      "sha256": "1b5556effa0fc23f8ed6260442a9b56521fbd8ab7e1716dba205d946933a9e18",
+      "bytes": 10861465,
+      "classes": {
+        "67": "cell phone",
+        "73": "book",
+        "63": "laptop"
+      }
+    },
+    "behaviour": {
+      "file": "behaviour-v1.onnx",
+      "task": "detect",
+      "inputSize": 640,
+      "stride": 32,
+      "output": [
+        "batch",
+        8,
+        "anchors"
+      ],
+      "sha256": "961c06a7e32b2c79d3ddec0116f8f639a42a1c4ba6f4e674caa3ba8de1033434",
+      "bytes": 10726775,
+      "classes": {
+        "0": "touching_face",
+        "1": "arms_crossed",
+        "2": "reading_notes",
+        "3": "slouching"
+      }
+    },
+    "face": {
+      "file": "face_landmarker.task",
+      "task": "face",
+      "sha256": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff",
+      "bytes": 3758596
+    }
+  },
+  "parity": {
+    "pose": {
+      "frames": 40,
+      "pt_detections": 48,
+      "matched_iou_0.9": 48,
+      "max_conf_diff": 0.0007,
+      "pass": true,
+      "max_keypoint_diff_px": 0.13
+    },
+    "objects": {
+      "frames": 40,
+      "pt_detections": 2,
+      "matched_iou_0.9": 2,
+      "max_conf_diff": 0.0016,
+      "pass": true
+    },
+    "behaviour": {
+      "frames": 40,
+      "pt_detections": 7,
+      "matched_iou_0.9": 7,
+      "max_conf_diff": 0.0007,
+      "pass": true
+    }
+  }
+}

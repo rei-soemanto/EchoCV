@@ -121,6 +121,10 @@ def main() -> None:
     ap.add_argument("--eval-every", type=int, default=500)
     ap.add_argument("--encoder-lora", type=int, default=0)
     ap.add_argument("--out", default=str(OUT))
+    ap.add_argument("--init-adapter", default="")
+    ap.add_argument("--train-manifest", default="train")
+    ap.add_argument("--val-manifest", default="val_mix")
+    ap.add_argument("--steps", type=int, default=0)
     args = ap.parse_args()
     random.seed(SEED)
     torch.manual_seed(SEED)
@@ -141,6 +145,9 @@ def main() -> None:
     if (last / "adapter_config.json").exists():
         model = PeftModel.from_pretrained(model, last, is_trainable=True)
         print("resuming from", last)
+    elif args.init_adapter:
+        model = PeftModel.from_pretrained(model, args.init_adapter, is_trainable=True)
+        print("starting from", args.init_adapter)
     else:
         cfg = LoraConfig(
             r=32,
@@ -157,8 +164,8 @@ def main() -> None:
     model.to("cuda")
     encoder = model.get_base_model().model.encoder
 
-    train_rows = read_manifest("train")
-    val_rows = read_manifest("val_mix")
+    train_rows = read_manifest(args.train_manifest)
+    val_rows = read_manifest(args.val_manifest)
     if args.smoke:
         train_rows, val_rows = train_rows[:400], val_rows[:16]
     pad_id = processor.tokenizer.eos_token_id
@@ -171,7 +178,7 @@ def main() -> None:
         collate_fn=partial(collate, pad_id=pad_id),  # lambdas can't be pickled for Windows workers
     )
     steps_per_epoch = len(loader) // args.accum
-    total = 50 if args.smoke else int(steps_per_epoch * args.epochs)
+    total = 50 if args.smoke else args.steps or int(steps_per_epoch * args.epochs)
     params = [p for p in model.parameters() if p.requires_grad]
     opt = torch.optim.AdamW(params, lr=args.lr, weight_decay=0.01)
     sched = get_linear_schedule_with_warmup(opt, min(300, total // 10), total)

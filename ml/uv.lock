@@ -302,6 +302,7 @@ dependencies = [
     { name = "librosa" },
     { name = "onnx" },
     { name = "onnxruntime" },
+    { name = "onnxslim" },
     { name = "peft" },
     { name = "pyarrow" },
     { name = "pycocotools" },
@@ -333,6 +334,7 @@ requires-dist = [
     { name = "librosa", specifier = ">=1.0.0" },
     { name = "onnx", specifier = ">=1.23.2" },
     { name = "onnxruntime", specifier = ">=1.30.0" },
+    { name = "onnxslim", specifier = ">=0.1.97" },
     { name = "peft", specifier = ">=0.21.2" },
     { name = "pyarrow", specifier = ">=25.0.1" },
     { name = "pycocotools", specifier = ">=2.0.11" },
@@ -979,6 +981,22 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/34/35/e7f862dbacbc99fadd9b14a614e49c99bf0f35fd9927a82f096e3de33531/onnxruntime-1.30.0-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:fa688e7891a6aa206636fe7372e27ee75fd17713289f6b4fc7b190e0a7de9328", size = 23585654, upload-time = "2026-09-10T16:31:26.65Z" },
     { url = "https://files.pythonhosted.org/packages/a6/13/0f1699f6de549c9324bc9112a2a85b14c517904cd11b562a654643b755a1/onnxruntime-1.30.0-cp312-cp312-win_amd64.whl", hash = "sha256:f3501472571f1b1eee50e017851e7929f5ea37312d2d8c2494a19e8fc58b4a38", size = 14311470, upload-time = "2026-09-10T16:31:31.273Z" },
     { url = "https://files.pythonhosted.org/packages/a2/17/02b13e5f51461f0453b18ab854e2d0bc1b6ec353241b05a2ee6b79e35d87/onnxruntime-1.30.0-cp312-cp312-win_arm64.whl", hash = "sha256:dc4c706f1935ebb62356e6a095b047859badd854482c40560888e95c328ed262", size = 14175072, upload-time = "2026-09-10T16:31:34.541Z" },
+]
+
+[[package]]
+name = "onnxslim"
+version = "0.1.99"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "colorama" },
+    { name = "ml-dtypes" },
+    { name = "onnx" },
+    { name = "packaging" },
+    { name = "sympy" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/fe/ac/8610e7274fe6bf26b6269f91de5a2acd03bfa2133153e691fc93f71a6f64/onnxslim-0.1.99.tar.gz", hash = "sha256:d662d6a6c384b64fe7464527a5865020c4335f8619a4a1272512ca0cc266867c", size = 616093, upload-time = "2026-11-04T03:13:12.228Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/76/d1/063874f0c02d3c00a169bce3ccf24a4f42ffbc4263d4b1593499c39f7a4c/onnxslim-0.1.99-py3-none-any.whl", hash = "sha256:6c6a3ddbbb7c5426f8f9c38ed1917bb4ab6335919c7d973328ba520faca469e4", size = 248552, upload-time = "2026-11-04T03:13:10.931Z" },
 ]
 
 [[package]]

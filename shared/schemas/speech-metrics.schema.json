@@ -4,47 +4,80 @@
   "title": "SpeechMetrics",
   "description": "Per-answer speech metrics returned by services/speech /analyze. Mirrored by services/speech/app/schemas.py.",
   "type": "object",
-  "required": ["answerIndex", "language", "transcript", "fillers", "pauses", "speakingRateWps", "prosody"],
+  "required": [
+    "answerIndex",
+    "language",
+    "durationMs",
+    "speechMs",
+    "transcript",
+    "words",
+    "fillers",
+    "pauses",
+    "speakingRateWps",
+    "syllablesPerSecond",
+    "prosody"
+  ],
   "additionalProperties": false,
   "properties": {
     "answerIndex": { "type": "integer", "minimum": 0 },
-    "language": { "enum": ["id", "en"] },
-    "transcript": { "type": "string" },
-    "fillers": {
+    "language": { "enum": ["id", "en"], "description": "Interview language chosen when the session was created (BR-26)." },
+    "durationMs": { "type": "integer", "minimum": 0, "description": "Length of the uploaded answer audio." },
+    "speechMs": { "type": "integer", "minimum": 0, "description": "Time Silero VAD marked as speech." },
+    "transcript": { "type": "string", "description": "Verbatim transcript, filler tokens included." },
+    "words": {
       "type": "array",
-      "description": "Vocalised fillers (shared/labels.json fillerTokens) and lexical fillers found in the transcript.",
+      "description": "Transcript words without vocalised fillers, each tagged with the language it was spoken in. A tag that differs from the session language marks language mixing (BR-27, BR-28).",
       "items": {
         "type": "object",
-        "required": ["token", "startMs"],
+        "required": ["text", "startMs", "endMs", "language"],
+        "additionalProperties": false,
+        "properties": {
+          "text": { "type": "string" },
+          "startMs": { "type": "integer", "minimum": 0 },
+          "endMs": { "type": "integer", "minimum": 0 },
+          "language": { "enum": ["id", "en"] }
+        }
+      }
+    },
+    "fillers": {
+      "type": "array",
+      "description": "Vocalised fillers (shared/labels.json fillerTokens) and lexical fillers (lexicalFillers) spoken next to a hesitation.",
+      "items": {
+        "type": "object",
+        "required": ["token", "startMs", "endMs", "kind"],
         "additionalProperties": false,
         "properties": {
           "token": { "type": "string" },
-          "startMs": { "type": "integer", "minimum": 0 }
+          "startMs": { "type": "integer", "minimum": 0 },
+          "endMs": { "type": "integer", "minimum": 0 },
+          "kind": { "enum": ["vocal", "lexical"] }
         }
       }
     },
     "pauses": {
       "type": "array",
-      "description": "Silero VAD gaps longer than the pause threshold.",
+      "description": "Silero VAD gaps between speech of at least shared/speech.json pauseMinMs; long is true from longPauseMs.",
       "items": {
         "type": "object",
-        "required": ["startMs", "endMs"],
+        "required": ["startMs", "endMs", "long"],
         "additionalProperties": false,
         "properties": {
           "startMs": { "type": "integer", "minimum": 0 },
-          "endMs": { "type": "integer", "minimum": 0 }
+          "endMs": { "type": "integer", "minimum": 0 },
+          "long": { "type": "boolean" }
         }
       }
     },
-    "speakingRateWps": { "type": "number", "minimum": 0, "description": "Words per second of speech." },
+    "speakingRateWps": { "type": "number", "minimum": 0, "description": "Words per second of speech, fillers excluded." },
+    "syllablesPerSecond": { "type": "number", "minimum": 0, "description": "Estimated syllables per second of speech, fillers excluded." },
     "prosody": {
       "type": "object",
       "required": ["pitchMeanHz", "pitchStdHz", "volumeMeanDb"],
       "additionalProperties": false,
       "properties": {
         "pitchMeanHz": { "type": "number", "minimum": 0 },
-        "pitchStdHz": { "type": "number", "minimum": 0 },
-        "volumeMeanDb": { "type": "number" }
+        "pitchStdHz": { "type": "number", "minimum": 0, "description": "Pitch variation over voiced speech frames." },
+        "volumeMeanDb": { "type": "number", "description": "Mean frame level of speech in dBFS." }
       }
     }
   }

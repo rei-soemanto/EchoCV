@@ -7,6 +7,7 @@
     "./vision-models.json": "./vision-models.json",
     "./rubric.json": "./rubric.json",
     "./labels.json": "./labels.json",
+    "./speech.json": "./speech.json",
     "./schemas/*": "./schemas/*"
   }
 }

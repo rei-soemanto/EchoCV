@@ -79,15 +79,17 @@ Team decisions (architecture doc §5):
 |---|---|
 | Database, row-level security and private storage for answer audio and videos | Done |
 | Behaviour detector v1 and posture calibration on laptop-webcam recordings | Done |
+| Speech analysis of an answer: fillers, pauses, pace, pitch, volume and language mixing | Done |
 
 ## Progress so far
 
 - The database stores profiles, consents, practice sessions, questions, answers, uploads and reports. Every table has row-level security so a user only ever sees their own data, and answer audio and videos go to private storage buckets.
 - Eye contact, smile, looking down at notes and the four behaviours (touching the face, arms crossed, slouching, reading notes) are now tuned on the team's own laptop-webcam recordings and measured on people the models never saw. With seven people, eye-contact accuracy rose from F1 0.70 to 0.89 and reading notes is detected at F1 0.77; a test on three people the first models never saw is included. The results are in `docs/model-report-v1.md`.
+- The speech service analyses a recorded answer in Indonesian or English: it finds vocal fillers such as "eee" and "hmm", filler words like "jadi" or "kayak" when they come with a hesitation, pauses and long pauses, words and syllables per second, pitch, pitch variation and volume, and marks each word as Indonesian or English so language mixing can be shown. A one-minute answer takes about half a minute on a laptop CPU.
 
 ## Contributors
 
 | Name | Work |
 |---|---|
 | Life | Set up the Supabase database, row-level security and private storage so each user's practice data stays their own. |
-| Rei | Tuned the eye-contact, smile, looking-down and posture rules and trained behaviour detector v1 on the team's own webcam recordings, so feedback holds up on ordinary laptop cameras. |
+| Rei | Tuned the eye-contact, smile, looking-down and posture rules and trained behaviour detector v1 on the team's own webcam recordings, so feedback holds up on ordinary laptop cameras. Built the speech analysis that turns a recorded answer into fillers, pauses, pace, pitch, volume and language mixing. |

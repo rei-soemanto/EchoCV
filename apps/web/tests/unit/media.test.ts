@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { audioMimeType, captureError, meanLuma, micLevel } from "../../lib/media";
+import { audioMimeType, captureError, meanLuma, micLevel } from "@/lib/media";
 
 describe("captureError", () => {
   const err = (name: string) => Object.assign(new Error(name), { name });
@@ -48,7 +48,7 @@ describe("audioMimeType", () => {
 
 describe("startAudioRecorder", () => {
   it("records only the audio tracks and joins the chunks on stop", async () => {
-    const { startAudioRecorder } = await import("../../lib/media");
+    const { startAudioRecorder } = await import("@/lib/media");
     const made: { tracks: string[]; options?: MediaRecorderOptions; timeslice?: number }[] = [];
     class FakeStream {
       constructor(public tracks: string[]) {}

@@ -1,0 +1,48 @@
+{
+  "created": "2026-11-20T19:52:08+00:00",
+  "base_model": "artifacts/yolo/v0/best.pt (fine-tuned from yolo26n.pt, AGPL-3.0)",
+  "commercially_safe_training_data": true,
+  "datasets": [
+    {
+      "name": "Roboflow Body Language Datasets",
+      "url": "https://universe.roboflow.com/skin-deseases/body-language-datasets",
+      "licence": "CC BY 4.0",
+      "commercial": true,
+      "use": "train",
+      "caveat": ""
+    },
+    {
+      "name": "Roboflow Sitting Posture Classification",
+      "url": "https://universe.roboflow.com/khaldas-workspace/sitting-posture-classification-ccvao-e9i4p",
+      "licence": "CC BY 4.0",
+      "commercial": true,
+      "use": "train",
+      "caveat": ""
+    },
+    {
+      "name": "Roboflow face-gesture_detection_large",
+      "url": "https://universe.roboflow.com/clyfars-workspace/face-gesture_detection_large",
+      "licence": "CC BY 4.0",
+      "commercial": true,
+      "use": "train",
+      "caveat": ""
+    },
+    {
+      "name": "COCO 2017 person keypoints",
+      "url": "https://cocodataset.org/#keypoints-2017",
+      "licence": "Annotations CC BY 4.0; images Flickr terms",
+      "commercial": true,
+      "use": "train",
+      "caveat": "Image rights follow Flickr terms."
+    },
+    {
+      "name": "EchoCV team recordings (laptop webcam, Part A clips and Part B answers)",
+      "url": "docs/data-collection-protocol.md",
+      "licence": "Own recordings, participant consent form v1.0 (UU PDP 27/2022)",
+      "commercial": true,
+      "use": "train",
+      "caveat": "Personal data: kept off git; delete a participant's derived data on withdrawal."
+    }
+  ],
+  "notes": "Fine-tuned on in-house frames from p01, p02, p03, p04 plus a v0 replay sample."
+}

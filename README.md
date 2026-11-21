@@ -78,13 +78,16 @@ Team decisions (architecture doc §5):
 | Feature | Status |
 |---|---|
 | Database, row-level security and private storage for answer audio and videos | Done |
+| Behaviour detector v1 and posture calibration on laptop-webcam recordings | Done |
 
 ## Progress so far
 
 - The database stores profiles, consents, practice sessions, questions, answers, uploads and reports. Every table has row-level security so a user only ever sees their own data, and answer audio and videos go to private storage buckets.
+- Eye contact, smile, looking down at notes and the four behaviours (touching the face, arms crossed, slouching, reading notes) are now tuned on the team's own laptop-webcam recordings and measured on people the models never saw. Eye-contact accuracy rose from F1 0.72 to 0.88, and reading notes is now detected at F1 0.95. The results are in `docs/model-report-v1.md`.
 
 ## Contributors
 
 | Name | Work |
 |---|---|
 | Life | Set up the Supabase database, row-level security and private storage so each user's practice data stays their own. |
+| Rei | Tuned the eye-contact, smile, looking-down and posture rules and trained behaviour detector v1 on the team's own webcam recordings, so feedback holds up on ordinary laptop cameras. |

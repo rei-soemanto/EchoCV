@@ -1,0 +1,7 @@
+{
+  "images": 20,
+  "pt_detections": 21,
+  "matched_in_onnx_iou>=0.9": 20,
+  "max_conf_diff": 0.03174406290054321,
+  "pass": true
+}

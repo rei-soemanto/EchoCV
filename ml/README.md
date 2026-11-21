@@ -1,6 +1,6 @@
 # ml/
 
-Training and calibration for EchoCV v0. Python 3.12, managed with uv. Everything runs locally on
+Training and calibration for EchoCV v0 and v1. Python 3.12, managed with uv. Everything runs locally on
 the RTX 3050 Ti (4 GB); only the LiteRT export needs Colab. Datasets, weights and base models never
 go in git (`ml/data/`, `ml/artifacts/`, `ml/.cache/` are ignored).
 
@@ -57,6 +57,26 @@ uv run python -m calib.export_thresholds        # -> shared/thresholds.json
 
 # 5. Report (from ml/)
 uv run python report.py                         # -> docs/model-report-v0.md
+```
+
+## v1: team recordings
+
+Recordings go in `data/inhouse/raw/` with the file names from `docs/data-collection-protocol.md`.
+Every number is leave one person out; the final model or constants use everyone.
+
+```bash
+uv run python -m inhouse.inventory              # -> data/inhouse/inventory.csv, flags
+uv run python -m inhouse.extract_pose           # GPU: frames + YOLO26n-pose + objects
+cd calibration
+uv run python -m calib.inhouse_face             # MediaPipe face features on the same frames
+uv run python -m calib.inhouse_calibrate        # eye contact, smile, gaze down
+uv run python -m calib.inhouse_posture          # pose rules -> derived/behaviour_scores.csv
+cd ..
+uv run python -m inhouse.autolabel              # check derived/contact/*.jpg; bad frames -> reject.txt
+uv run python -m inhouse.evaluate_lopo          # GPU: 4 folds + final -> artifacts/yolo/v1/
+uv run python -m yolo.export --version v1       # ONNX + parity check
+cd calibration && uv run python -m calib.export_thresholds && cd ..
+uv run python report_v1.py                      # -> docs/model-report-v1.md
 ```
 
 Run GPU jobs one at a time: on the 4 GB card a second CUDA process spills into shared system

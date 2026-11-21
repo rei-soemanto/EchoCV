@@ -105,6 +105,7 @@ def posture(result: dict, detector: dict | None) -> dict:
         "baseline; pose features come from YOLO26n-pose keypoints (confidence >= 0.5), with "
         "distances in face widths. probability = sigmoid(bias + sum(weights * (x - mean) / "
         "scale)), averaged over the last smoothingFrames frames, flagged when >= threshold.",
+        "detector": "artifacts/yolo/v1/best.pt" if detector else "artifacts/yolo/v0/best.pt",
         "behaviours": {},
     }
     for name, r in result["behaviours"].items():
@@ -113,8 +114,8 @@ def posture(result: dict, detector: dict | None) -> dict:
         if detector and name in detector["summary"]:
             d = detector["summary"][name]
             source = d["use"]
-            evaluation["detector_v1_lopo_f1"] = d["detector_v1_lopo_f1"]
-            evaluation["detector_v0_lopo_f1"] = d["detector_v0_lopo_f1"]
+            evaluation["detector_v1_lopo_f1"] = round(d["detector_v1_lopo_f1"], 3)
+            evaluation["detector_v0_lopo_f1"] = round(d["detector_v0_lopo_f1"], 3)
         out["behaviours"][name] = {"source": source, **r["rule"], "evaluation": evaluation}
     return out
 

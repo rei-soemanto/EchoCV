@@ -4,6 +4,7 @@ LiteRT (.tflite) export needs Linux: run ml/yolo/export_litert.ipynb in Colab.
 Run from ml/:  uv run python -m yolo.export
 """
 
+import argparse
 import json
 from pathlib import Path
 
@@ -11,7 +12,7 @@ from ultralytics import YOLO
 
 from common.paths import ARTIFACTS, DATA
 
-OUT = ARTIFACTS / "yolo" / "v0"
+YOLO_ARTIFACTS = ARTIFACTS / "yolo"
 N_IMAGES = 20
 
 
@@ -24,14 +25,21 @@ def _iou(a, b) -> float:
 
 
 def main() -> None:
-    pt = YOLO(OUT / "best.pt")
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--version", default="v0")
+    args = ap.parse_args()
+    out = YOLO_ARTIFACTS / args.version
+    pt = YOLO(out / "best.pt")
     onnx_path = Path(pt.export(format="onnx", imgsz=640, simplify=True))
     onnx = YOLO(onnx_path, task="detect")
 
     # Images that have labels, so the comparison isn't vacuous (most test images are negatives).
     labelled = []
-    for name in ("test_rf", "test_coco"):
-        for img in (DATA / "behaviour" / "lists" / f"{name}.txt").read_text().split("\n"):
+    lists = DATA / "behaviour" / "lists"
+    inhouse = [p.stem for p in sorted(lists.glob("inhouse_p*.txt")) if "_x" not in p.stem]
+    names = ["test_rf", "test_coco", *inhouse]
+    for name in names:
+        for img in (lists / f"{name}.txt").read_text().split("\n"):
             lbl = Path(img.replace("\\images\\", "\\labels\\").replace("/images/", "/labels/"))
             if img and lbl.with_suffix(".txt").read_text().strip():
                 labelled.append(img)
@@ -63,7 +71,7 @@ def main() -> None:
         "max_conf_diff": max_conf_diff,
         "pass": total == 0 or (matched / total >= 0.95 and max_conf_diff <= 0.05),
     }
-    (OUT / "onnx_parity.json").write_text(json.dumps(parity, indent=2), encoding="utf-8")
+    (out / "onnx_parity.json").write_text(json.dumps(parity, indent=2), encoding="utf-8")
     print(onnx_path, parity)
 
 

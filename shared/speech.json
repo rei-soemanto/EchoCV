@@ -1,0 +1,24 @@
+{
+  "version": "0.1.0",
+  "sampleRate": 16000,
+  "maxAudioSeconds": 300,
+  "maxUploadMb": 50,
+  "vad": {
+    "threshold": 0.5,
+    "minSpeechMs": 250,
+    "minSilenceMs": 300,
+    "speechPadMs": 100
+  },
+  "pauseMinMs": 500,
+  "longPauseMs": 2000,
+  "lexicalFillerGapMs": 300,
+  "languageSwitchMarginZipf": 0.25,
+  "whisperBeamSize": 1,
+  "pitchFminHz": 65,
+  "pitchFmaxHz": 400,
+  "vocalFillerForms": {
+    "[EEE]": ["uh", "uhh", "uhm", "er", "err", "eee", "ee", "eeh", "eeee"],
+    "[UM]": ["um", "umm", "erm", "em", "emm", "ehm"],
+    "[HMM]": ["hmm", "hm", "hmmm", "mm", "mmm"]
+  }
+}

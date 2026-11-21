@@ -88,6 +88,7 @@ cd ..
 uv run python -m inhouse.autolabel              # check derived/contact/*.jpg; bad frames -> reject.txt
 uv run python -m inhouse.evaluate_lopo --prefix v1_lopo7   # GPU: one fold per person + final -> artifacts/yolo/v1/
 uv run python -m yolo.export --version v1       # ONNX + parity check
+YOLO_AUTOINSTALL=false uv run python -m yolo.export_browser   # pose, objects, detector -> apps/web/public/models
 cd calibration && uv run python -m calib.export_thresholds && cd ..
 uv run python report_v1.py                      # -> docs/model-report-v1.md
 ```

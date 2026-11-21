@@ -125,7 +125,7 @@ def main() -> None:
     eye = json.loads((RESULTS / "eye_contact.json").read_text(encoding="utf-8"))
     inhouse = _read(INHOUSE)
     out = {
-        "version": "0.2.0" if inhouse else "0.1.0",
+        "version": "0.3.0" if inhouse else "0.1.0",
         "eyeContact": eye_contact(eye, inhouse),
         "smile": smile_section(smile, inhouse),
     }

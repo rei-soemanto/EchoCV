@@ -1,0 +1,448 @@
+{
+  "weights": "artifacts/yolo/v1_4p/best.pt",
+  "people": [
+    "p05",
+    "p06",
+    "p07"
+  ],
+  "summary": {
+    "touching_face": {
+      "v1": 0.6305942339447493,
+      "v0": 0.13019143118842438
+    },
+    "arms_crossed": {
+      "v1": 0.492278732402111,
+      "v0": 0.596078431372549
+    },
+    "reading_notes": {
+      "v1": 0.35538703286192524,
+      "v0": 0.3301782994877624
+    },
+    "slouching": {
+      "v1": 0.0,
+      "v0": 0.0
+    }
+  },
+  "per_person": {
+    "p05": {
+      "v1": {
+        "touching_face": {
+          "f1": 0.7628865979381443,
+          "precision": 0.8809523809523809,
+          "recall": 0.6727272727272727,
+          "clip_rate": {
+            "arms_crossed": 0.0,
+            "desk_hands": 0.0,
+            "gestures": 0.095,
+            "looking_away": 0.0,
+            "reading_notes_desk": 0.0,
+            "reading_notes_held": 0.0,
+            "slouching": 0.0,
+            "smile": 0.0,
+            "touching_face": 0.673,
+            "upright": 0.0
+          }
+        },
+        "arms_crossed": {
+          "f1": 0.4237918215613383,
+          "precision": 0.6063829787234043,
+          "recall": 0.32571428571428573,
+          "clip_rate": {
+            "arms_crossed": 0.326,
+            "desk_hands": 0.0,
+            "gestures": 0.0,
+            "looking_away": 0.0,
+            "reading_notes_desk": 0.086,
+            "reading_notes_held": 0.15,
+            "slouching": 0.0,
+            "smile": 0.0,
+            "touching_face": 0.0,
+            "upright": 0.0
+          }
+        },
+        "reading_notes": {
+          "f1": 0.5520361990950226,
+          "precision": 1.0,
+          "recall": 0.38125,
+          "clip_rate": {
+            "arms_crossed": 0.0,
+            "desk_hands": 0.0,
+            "gestures": 0.0,
+            "looking_away": 0.0,
+            "reading_notes_held": 0.381,
+            "slouching": 0.0,
+            "smile": 0.0,
+            "touching_face": 0.0,
+            "upright": 0.0
+          }
+        },
+        "slouching": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "clip_rate": {
+            "arms_crossed": 0.0,
+            "desk_hands": 0.0,
+            "gestures": 0.0,
+            "looking_away": 0.0,
+            "reading_notes_desk": 0.0,
+            "reading_notes_held": 0.0,
+            "slouching": 0.0,
+            "smile": 0.0,
+            "touching_face": 0.0,
+            "upright": 0.0
+          }
+        }
+      },
+      "v0": {
+        "touching_face": {
+          "f1": 0.11235955056179775,
+          "precision": 0.7692307692307693,
+          "recall": 0.06060606060606061,
+          "clip_rate": {
+            "arms_crossed": 0.0,
+            "desk_hands": 0.0,
+            "gestures": 0.019,
+            "looking_away": 0.0,
+            "reading_notes_desk": 0.0,
+            "reading_notes_held": 0.0,
+            "slouching": 0.0,
+            "smile": 0.0,
+            "touching_face": 0.061,
+            "upright": 0.0
+          }
+        },
+        "arms_crossed": {
+          "f1": 0.7882352941176471,
+          "precision": 0.8121212121212121,
+          "recall": 0.7657142857142857,
+          "clip_rate": {
+            "arms_crossed": 0.766,
+            "desk_hands": 0.0,
+            "gestures": 0.0,
+            "looking_away": 0.0,
+            "reading_notes_desk": 0.013,
+            "reading_notes_held": 0.138,
+            "slouching": 0.035,
+            "smile": 0.0,
+            "touching_face": 0.0,
+            "upright": 0.0
+          }
+        },
+        "reading_notes": {
+          "f1": 0.6324786324786326,
+          "precision": 1.0,
+          "recall": 0.4625,
+          "clip_rate": {
+            "arms_crossed": 0.0,
+            "desk_hands": 0.0,
+            "gestures": 0.0,
+            "looking_away": 0.0,
+            "reading_notes_held": 0.463,
+            "slouching": 0.0,
+            "smile": 0.0,
+            "touching_face": 0.0,
+            "upright": 0.0
+          }
+        },
+        "slouching": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "clip_rate": {
+            "arms_crossed": 0.0,
+            "desk_hands": 0.0,
+            "gestures": 0.0,
+            "looking_away": 0.0,
+            "reading_notes_desk": 0.0,
+            "reading_notes_held": 0.0,
+            "slouching": 0.0,
+            "smile": 0.0,
+            "touching_face": 0.0,
+            "upright": 0.0
+          }
+        }
+      }
+    },
+    "p06": {
+      "v1": {
+        "touching_face": {
+          "f1": 0.6857142857142856,
+          "precision": 1.0,
+          "recall": 0.5217391304347826,
+          "clip_rate": {
+            "arms_crossed": 0.0,
+            "desk_hands": 0.0,
+            "gestures": 0.0,
+            "looking_away": 0.0,
+            "reading_notes_desk": 0.0,
+            "reading_notes_held": 0.0,
+            "slouching": 0.0,
+            "smile": 0.0,
+            "touching_face": 0.522,
+            "upright": 0.0
+          }
+        },
+        "arms_crossed": {
+          "f1": 0.9824561403508771,
+          "precision": 0.9655172413793104,
+          "recall": 1.0,
+          "clip_rate": {
+            "arms_crossed": 1.0,
+            "desk_hands": 0.0,
+            "gestures": 0.0,
+            "looking_away": 0.018,
+            "reading_notes_desk": 0.0,
+            "reading_notes_held": 0.007,
+            "slouching": 0.015,
+            "smile": 0.0,
+            "touching_face": 0.0,
+            "upright": 0.0
+          }
+        },
+        "reading_notes": {
+          "f1": 0.35384615384615387,
+          "precision": 0.27380952380952384,
+          "recall": 0.5,
+          "clip_rate": {
+            "arms_crossed": 0.764,
+            "desk_hands": 0.029,
+            "gestures": 0.0,
+            "looking_away": 0.027,
+            "reading_notes_held": 0.5,
+            "slouching": 0.081,
+            "smile": 0.35,
+            "touching_face": 0.051,
+            "upright": 0.2
+          }
+        },
+        "slouching": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "clip_rate": {
+            "arms_crossed": 0.0,
+            "desk_hands": 0.0,
+            "gestures": 0.0,
+            "looking_away": 0.0,
+            "reading_notes_desk": 0.0,
+            "reading_notes_held": 0.0,
+            "slouching": 0.0,
+            "smile": 0.0,
+            "touching_face": 0.0,
+            "upright": 0.0
+          }
+        }
+      },
+      "v0": {
+        "touching_face": {
+          "f1": 0.20779220779220778,
+          "precision": 1.0,
+          "recall": 0.11594202898550725,
+          "clip_rate": {
+            "arms_crossed": 0.0,
+            "desk_hands": 0.0,
+            "gestures": 0.0,
+            "looking_away": 0.0,
+            "reading_notes_desk": 0.0,
+            "reading_notes_held": 0.0,
+            "slouching": 0.0,
+            "smile": 0.0,
+            "touching_face": 0.116,
+            "upright": 0.0
+          }
+        },
+        "arms_crossed": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "clip_rate": {
+            "arms_crossed": 1.0,
+            "desk_hands": 0.0,
+            "gestures": 0.0,
+            "looking_away": 0.0,
+            "reading_notes_desk": 0.0,
+            "reading_notes_held": 0.0,
+            "slouching": 0.0,
+            "smile": 0.0,
+            "touching_face": 0.0,
+            "upright": 0.0
+          }
+        },
+        "reading_notes": {
+          "f1": 0.18414322250639387,
+          "precision": 0.11180124223602485,
+          "recall": 0.5217391304347826,
+          "clip_rate": {
+            "arms_crossed": 1.0,
+            "desk_hands": 0.82,
+            "gestures": 0.343,
+            "looking_away": 0.186,
+            "reading_notes_held": 0.522,
+            "slouching": 0.331,
+            "smile": 0.986,
+            "touching_face": 0.428,
+            "upright": 0.7
+          }
+        },
+        "slouching": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "clip_rate": {
+            "arms_crossed": 0.0,
+            "desk_hands": 0.0,
+            "gestures": 0.0,
+            "looking_away": 0.0,
+            "reading_notes_desk": 0.0,
+            "reading_notes_held": 0.0,
+            "slouching": 0.0,
+            "smile": 0.0,
+            "touching_face": 0.0,
+            "upright": 0.0
+          }
+        }
+      }
+    },
+    "p07": {
+      "v1": {
+        "touching_face": {
+          "f1": 0.4431818181818182,
+          "precision": 1.0,
+          "recall": 0.2846715328467153,
+          "clip_rate": {
+            "arms_crossed": 0.0,
+            "desk_hands": 0.0,
+            "gestures": 0.0,
+            "looking_away": 0.0,
+            "reading_notes_desk": 0.0,
+            "reading_notes_held": 0.0,
+            "slouching": 0.0,
+            "smile": 0.0,
+            "touching_face": 0.285,
+            "upright": 0.0
+          }
+        },
+        "arms_crossed": {
+          "f1": 0.07058823529411765,
+          "precision": 0.18181818181818182,
+          "recall": 0.043795620437956206,
+          "clip_rate": {
+            "arms_crossed": 0.044,
+            "desk_hands": 0.0,
+            "gestures": 0.152,
+            "looking_away": 0.0,
+            "reading_notes_desk": 0.0,
+            "reading_notes_held": 0.022,
+            "slouching": 0.0,
+            "smile": 0.015,
+            "touching_face": 0.015,
+            "upright": 0.0
+          }
+        },
+        "reading_notes": {
+          "f1": 0.16027874564459932,
+          "precision": 0.1503267973856209,
+          "recall": 0.17164179104477612,
+          "clip_rate": {
+            "arms_crossed": 0.0,
+            "desk_hands": 0.03,
+            "gestures": 0.03,
+            "looking_away": 0.0,
+            "reading_notes_held": 0.172,
+            "slouching": 0.0,
+            "smile": 0.0,
+            "touching_face": 0.0,
+            "upright": 0.878
+          }
+        },
+        "slouching": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "clip_rate": {
+            "arms_crossed": 0.0,
+            "desk_hands": 0.0,
+            "gestures": 0.0,
+            "looking_away": 0.0,
+            "reading_notes_desk": 0.0,
+            "reading_notes_held": 0.0,
+            "slouching": 0.0,
+            "smile": 0.0,
+            "touching_face": 0.0,
+            "upright": 0.0
+          }
+        }
+      },
+      "v0": {
+        "touching_face": {
+          "f1": 0.0704225352112676,
+          "precision": 1.0,
+          "recall": 0.0364963503649635,
+          "clip_rate": {
+            "arms_crossed": 0.0,
+            "desk_hands": 0.0,
+            "gestures": 0.0,
+            "looking_away": 0.0,
+            "reading_notes_desk": 0.0,
+            "reading_notes_held": 0.0,
+            "slouching": 0.0,
+            "smile": 0.0,
+            "touching_face": 0.036,
+            "upright": 0.0
+          }
+        },
+        "arms_crossed": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "clip_rate": {
+            "arms_crossed": 0.0,
+            "desk_hands": 0.0,
+            "gestures": 0.0,
+            "looking_away": 0.0,
+            "reading_notes_desk": 0.0,
+            "reading_notes_held": 0.0,
+            "slouching": 0.0,
+            "smile": 0.0,
+            "touching_face": 0.0,
+            "upright": 0.0
+          }
+        },
+        "reading_notes": {
+          "f1": 0.17391304347826086,
+          "precision": 0.11827956989247312,
+          "recall": 0.3283582089552239,
+          "clip_rate": {
+            "arms_crossed": 0.0,
+            "desk_hands": 0.089,
+            "gestures": 0.356,
+            "looking_away": 0.424,
+            "reading_notes_held": 0.328,
+            "slouching": 0.0,
+            "smile": 0.518,
+            "touching_face": 0.0,
+            "upright": 1.0
+          }
+        },
+        "slouching": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "clip_rate": {
+            "arms_crossed": 0.0,
+            "desk_hands": 0.0,
+            "gestures": 0.0,
+            "looking_away": 0.0,
+            "reading_notes_desk": 0.0,
+            "reading_notes_held": 0.0,
+            "slouching": 0.0,
+            "smile": 0.0,
+            "touching_face": 0.0,
+            "upright": 0.0
+          }
+        }
+      }
+    }
+  }
+}

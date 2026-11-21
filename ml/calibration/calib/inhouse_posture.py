@@ -5,7 +5,7 @@ import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_auc_score
 
-from calib.inhouse_calibrate import BASELINE_S, FPS, clip_rates, prf
+from calib.inhouse_calibrate import FPS, apply_relabel, clip_rates, prf, session_baseline
 from calib.inhouse_face import DERIVED, FACE_CSV
 from calib.paths import RESULTS
 
@@ -154,15 +154,10 @@ def frame_features(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def baseline_relative(df: pd.DataFrame) -> pd.DataFrame:
-    starts = df[(df["part"] == "B") & (df["t"] <= BASELINE_S)]
     cols = ["fx", "fy", "fw", "fh", "roll", "pitch", "shoulder_drop_raw", "shoulder_width_raw"]
-    per_answer = starts.groupby("stem")[cols].median()
-    per_session = starts.groupby("sid")[cols].median()
-    base = pd.DataFrame(index=df.index, columns=cols, dtype=float)
-    answers = df["part"] == "B"
-    base.loc[answers] = per_answer.reindex(df.loc[answers, "stem"]).to_numpy()
-    base.loc[~answers] = per_session.reindex(df.loc[~answers, "sid"]).to_numpy()
-    df = df.copy()
+    base, is_baseline = session_baseline(df, cols)
+    df = df[~is_baseline].copy()
+    base = base[~is_baseline]
     df["face_dy"] = (df["fy"] - base["fy"]) / base["fh"]
     df["face_dx"] = (df["fx"] - base["fx"]) / base["fw"]
     df["face_scale"] = df["fw"] / base["fw"]
@@ -182,8 +177,8 @@ def baseline_relative(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def load() -> pd.DataFrame:
-    face = pd.read_csv(FACE_CSV)
-    pose = pd.read_csv(POSE_CSV)
+    face = apply_relabel(pd.read_csv(FACE_CSV))
+    pose = pd.read_csv(POSE_CSV, low_memory=False)
     keep = ["frame", "objects"] + [c for c in pose.columns if c.startswith("k")]
     df = face.merge(pose[keep], on="frame", how="inner")
     df = df[df["detected"].fillna(False).astype(bool)].copy()
@@ -246,6 +241,12 @@ def predict(p: dict, df: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
     prob = p["model"].predict_proba(x)[:, 1]
     smoothed = smooth(df, prob, p["window"]).to_numpy()
     return prob, smoothed
+
+
+def apply_exported(rule: dict, df: pd.DataFrame) -> np.ndarray:
+    x = (df[rule["features"]].to_numpy(float) - np.array(rule["mean"])) / np.array(rule["scale"])
+    prob = 1.0 / (1.0 + np.exp(-(x @ np.array(rule["weights"]) + rule["bias"])))
+    return smooth(df, prob, rule["smoothingFrames"]).to_numpy()
 
 
 def export(p: dict) -> dict:

@@ -62,7 +62,20 @@ uv run python report.py                         # -> docs/model-report-v0.md
 ## v1: team recordings
 
 Recordings go in `data/inhouse/raw/` with the file names from `docs/data-collection-protocol.md`.
-Every number is leave one person out; the final model or constants use everyone.
+Every number is leave one person out; the final model or constants use everyone. A clip recorded
+under the wrong name is fixed in `data/inhouse/relabel.csv` (`stem,start,end,clip`; an empty clip
+drops those seconds), which every step reads.
+
+When new people arrive, score the frozen models on them before refitting (copy the current
+`calibration/results/inhouse*.json` and `artifacts/yolo/v1_lopo.json` into
+`calibration/results/v1_4p/` first):
+
+```bash
+cd calibration && uv run python -m calib.inhouse_holdout && cd ..   # -> results/holdout_v1.json
+uv run python -m inhouse.evaluate_lopo --holdout p05,p06,p07 --weights artifacts/yolo/v1_4p/best.pt
+```
+
+Then refit with a new run prefix so old folds are not reused (`--prefix v1_lopo7`).
 
 ```bash
 uv run python -m inhouse.inventory              # -> data/inhouse/inventory.csv, flags
@@ -73,7 +86,7 @@ uv run python -m calib.inhouse_calibrate        # eye contact, smile, gaze down
 uv run python -m calib.inhouse_posture          # pose rules -> derived/behaviour_scores.csv
 cd ..
 uv run python -m inhouse.autolabel              # check derived/contact/*.jpg; bad frames -> reject.txt
-uv run python -m inhouse.evaluate_lopo          # GPU: 4 folds + final -> artifacts/yolo/v1/
+uv run python -m inhouse.evaluate_lopo --prefix v1_lopo7   # GPU: one fold per person + final -> artifacts/yolo/v1/
 uv run python -m yolo.export --version v1       # ONNX + parity check
 cd calibration && uv run python -m calib.export_thresholds && cd ..
 uv run python report_v1.py                      # -> docs/model-report-v1.md

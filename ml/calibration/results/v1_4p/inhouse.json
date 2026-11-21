@@ -1,0 +1,495 @@
+{
+  "data": {
+    "frames": 20161,
+    "people": [
+      "p01",
+      "p02",
+      "p03",
+      "p04"
+    ],
+    "sessions": [
+      "p01_s1",
+      "p01_s2",
+      "p02_s1",
+      "p02_s2",
+      "p03_s1",
+      "p04_s1"
+    ],
+    "baseline": "median of the first 2 s of each answer (Part A frames use the session's answers), as the in-app look-at-camera calibration",
+    "evaluation": "leave one person out"
+  },
+  "eye_contact": {
+    "positives": [
+      "upright",
+      "smile"
+    ],
+    "negatives": [
+      "looking_away"
+    ],
+    "lopo_f1": 0.8814068888535731,
+    "v0_lopo_f1": 0.7223047780284695,
+    "folds": [
+      {
+        "held_out": "p01",
+        "params": {
+          "f1": 0.892278360343184,
+          "kX": 238.73578117086348,
+          "kY": 92.89301975723481,
+          "toleranceDeg": 12.5
+        },
+        "test": {
+          "f1": 0.9116981132075471,
+          "precision": 0.8616262482168331,
+          "recall": 0.967948717948718,
+          "n": 934,
+          "positives": 624
+        },
+        "clip_rate": {
+          "looking_away": 0.313,
+          "smile": 0.944,
+          "upright": 0.991
+        }
+      },
+      {
+        "held_out": "p02",
+        "params": {
+          "f1": 0.947047619047619,
+          "kX": 83.55752340980222,
+          "kY": 92.89301975723481,
+          "toleranceDeg": 8.0
+        },
+        "test": {
+          "f1": 0.7864823348694316,
+          "precision": 0.7091412742382271,
+          "recall": 0.8827586206896552,
+          "n": 434,
+          "positives": 290
+        },
+        "clip_rate": {
+          "looking_away": 0.729,
+          "smile": 0.911,
+          "upright": 0.854
+        }
+      },
+      {
+        "held_out": "p03",
+        "params": {
+          "f1": 0.9321302471557473,
+          "kX": 119.36789058543174,
+          "kY": 92.89301975723481,
+          "toleranceDeg": 8.5
+        },
+        "test": {
+          "f1": 0.8606224627875507,
+          "precision": 0.8174807197943444,
+          "recall": 0.9085714285714286,
+          "n": 520,
+          "positives": 350
+        },
+        "clip_rate": {
+          "looking_away": 0.418,
+          "smile": 0.841,
+          "upright": 0.977
+        }
+      },
+      {
+        "held_out": "p04",
+        "params": {
+          "f1": 0.9027620128641695,
+          "kX": 83.55752340980222,
+          "kY": 92.89301975723481,
+          "toleranceDeg": 8.0
+        },
+        "test": {
+          "f1": 0.966824644549763,
+          "precision": 0.9839228295819936,
+          "recall": 0.9503105590062112,
+          "n": 489,
+          "positives": 322
+        },
+        "clip_rate": {
+          "looking_away": 0.03,
+          "smile": 0.902,
+          "upright": 0.994
+        }
+      }
+    ],
+    "v0_folds": [
+      {
+        "held_out": "p01",
+        "test": {
+          "f1": 0.7850287907869482,
+          "precision": 0.9784688995215312,
+          "recall": 0.655448717948718,
+          "n": 934,
+          "positives": 624
+        },
+        "clip_rate": {
+          "looking_away": 0.029,
+          "smile": 0.528,
+          "upright": 0.777
+        }
+      },
+      {
+        "held_out": "p02",
+        "test": {
+          "f1": 0.425531914893617,
+          "precision": 0.6766917293233082,
+          "recall": 0.3103448275862069,
+          "n": 434,
+          "positives": 290
+        },
+        "clip_rate": {
+          "looking_away": 0.299,
+          "smile": 0.212,
+          "upright": 0.41
+        }
+      },
+      {
+        "held_out": "p03",
+        "test": {
+          "f1": 0.8135095447870778,
+          "precision": 0.8368580060422961,
+          "recall": 0.7914285714285715,
+          "n": 520,
+          "positives": 350
+        },
+        "clip_rate": {
+          "looking_away": 0.318,
+          "smile": 0.733,
+          "upright": 0.851
+        }
+      },
+      {
+        "held_out": "p04",
+        "test": {
+          "f1": 0.8651488616462347,
+          "precision": 0.9919678714859438,
+          "recall": 0.7670807453416149,
+          "n": 489,
+          "positives": 322
+        },
+        "clip_rate": {
+          "looking_away": 0.012,
+          "smile": 0.673,
+          "upright": 0.852
+        }
+      }
+    ],
+    "params": {
+      "kX": 119.36789058543174,
+      "kY": 92.89301975723481,
+      "toleranceDeg": 8.5
+    },
+    "answers_contact_rate_by_person": {
+      "p01": 0.924,
+      "p02": 0.558,
+      "p03": 0.848,
+      "p04": 0.995
+    }
+  },
+  "smile": {
+    "positives": [
+      "smile"
+    ],
+    "negatives": [
+      "upright",
+      "looking_away",
+      "desk_hands",
+      "gestures"
+    ],
+    "smile": {
+      "lopo_f1": 0.4674859505140358,
+      "lopo_auc": 0.8816310646451013,
+      "threshold": 0.012202199755608987,
+      "threshold_rule": "false-positive rate <= 2% on the non-smile clips of every training person",
+      "folds": [
+        {
+          "held_out": "p01",
+          "threshold": 0.0023535541118122013,
+          "auc": 0.9433008947815296,
+          "test": {
+            "f1": 0.6496519721577726,
+            "precision": 0.5026929982046678,
+            "recall": 0.9180327868852459,
+            "n": 1560,
+            "positives": 305
+          },
+          "clip_rate": {
+            "desk_hands": 0.382,
+            "gestures": 0.202,
+            "looking_away": 0.129,
+            "smile": 0.918,
+            "upright": 0.176
+          }
+        },
+        {
+          "held_out": "p02",
+          "threshold": 0.012202199755608987,
+          "auc": 0.7987128011336797,
+          "test": {
+            "f1": 0.26900584795321636,
+            "precision": 0.92,
+            "recall": 0.15753424657534246,
+            "n": 726,
+            "positives": 146
+          },
+          "clip_rate": {
+            "desk_hands": 0.0,
+            "gestures": 0.0,
+            "looking_away": 0.014,
+            "smile": 0.158,
+            "upright": 0.0
+          }
+        },
+        {
+          "held_out": "p03",
+          "threshold": 0.012202199755608987,
+          "auc": 0.9217043810024996,
+          "test": {
+            "f1": 0.45614035087719296,
+            "precision": 1.0,
+            "recall": 0.29545454545454547,
+            "n": 867,
+            "positives": 176
+          },
+          "clip_rate": {
+            "desk_hands": 0.0,
+            "gestures": 0.0,
+            "looking_away": 0.0,
+            "smile": 0.295,
+            "upright": 0.0
+          }
+        },
+        {
+          "held_out": "p04",
+          "threshold": 0.012202199755608987,
+          "auc": 0.8628061816626962,
+          "test": {
+            "f1": 0.49514563106796117,
+            "precision": 0.9622641509433962,
+            "recall": 0.3333333333333333,
+            "n": 795,
+            "positives": 153
+          },
+          "clip_rate": {
+            "desk_hands": 0.0,
+            "gestures": 0.0,
+            "looking_away": 0.012,
+            "smile": 0.333,
+            "upright": 0.0
+          }
+        }
+      ]
+    },
+    "smile_rel": {
+      "lopo_f1": 0.4791934988407468,
+      "lopo_auc": 0.8816186552662233,
+      "threshold": 0.011469587571825889,
+      "threshold_rule": "false-positive rate <= 2% on the non-smile clips of every training person",
+      "folds": [
+        {
+          "held_out": "p01",
+          "threshold": 0.0017637021087808515,
+          "auc": 0.9432512572660179,
+          "test": {
+            "f1": 0.6897404202719407,
+            "precision": 0.5535714285714286,
+            "recall": 0.9147540983606557,
+            "n": 1560,
+            "positives": 305
+          },
+          "clip_rate": {
+            "desk_hands": 0.316,
+            "gestures": 0.155,
+            "looking_away": 0.11,
+            "smile": 0.915,
+            "upright": 0.141
+          }
+        },
+        {
+          "held_out": "p02",
+          "threshold": 0.011469587571825889,
+          "auc": 0.7987128011336797,
+          "test": {
+            "f1": 0.26900584795321636,
+            "precision": 0.92,
+            "recall": 0.15753424657534246,
+            "n": 726,
+            "positives": 146
+          },
+          "clip_rate": {
+            "desk_hands": 0.0,
+            "gestures": 0.0,
+            "looking_away": 0.014,
+            "smile": 0.158,
+            "upright": 0.0
+          }
+        },
+        {
+          "held_out": "p03",
+          "threshold": 0.011469587571825889,
+          "auc": 0.9217043810024996,
+          "test": {
+            "f1": 0.462882096069869,
+            "precision": 1.0,
+            "recall": 0.30113636363636365,
+            "n": 867,
+            "positives": 176
+          },
+          "clip_rate": {
+            "desk_hands": 0.0,
+            "gestures": 0.0,
+            "looking_away": 0.0,
+            "smile": 0.301,
+            "upright": 0.0
+          }
+        },
+        {
+          "held_out": "p04",
+          "threshold": 0.011469587571825889,
+          "auc": 0.8628061816626962,
+          "test": {
+            "f1": 0.49514563106796117,
+            "precision": 0.9622641509433962,
+            "recall": 0.3333333333333333,
+            "n": 795,
+            "positives": 153
+          },
+          "clip_rate": {
+            "desk_hands": 0.0,
+            "gestures": 0.0,
+            "looking_away": 0.012,
+            "smile": 0.333,
+            "upright": 0.0
+          }
+        }
+      ]
+    },
+    "v0_threshold_all_people": {
+      "f1": 0.12949640287769784,
+      "precision": 1.0,
+      "recall": 0.06923076923076923,
+      "n": 3948,
+      "positives": 780
+    },
+    "use": "smile_rel"
+  },
+  "gaze_down": {
+    "positives": [
+      "reading_notes_desk"
+    ],
+    "negatives": [
+      "upright",
+      "smile",
+      "gestures",
+      "desk_hands"
+    ],
+    "sign": 1.0,
+    "kY": 92.89301975723481,
+    "lopo_f1": 0.6732521590638054,
+    "folds": [
+      {
+        "held_out": "p01",
+        "params": {
+          "f1": 0.7403726708074534,
+          "angleDeg": 9.0,
+          "windowS": 2.0,
+          "minFraction": 0.5,
+          "kY": 92.89301975723481
+        },
+        "test": {
+          "f1": 0.9113924050632911,
+          "precision": 1.0,
+          "recall": 0.8372093023255814,
+          "n": 1551,
+          "positives": 301
+        },
+        "clip_rate": {
+          "desk_hands": 0.0,
+          "gestures": 0.0,
+          "reading_notes_desk": 0.837,
+          "smile": 0.0,
+          "upright": 0.0
+        }
+      },
+      {
+        "held_out": "p02",
+        "params": {
+          "f1": 0.8125,
+          "angleDeg": 9.0,
+          "windowS": 2.0,
+          "minFraction": 0.5,
+          "kY": 92.89301975723481
+        },
+        "test": {
+          "f1": 0.7983193277310925,
+          "precision": 1.0,
+          "recall": 0.6643356643356644,
+          "n": 725,
+          "positives": 143
+        },
+        "clip_rate": {
+          "desk_hands": 0.0,
+          "gestures": 0.0,
+          "reading_notes_desk": 0.664,
+          "smile": 0.0,
+          "upright": 0.0
+        }
+      },
+      {
+        "held_out": "p03",
+        "params": {
+          "f1": 0.8121827411167513,
+          "angleDeg": 6.0,
+          "windowS": 2.0,
+          "minFraction": 0.5,
+          "kY": 0.0
+        },
+        "test": {
+          "f1": 0.6188524590163934,
+          "precision": 0.4603658536585366,
+          "recall": 0.94375,
+          "n": 857,
+          "positives": 160
+        },
+        "clip_rate": {
+          "desk_hands": 0.936,
+          "gestures": 0.0,
+          "reading_notes_desk": 0.944,
+          "smile": 0.261,
+          "upright": 0.0
+        }
+      },
+      {
+        "held_out": "p04",
+        "params": {
+          "f1": 0.8947849954254345,
+          "angleDeg": 10.0,
+          "windowS": 2.0,
+          "minFraction": 0.5,
+          "kY": 92.89301975723481
+        },
+        "test": {
+          "f1": 0.36444444444444446,
+          "precision": 0.7068965517241379,
+          "recall": 0.24550898203592814,
+          "n": 795,
+          "positives": 167
+        },
+        "clip_rate": {
+          "desk_hands": 0.0,
+          "gestures": 0.076,
+          "reading_notes_desk": 0.246,
+          "smile": 0.039,
+          "upright": 0.0
+        }
+      }
+    ],
+    "params": {
+      "angleDeg": 9.0,
+      "windowS": 2.0,
+      "minFraction": 0.5
+    }
+  }
+}

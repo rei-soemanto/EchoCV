@@ -5,91 +5,92 @@
     "lr0": 0.002,
     "only": "",
     "skip_final": false,
+    "prefix": "v1_lopo7",
     "conf": 0.25,
     "smoothing_frames": 3
   },
   "summary": {
     "touching_face": {
-      "detector_v1_lopo_f1": 0.5532607631533911,
-      "detector_v0_lopo_f1": 0.6076404627524888,
-      "pose_rule_lopo_f1": 0.6778602127330626,
+      "detector_v1_lopo_f1": 0.749048917417964,
+      "detector_v0_lopo_f1": 0.40301944922503263,
+      "pose_rule_lopo_f1": 0.8021160995716698,
       "use": "pose_rule"
     },
     "arms_crossed": {
-      "detector_v1_lopo_f1": 0.41102823409921807,
-      "detector_v0_lopo_f1": 0.023629319277379827,
-      "pose_rule_lopo_f1": 0.7626302253852288,
+      "detector_v1_lopo_f1": 0.40078932427192976,
+      "detector_v0_lopo_f1": 0.26896465303245237,
+      "pose_rule_lopo_f1": 0.5101957851464672,
       "use": "pose_rule"
     },
     "reading_notes": {
-      "detector_v1_lopo_f1": 0.950946954839047,
-      "detector_v0_lopo_f1": 0.5262679676246207,
-      "pose_rule_lopo_f1": 0.8198701093536198,
+      "detector_v1_lopo_f1": 0.7656704509509815,
+      "detector_v0_lopo_f1": 0.44222953842310997,
+      "pose_rule_lopo_f1": 0.6676685721708066,
       "use": "detector"
     },
     "slouching": {
-      "detector_v1_lopo_f1": 0.4119470822087078,
+      "detector_v1_lopo_f1": 0.1578244276929948,
       "detector_v0_lopo_f1": 0.0,
-      "pose_rule_lopo_f1": 0.500873479018235,
+      "pose_rule_lopo_f1": 0.41704861600482307,
       "use": "pose_rule"
     }
   },
   "folds": [
     {
       "held_out": "p01",
-      "best_epoch": 1,
+      "best_epoch": 9,
       "map_held_out": {
         "v1": {
-          "mAP50": 0.5947282436187765,
-          "mAP50-95": 0.4027922336684034,
+          "mAP50": 0.5914318853472993,
+          "mAP50-95": 0.3909912463955264,
           "per_class": {
             "touching_face": {
-              "precision": 0.6181323845538216,
-              "recall": 0.7983193277310925,
-              "mAP50": 0.626011503688471,
-              "mAP50-95": 0.27763958803927735
+              "precision": 0.6906681282265059,
+              "recall": 0.8666666666666667,
+              "mAP50": 0.8045941240920992,
+              "mAP50-95": 0.33799521988929376
             },
             "arms_crossed": {
-              "precision": 0.7172953073157936,
-              "recall": 0.6138700747718295,
-              "mAP50": 0.7020317637455596,
-              "mAP50-95": 0.5594940134233501
+              "precision": 0.0,
+              "recall": 0.0,
+              "mAP50": 0.0,
+              "mAP50-95": 0.0
             },
             "reading_notes": {
-              "precision": 0.7004708253990652,
-              "recall": 0.9787985865724381,
-              "mAP50": 0.9651902265152784,
-              "mAP50-95": 0.7246781045483071
+              "precision": 0.7828402739768782,
+              "recall": 0.971830985915493,
+              "mAP50": 0.9693112572942666,
+              "mAP50-95": 0.7727335023466299
             },
             "slouching": {
-              "precision": 0.11911454513570607,
-              "recall": 0.1881720430107527,
-              "mAP50": 0.08567948052579706,
-              "mAP50-95": 0.04935722866267904
+              "precision": 0.8809483041350604,
+              "recall": 0.37684919620352547,
+              "mAP50": 0.5918221600028313,
+              "mAP50-95": 0.4532362633461817
             }
           }
         },
         "v0": {
-          "mAP50": 0.3850673968937668,
-          "mAP50-95": 0.18243400452588937,
+          "mAP50": 0.39497420974346975,
+          "mAP50-95": 0.1860798467247124,
           "per_class": {
             "touching_face": {
-              "precision": 0.7741277527305525,
-              "recall": 0.8487394957983193,
-              "mAP50": 0.793198284515614,
-              "mAP50-95": 0.2791227921192045
+              "precision": 0.7852845671821322,
+              "recall": 0.8708333333333333,
+              "mAP50": 0.7957835269107951,
+              "mAP50-95": 0.28131350658801846
             },
             "arms_crossed": {
-              "precision": 0.22077246624115315,
-              "recall": 0.03225806451612903,
-              "mAP50": 0.05438775510204082,
-              "mAP50-95": 0.018055486080732385
+              "precision": 0.22859697617569277,
+              "recall": 0.056338028169014086,
+              "mAP50": 0.09154545454545454,
+              "mAP50-95": 0.030114285714285715
             },
             "reading_notes": {
-              "precision": 0.6824785585451016,
-              "recall": 0.6431095406360424,
-              "mAP50": 0.6926835479574124,
-              "mAP50-95": 0.43255773990362056
+              "precision": 0.6211823846385258,
+              "recall": 0.71019423744523,
+              "mAP50": 0.6925678575176293,
+              "mAP50-95": 0.43289159459654547
             },
             "slouching": {
               "precision": 1.0,
@@ -103,33 +104,33 @@
       "frames_held_out": {
         "v1": {
           "touching_face": {
-            "f1": 0.6387832699619772,
-            "precision": 0.75,
-            "recall": 0.5562913907284768,
+            "f1": 0.7888198757763976,
+            "precision": 0.7426900584795322,
+            "recall": 0.8410596026490066,
             "clip_rate": {
               "arms_crossed": 0.0,
               "desk_hands": 0.076,
-              "gestures": 0.102,
+              "gestures": 0.196,
               "looking_away": 0.0,
               "reading_notes_desk": 0.0,
               "reading_notes_held": 0.0,
-              "slouching": 0.0,
+              "slouching": 0.006,
               "smile": 0.0,
-              "touching_face": 0.556,
+              "touching_face": 0.841,
               "upright": 0.0
             }
           },
           "arms_crossed": {
-            "f1": 0.21288515406162464,
-            "precision": 1.0,
-            "recall": 0.11912225705329153,
+            "f1": 0.08928571428571429,
+            "precision": 0.8823529411764706,
+            "recall": 0.047021943573667714,
             "clip_rate": {
-              "arms_crossed": 0.119,
+              "arms_crossed": 0.047,
               "desk_hands": 0.0,
               "gestures": 0.0,
               "looking_away": 0.0,
               "reading_notes_desk": 0.0,
-              "reading_notes_held": 0.0,
+              "reading_notes_held": 0.007,
               "slouching": 0.0,
               "smile": 0.0,
               "touching_face": 0.0,
@@ -137,15 +138,15 @@
             }
           },
           "reading_notes": {
-            "f1": 0.9950576606260296,
-            "precision": 0.9901639344262295,
-            "recall": 1.0,
+            "f1": 0.9900990099009901,
+            "precision": 0.9868421052631579,
+            "recall": 0.9933774834437086,
             "clip_rate": {
               "arms_crossed": 0.0,
               "desk_hands": 0.0,
-              "gestures": 0.009,
+              "gestures": 0.012,
               "looking_away": 0.0,
-              "reading_notes_held": 1.0,
+              "reading_notes_held": 0.993,
               "slouching": 0.0,
               "smile": 0.0,
               "touching_face": 0.0,
@@ -153,19 +154,19 @@
             }
           },
           "slouching": {
-            "f1": 0.011235955056179775,
-            "precision": 0.044444444444444446,
-            "recall": 0.006430868167202572,
+            "f1": 0.18269230769230768,
+            "precision": 0.3619047619047619,
+            "recall": 0.12218649517684887,
             "clip_rate": {
-              "arms_crossed": 0.0,
+              "arms_crossed": 0.063,
               "desk_hands": 0.0,
               "gestures": 0.0,
               "looking_away": 0.0,
-              "reading_notes_desk": 0.0,
+              "reading_notes_desk": 0.148,
               "reading_notes_held": 0.0,
-              "slouching": 0.006,
+              "slouching": 0.122,
               "smile": 0.0,
-              "touching_face": 0.142,
+              "touching_face": 0.0,
               "upright": 0.0
             }
           }
@@ -241,85 +242,85 @@
         }
       },
       "forgetting_test_rf": {
-        "mAP50": 0.9553230754293014,
-        "mAP50-95": 0.7261778555923907,
+        "mAP50": 0.9585670268094998,
+        "mAP50-95": 0.7259160636682345,
         "per_class": {
           "touching_face": {
-            "precision": 0.9161053264889346,
-            "recall": 0.8400006942056293,
-            "mAP50": 0.909300094185311,
-            "mAP50-95": 0.6117464040773396
+            "precision": 0.9116445339768013,
+            "recall": 0.8929081079369742,
+            "mAP50": 0.9162973907341365,
+            "mAP50-95": 0.6215507879984192
           },
           "arms_crossed": {
-            "precision": 0.9592708897905029,
-            "recall": 0.9421083092024239,
-            "mAP50": 0.9636203516147883,
-            "mAP50-95": 0.7357886255680967
+            "precision": 0.9561193045505415,
+            "recall": 0.9466666666666667,
+            "mAP50": 0.9644036896943627,
+            "mAP50-95": 0.7395139175525116
           },
           "slouching": {
-            "precision": 0.9836960403435546,
-            "recall": 0.972972972972973,
-            "mAP50": 0.9930487804878049,
-            "mAP50-95": 0.8309985371317357
+            "precision": 0.9975706716517561,
+            "recall": 1.0,
+            "mAP50": 0.995,
+            "mAP50-95": 0.8166834854537728
           }
         }
       }
     },
     {
       "held_out": "p02",
-      "best_epoch": 1,
+      "best_epoch": 14,
       "map_held_out": {
         "v1": {
-          "mAP50": 0.6223585589353813,
-          "mAP50-95": 0.38806324005326076,
+          "mAP50": 0.7037511037896277,
+          "mAP50-95": 0.5142053226271721,
           "per_class": {
             "touching_face": {
-              "precision": 0.33834196922596915,
-              "recall": 0.9690721649484536,
-              "mAP50": 0.48369655248877064,
-              "mAP50-95": 0.15360687028803288
+              "precision": 0.5305899959884888,
+              "recall": 0.9693877551020408,
+              "mAP50": 0.9496505314545531,
+              "mAP50-95": 0.5738042755947721
             },
             "arms_crossed": {
-              "precision": 0.8447783318549906,
-              "recall": 0.10374009413989783,
-              "mAP50": 0.26108058357623576,
-              "mAP50-95": 0.12036439505921923
+              "precision": 1.0,
+              "recall": 0.07076168681306674,
+              "mAP50": 0.13055465894407486,
+              "mAP50-95": 0.06203770238388399
             },
             "reading_notes": {
-              "precision": 0.7940867060368904,
+              "precision": 0.8817168686996412,
               "recall": 1.0,
               "mAP50": 0.995,
-              "mAP50-95": 0.7179501736868783
+              "mAP50-95": 0.8687976496260221
             },
             "slouching": {
-              "precision": 1.0,
-              "recall": 0.31038267028832817,
-              "mAP50": 0.7496570996765186,
-              "mAP50-95": 0.5603315211789124
+              "precision": 0.9808654049120649,
+              "recall": 0.3913363048675648,
+              "mAP50": 0.7397992247598829,
+              "mAP50-95": 0.5521816629040102
             }
           }
         },
         "v0": {
-          "mAP50": 0.314440906163775,
-          "mAP50-95": 0.17557890534194445,
+          "mAP50": 0.3177833851077032,
+          "mAP50-95": 0.17660802671234782,
           "per_class": {
             "touching_face": {
-              "precision": 0.37215621761862394,
-              "recall": 0.7010309278350515,
-              "mAP50": 0.3056427733749505,
-              "mAP50-95": 0.0665272809276537
+              "precision": 0.37565791791704006,
+              "recall": 0.7040816326530612,
+              "mAP50": 0.30574760693205516,
+              "mAP50-95": 0.06661661790912946
             },
             "arms_crossed": {
               "precision": 0.30700196335107355,
-              "recall": 0.017166806906029064,
-              "mAP50": 0.07375,
-              "mAP50-95": 0.030845454545454544
+              "recall": 0.016536832340670198,
+              "mAP50": 0.08444444444444443,
+              "mAP50-95": 0.03612091503267974
             },
             "reading_notes": {
               "precision": 0.8766042243323353,
-              "recall": 0.7099236641221374,
-              "mAP50": 0.8783708512801496,
-              "mAP50-95": 0.6049428858946696
+              "recall": 0.6940298507462687,
+              "mAP50": 0.8809414890543132,
+              "mAP50-95": 0.6036945739075821
             },
             "slouching": {
               "precision": 0.0,
@@ -333,9 +334,9 @@
       "frames_held_out": {
         "v1": {
           "touching_face": {
-            "f1": 0.718266253869969,
-            "precision": 0.6444444444444445,
-            "recall": 0.8111888111888111,
+            "f1": 0.729483282674772,
+            "precision": 0.6451612903225806,
+            "recall": 0.8391608391608392,
             "clip_rate": {
               "arms_crossed": 0.0,
               "desk_hands": 0.0,
@@ -343,18 +344,18 @@
               "looking_away": 0.0,
               "reading_notes_desk": 0.0,
               "reading_notes_held": 0.0,
-              "slouching": 0.451,
+              "slouching": 0.465,
               "smile": 0.0,
-              "touching_face": 0.811,
+              "touching_face": 0.839,
               "upright": 0.0
             }
           },
           "arms_crossed": {
-            "f1": 0.21383647798742136,
-            "precision": 1.0,
-            "recall": 0.11971830985915492,
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
             "clip_rate": {
-              "arms_crossed": 0.12,
+              "arms_crossed": 0.0,
               "desk_hands": 0.0,
               "gestures": 0.0,
               "looking_away": 0.0,
@@ -367,11 +368,11 @@
             }
           },
           "reading_notes": {
-            "f1": 0.9642857142857144,
-            "precision": 0.9854014598540146,
+            "f1": 0.9712230215827338,
+            "precision": 1.0,
             "recall": 0.9440559440559441,
             "clip_rate": {
-              "arms_crossed": 0.014,
+              "arms_crossed": 0.0,
               "desk_hands": 0.0,
               "gestures": 0.0,
               "looking_away": 0.0,
@@ -383,9 +384,9 @@
             }
           },
           "slouching": {
-            "f1": 0.08108108108108109,
+            "f1": 0.17948717948717946,
             "precision": 1.0,
-            "recall": 0.04225352112676056,
+            "recall": 0.09859154929577464,
             "clip_rate": {
               "arms_crossed": 0.0,
               "desk_hands": 0.0,
@@ -393,7 +394,7 @@
               "looking_away": 0.0,
               "reading_notes_desk": 0.0,
               "reading_notes_held": 0.0,
-              "slouching": 0.042,
+              "slouching": 0.099,
               "smile": 0.0,
               "touching_face": 0.0,
               "upright": 0.0
@@ -471,85 +472,85 @@
         }
       },
       "forgetting_test_rf": {
-        "mAP50": 0.9506916643229529,
-        "mAP50-95": 0.7179248516668294,
+        "mAP50": 0.949437767374326,
+        "mAP50-95": 0.7260084846839813,
         "per_class": {
           "touching_face": {
-            "precision": 0.8643351892608888,
-            "recall": 0.9038461538461539,
-            "mAP50": 0.8964528006313586,
-            "mAP50-95": 0.5925188461642905
+            "precision": 0.8691651298551287,
+            "recall": 0.8942803850315026,
+            "mAP50": 0.9109986320866137,
+            "mAP50-95": 0.6127108166720061
           },
           "arms_crossed": {
-            "precision": 0.9460675264831111,
-            "recall": 0.9533333333333334,
-            "mAP50": 0.9606221923375002,
-            "mAP50-95": 0.7375285630090519
+            "precision": 0.9661024502728554,
+            "recall": 0.9500332108483232,
+            "mAP50": 0.969372843125916,
+            "mAP50-95": 0.7411164480179013
           },
           "slouching": {
-            "precision": 1.0,
-            "recall": 0.9984119106521218,
-            "mAP50": 0.995,
-            "mAP50-95": 0.823727145827146
+            "precision": 0.8905773804928383,
+            "recall": 1.0,
+            "mAP50": 0.9679418269104482,
+            "mAP50-95": 0.8241981893620366
           }
         }
       }
     },
     {
       "held_out": "p03",
-      "best_epoch": 12,
+      "best_epoch": 19,
       "map_held_out": {
         "v1": {
-          "mAP50": 0.9113053767320726,
-          "mAP50-95": 0.514405896865003,
+          "mAP50": 0.9366091012408053,
+          "mAP50-95": 0.7042971901109522,
           "per_class": {
             "touching_face": {
-              "precision": 0.9630070542746598,
-              "recall": 0.43752500502411723,
-              "mAP50": 0.7688942398918681,
-              "mAP50-95": 0.4355873453907152
+              "precision": 0.874017983137157,
+              "recall": 0.8600423136080445,
+              "mAP50": 0.8999228848582301,
+              "mAP50-95": 0.6703219818023871
             },
             "arms_crossed": {
               "precision": 1.0,
-              "recall": 0.9814611956788574,
+              "recall": 0.9780564945637807,
               "mAP50": 0.995,
-              "mAP50-95": 0.7136003227346983
+              "mAP50-95": 0.8187775889657211
             },
             "reading_notes": {
-              "precision": 0.5321519925180479,
-              "recall": 0.9083333333333333,
-              "mAP50": 0.8863272670364221,
-              "mAP50-95": 0.4396543353752926
+              "precision": 0.9007517753320291,
+              "recall": 0.8833333333333333,
+              "mAP50": 0.9308704907191333,
+              "mAP50-95": 0.8812520930018533
             },
             "slouching": {
-              "precision": 0.9883547898769642,
-              "recall": 1.0,
-              "mAP50": 0.995,
-              "mAP50-95": 0.4687815839593063
+              "precision": 1.0,
+              "recall": 0.0,
+              "mAP50": 0.9206430293858576,
+              "mAP50-95": 0.4468370966738469
             }
           }
         },
         "v0": {
-          "mAP50": 0.37134382322839654,
-          "mAP50-95": 0.11587866098582042,
+          "mAP50": 0.34523948433056206,
+          "mAP50-95": 0.10687546397552738,
           "per_class": {
             "touching_face": {
-              "precision": 0.6148148148148148,
-              "recall": 0.6974789915966386,
-              "mAP50": 0.6423803894638485,
-              "mAP50-95": 0.13338065548737102
+              "precision": 0.5637583892617449,
+              "recall": 0.6942148760330579,
+              "mAP50": 0.6243456489253323,
+              "mAP50-95": 0.1291677880340747
             },
             "arms_crossed": {
-              "precision": 0.38545454545454544,
-              "recall": 0.8217054263565892,
-              "mAP50": 0.6390827621301375,
-              "mAP50-95": 0.23681109608516165
+              "precision": 0.37542662116040953,
+              "recall": 0.7432432432432432,
+              "mAP50": 0.5576296995574532,
+              "mAP50-95": 0.20616491040860815
             },
             "reading_notes": {
-              "precision": 0.030395136778115502,
+              "precision": 0.030425963488843813,
               "recall": 1.0,
-              "mAP50": 0.20391214131960034,
-              "mAP50-95": 0.093322892370749
+              "mAP50": 0.19898258883946277,
+              "mAP50-95": 0.09216915745942661
             },
             "slouching": {
               "precision": 0.0,
@@ -563,19 +564,19 @@
       "frames_held_out": {
         "v1": {
           "touching_face": {
-            "f1": 0.47257383966244726,
-            "precision": 0.9032258064516129,
-            "recall": 0.32,
+            "f1": 0.8493975903614459,
+            "precision": 0.8980891719745223,
+            "recall": 0.8057142857142857,
             "clip_rate": {
               "arms_crossed": 0.0,
               "desk_hands": 0.0,
-              "gestures": 0.029,
+              "gestures": 0.077,
               "looking_away": 0.0,
               "reading_notes_desk": 0.0,
               "reading_notes_held": 0.0,
               "slouching": 0.0,
               "smile": 0.0,
-              "touching_face": 0.32,
+              "touching_face": 0.806,
               "upright": 0.0
             }
           },
@@ -597,15 +598,15 @@
             }
           },
           "reading_notes": {
-            "f1": 1.0,
+            "f1": 0.9157509157509157,
             "precision": 1.0,
-            "recall": 1.0,
+            "recall": 0.8445945945945946,
             "clip_rate": {
               "arms_crossed": 0.0,
               "desk_hands": 0.0,
               "gestures": 0.0,
               "looking_away": 0.0,
-              "reading_notes_held": 1.0,
+              "reading_notes_held": 0.845,
               "slouching": 0.0,
               "smile": 0.0,
               "touching_face": 0.0,
@@ -613,9 +614,9 @@
             }
           },
           "slouching": {
-            "f1": 0.9927007299270074,
-            "precision": 0.9855072463768116,
-            "recall": 1.0,
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
             "clip_rate": {
               "arms_crossed": 0.0,
               "desk_hands": 0.0,
@@ -623,8 +624,8 @@
               "looking_away": 0.0,
               "reading_notes_desk": 0.0,
               "reading_notes_held": 0.0,
-              "slouching": 1.0,
-              "smile": 0.011,
+              "slouching": 0.0,
+              "smile": 0.0,
               "touching_face": 0.0,
               "upright": 0.0
             }
@@ -701,85 +702,85 @@
         }
       },
       "forgetting_test_rf": {
-        "mAP50": 0.9516975986950947,
-        "mAP50-95": 0.7317153742948584,
+        "mAP50": 0.9597316140248179,
+        "mAP50-95": 0.7315239039774654,
         "per_class": {
           "touching_face": {
-            "precision": 0.881158721920065,
-            "recall": 0.8942307692307693,
-            "mAP50": 0.9056419104729251,
-            "mAP50-95": 0.599394945608595
+            "precision": 0.9036342561293491,
+            "recall": 0.9016636073630647,
+            "mAP50": 0.9179706156965941,
+            "mAP50-95": 0.6153203930599561
           },
           "arms_crossed": {
-            "precision": 0.9594655587211386,
-            "recall": 0.9468161121317212,
-            "mAP50": 0.9544508856123594,
-            "mAP50-95": 0.7383270687933663
+            "precision": 0.9657776182496105,
+            "recall": 0.9406923238308545,
+            "mAP50": 0.9667505421673332,
+            "mAP50-95": 0.7445737703110675
           },
           "slouching": {
-            "precision": 1.0,
-            "recall": 0.990194339003155,
-            "mAP50": 0.995,
-            "mAP50-95": 0.8574241084826145
+            "precision": 0.9899758512244884,
+            "recall": 0.972972972972973,
+            "mAP50": 0.9944736842105264,
+            "mAP50-95": 0.8346775485613727
           }
         }
       }
     },
     {
       "held_out": "p04",
-      "best_epoch": 6,
+      "best_epoch": 9,
       "map_held_out": {
         "v1": {
-          "mAP50": 0.674041646544008,
-          "mAP50-95": 0.46259352298896383,
+          "mAP50": 0.714083052687623,
+          "mAP50-95": 0.5341036264872006,
           "per_class": {
             "touching_face": {
-              "precision": 0.8759278686878867,
-              "recall": 0.4526197555080366,
-              "mAP50": 0.6379379503626958,
-              "mAP50-95": 0.33446972185441876
+              "precision": 0.9972350647448631,
+              "recall": 0.8333333333333334,
+              "mAP50": 0.9770914262511309,
+              "mAP50-95": 0.7404824231966115
             },
             "arms_crossed": {
               "precision": 1.0,
-              "recall": 0.21579244391842603,
-              "mAP50": 0.566296365915405,
-              "mAP50-95": 0.39200715189913776
+              "recall": 0.18151712829503405,
+              "mAP50": 0.6459005150703214,
+              "mAP50-95": 0.45597173748971304
             },
             "reading_notes": {
-              "precision": 0.6327478766042687,
+              "precision": 0.9223513099167556,
               "recall": 1.0,
-              "mAP50": 0.9878351749650566,
-              "mAP50-95": 0.9013697963643302
+              "mAP50": 0.9931534420289856,
+              "mAP50-95": 0.907056282097259
             },
             "slouching": {
-              "precision": 0.3711875092158737,
-              "recall": 0.5769230769230769,
-              "mAP50": 0.5040970949328748,
-              "mAP50-95": 0.22252742183796848
+              "precision": 0.21670395022278732,
+              "recall": 0.875,
+              "mAP50": 0.2401868274000539,
+              "mAP50-95": 0.032904063165218767
             }
           }
         },
         "v0": {
-          "mAP50": 0.22238153111521974,
-          "mAP50-95": 0.16835612995683516,
+          "mAP50": 0.2233329893373234,
+          "mAP50-95": 0.17015092717637806,
           "per_class": {
             "touching_face": {
-              "precision": 0.057528056747564504,
+              "precision": 0.05948909517487306,
               "recall": 0.02564102564102564,
-              "mAP50": 0.02054813825841863,
-              "mAP50-95": 0.0026242388683809163
+              "mAP50": 0.020576201048912363,
+              "mAP50-95": 0.0026282144303675283
             },
             "arms_crossed": {
               "precision": 1.0,
-              "recall": 0.02275047793720522,
-              "mAP50": 0.07727547391334157,
-              "mAP50-95": 0.05409163661304889
+              "recall": 0.025935082285156848,
+              "mAP50": 0.07162820512820513,
+              "mAP50-95": 0.05381864468864469
             },
             "reading_notes": {
-              "precision": 0.7660799409006127,
-              "recall": 0.756578947368421,
-              "mAP50": 0.7917025122891188,
-              "mAP50-95": 0.6167086443459108
+              "precision": 0.7762270523088523,
+              "recall": 0.7580966787139052,
+              "mAP50": 0.8011275511721762,
+              "mAP50-95": 0.6241568495865001
             },
             "slouching": {
               "precision": 1.0,
@@ -793,9 +794,9 @@
       "frames_held_out": {
         "v1": {
           "touching_face": {
-            "f1": 0.38341968911917096,
+            "f1": 0.7265306122448979,
             "precision": 1.0,
-            "recall": 0.23717948717948717,
+            "recall": 0.5705128205128205,
             "clip_rate": {
               "arms_crossed": 0.0,
               "desk_hands": 0.0,
@@ -805,16 +806,16 @@
               "reading_notes_held": 0.0,
               "slouching": 0.0,
               "smile": 0.0,
-              "touching_face": 0.237,
+              "touching_face": 0.571,
               "upright": 0.0
             }
           },
           "arms_crossed": {
-            "f1": 0.21739130434782605,
+            "f1": 0.23655913978494622,
             "precision": 1.0,
-            "recall": 0.12195121951219512,
+            "recall": 0.13414634146341464,
             "clip_rate": {
-              "arms_crossed": 0.122,
+              "arms_crossed": 0.134,
               "desk_hands": 0.0,
               "gestures": 0.0,
               "looking_away": 0.0,
@@ -827,35 +828,35 @@
             }
           },
           "reading_notes": {
-            "f1": 0.8444444444444443,
-            "precision": 0.7307692307692307,
+            "f1": 0.9296636085626911,
+            "precision": 0.8685714285714285,
             "recall": 1.0,
             "clip_rate": {
-              "arms_crossed": 0.201,
+              "arms_crossed": 0.024,
               "desk_hands": 0.0,
-              "gestures": 0.16,
+              "gestures": 0.028,
               "looking_away": 0.0,
               "reading_notes_held": 1.0,
-              "slouching": 0.0,
+              "slouching": 0.099,
               "smile": 0.0,
               "touching_face": 0.0,
               "upright": 0.0
             }
           },
           "slouching": {
-            "f1": 0.5627705627705628,
-            "precision": 0.8227848101265823,
-            "recall": 0.4276315789473684,
+            "f1": 0.3975720789074355,
+            "precision": 0.2583826429980276,
+            "recall": 0.8618421052631579,
             "clip_rate": {
-              "arms_crossed": 0.0,
-              "desk_hands": 0.0,
-              "gestures": 0.0,
+              "arms_crossed": 0.177,
+              "desk_hands": 0.049,
+              "gestures": 0.493,
               "looking_away": 0.0,
-              "reading_notes_desk": 0.0,
+              "reading_notes_desk": 0.479,
               "reading_notes_held": 0.0,
-              "slouching": 0.428,
-              "smile": 0.0,
-              "touching_face": 0.09,
+              "slouching": 0.862,
+              "smile": 0.941,
+              "touching_face": 0.282,
               "upright": 0.0
             }
           }
@@ -931,26 +932,704 @@
         }
       },
       "forgetting_test_rf": {
-        "mAP50": 0.9554701008415485,
-        "mAP50-95": 0.7130348479754134,
+        "mAP50": 0.9463665479211602,
+        "mAP50-95": 0.6982593202841976,
         "per_class": {
           "touching_face": {
-            "precision": 0.8736457333326759,
-            "recall": 0.9134615384615384,
-            "mAP50": 0.9099867403364886,
-            "mAP50-95": 0.6063980781101325
+            "precision": 0.8257167649928515,
+            "recall": 0.8655587106600653,
+            "mAP50": 0.874080475742859,
+            "mAP50-95": 0.566778461005192
           },
           "arms_crossed": {
-            "precision": 0.959814761371593,
-            "recall": 0.9553999073945633,
-            "mAP50": 0.9614235621881568,
-            "mAP50-95": 0.7173390092629567
+            "precision": 0.9719313869135773,
+            "recall": 0.9233979044451676,
+            "mAP50": 0.9700191680206213,
+            "mAP50-95": 0.7287943981981054
           },
           "slouching": {
-            "precision": 0.986401292494974,
+            "precision": 0.9931114392383115,
             "recall": 1.0,
             "mAP50": 0.995,
-            "mAP50-95": 0.8153674565531508
+            "mAP50-95": 0.7992051016492953
+          }
+        }
+      }
+    },
+    {
+      "held_out": "p05",
+      "best_epoch": 3,
+      "map_held_out": {
+        "v1": {
+          "mAP50": 0.902578213501183,
+          "mAP50-95": 0.6188162275588813,
+          "per_class": {
+            "touching_face": {
+              "precision": 0.8773466418998102,
+              "recall": 0.9669421487603306,
+              "mAP50": 0.984585615728833,
+              "mAP50-95": 0.7673243504897068
+            },
+            "arms_crossed": {
+              "precision": 1.0,
+              "recall": 0.7718996444910867,
+              "mAP50": 0.995,
+              "mAP50-95": 0.49749999999999994
+            },
+            "slouching": {
+              "precision": 0.9692738138230708,
+              "recall": 0.6126126126126126,
+              "mAP50": 0.7281490247747158,
+              "mAP50-95": 0.5916243321869374
+            }
+          }
+        },
+        "v0": {
+          "mAP50": 0.435544224163891,
+          "mAP50-95": 0.12659728325639757,
+          "per_class": {
+            "touching_face": {
+              "precision": 0.8043301622256875,
+              "recall": 0.11570247933884298,
+              "mAP50": 0.31163267249167315,
+              "mAP50-95": 0.08129184976919271
+            },
+            "arms_crossed": {
+              "precision": 0.9900790382877172,
+              "recall": 1.0,
+              "mAP50": 0.995,
+              "mAP50-95": 0.2985
+            },
+            "slouching": {
+              "precision": 1.0,
+              "recall": 0.0,
+              "mAP50": 0.0,
+              "mAP50-95": 0.0
+            }
+          }
+        }
+      },
+      "frames_held_out": {
+        "v1": {
+          "touching_face": {
+            "f1": 0.8208469055374593,
+            "precision": 0.8873239436619719,
+            "recall": 0.7636363636363637,
+            "clip_rate": {
+              "arms_crossed": 0.0,
+              "desk_hands": 0.0,
+              "gestures": 0.089,
+              "looking_away": 0.0,
+              "reading_notes_desk": 0.0,
+              "reading_notes_held": 0.013,
+              "slouching": 0.0,
+              "smile": 0.0,
+              "touching_face": 0.764,
+              "upright": 0.0
+            }
+          },
+          "arms_crossed": {
+            "f1": 0.10362694300518134,
+            "precision": 0.5555555555555556,
+            "recall": 0.05714285714285714,
+            "clip_rate": {
+              "arms_crossed": 0.057,
+              "desk_hands": 0.0,
+              "gestures": 0.0,
+              "looking_away": 0.0,
+              "reading_notes_desk": 0.0,
+              "reading_notes_held": 0.05,
+              "slouching": 0.0,
+              "smile": 0.0,
+              "touching_face": 0.0,
+              "upright": 0.0
+            }
+          },
+          "reading_notes": {
+            "f1": 0.36734693877551017,
+            "precision": 1.0,
+            "recall": 0.225,
+            "clip_rate": {
+              "arms_crossed": 0.0,
+              "desk_hands": 0.0,
+              "gestures": 0.0,
+              "looking_away": 0.0,
+              "reading_notes_held": 0.225,
+              "slouching": 0.0,
+              "smile": 0.0,
+              "touching_face": 0.0,
+              "upright": 0.0
+            }
+          },
+          "slouching": {
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "clip_rate": {
+              "arms_crossed": 0.0,
+              "desk_hands": 0.0,
+              "gestures": 0.0,
+              "looking_away": 0.0,
+              "reading_notes_desk": 0.0,
+              "reading_notes_held": 0.0,
+              "slouching": 0.0,
+              "smile": 0.0,
+              "touching_face": 0.0,
+              "upright": 0.0
+            }
+          }
+        },
+        "v0": {
+          "touching_face": {
+            "f1": 0.11235955056179775,
+            "precision": 0.7692307692307693,
+            "recall": 0.06060606060606061,
+            "clip_rate": {
+              "arms_crossed": 0.0,
+              "desk_hands": 0.0,
+              "gestures": 0.019,
+              "looking_away": 0.0,
+              "reading_notes_desk": 0.0,
+              "reading_notes_held": 0.0,
+              "slouching": 0.0,
+              "smile": 0.0,
+              "touching_face": 0.061,
+              "upright": 0.0
+            }
+          },
+          "arms_crossed": {
+            "f1": 0.7882352941176471,
+            "precision": 0.8121212121212121,
+            "recall": 0.7657142857142857,
+            "clip_rate": {
+              "arms_crossed": 0.766,
+              "desk_hands": 0.0,
+              "gestures": 0.0,
+              "looking_away": 0.0,
+              "reading_notes_desk": 0.013,
+              "reading_notes_held": 0.138,
+              "slouching": 0.035,
+              "smile": 0.0,
+              "touching_face": 0.0,
+              "upright": 0.0
+            }
+          },
+          "reading_notes": {
+            "f1": 0.6324786324786326,
+            "precision": 1.0,
+            "recall": 0.4625,
+            "clip_rate": {
+              "arms_crossed": 0.0,
+              "desk_hands": 0.0,
+              "gestures": 0.0,
+              "looking_away": 0.0,
+              "reading_notes_held": 0.463,
+              "slouching": 0.0,
+              "smile": 0.0,
+              "touching_face": 0.0,
+              "upright": 0.0
+            }
+          },
+          "slouching": {
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "clip_rate": {
+              "arms_crossed": 0.0,
+              "desk_hands": 0.0,
+              "gestures": 0.0,
+              "looking_away": 0.0,
+              "reading_notes_desk": 0.0,
+              "reading_notes_held": 0.0,
+              "slouching": 0.0,
+              "smile": 0.0,
+              "touching_face": 0.0,
+              "upright": 0.0
+            }
+          }
+        }
+      },
+      "forgetting_test_rf": {
+        "mAP50": 0.9489764484819171,
+        "mAP50-95": 0.6920315793232423,
+        "per_class": {
+          "touching_face": {
+            "precision": 0.7980887977518768,
+            "recall": 0.9134615384615384,
+            "mAP50": 0.9015181739106054,
+            "mAP50-95": 0.6106391651672176
+          },
+          "arms_crossed": {
+            "precision": 0.957863361459499,
+            "recall": 0.9333333333333333,
+            "mAP50": 0.9504111715351461,
+            "mAP50-95": 0.7024559393721785
+          },
+          "slouching": {
+            "precision": 0.9956194209499071,
+            "recall": 1.0,
+            "mAP50": 0.995,
+            "mAP50-95": 0.7629996334303306
+          }
+        }
+      }
+    },
+    {
+      "held_out": "p06",
+      "best_epoch": 19,
+      "map_held_out": {
+        "v1": {
+          "mAP50": 0.7612827403363547,
+          "mAP50-95": 0.590986542505864,
+          "per_class": {
+            "touching_face": {
+              "precision": 0.9898282189525572,
+              "recall": 0.8076923076923077,
+              "mAP50": 0.9148880937008197,
+              "mAP50-95": 0.6207023237190673
+            },
+            "arms_crossed": {
+              "precision": 0.9635573922516707,
+              "recall": 1.0,
+              "mAP50": 0.995,
+              "mAP50-95": 0.8187321428571428
+            },
+            "reading_notes": {
+              "precision": 0.9857886096798414,
+              "recall": 0.9249252014508204,
+              "mAP50": 0.9650092188992103,
+              "mAP50-95": 0.8025977435023414
+            },
+            "slouching": {
+              "precision": 0.4319108005350931,
+              "recall": 0.1875,
+              "mAP50": 0.17023364874538843,
+              "mAP50-95": 0.12191395994490468
+            }
+          }
+        },
+        "v0": {
+          "mAP50": 0.5345747968003414,
+          "mAP50-95": 0.3821884491512818,
+          "per_class": {
+            "touching_face": {
+              "precision": 1.0,
+              "recall": 0.10240212081211855,
+              "mAP50": 0.3182290720433581,
+              "mAP50-95": 0.08630339203167145
+            },
+            "arms_crossed": {
+              "precision": 1.0,
+              "recall": 0.8879253418113449,
+              "mAP50": 0.995,
+              "mAP50-95": 0.8027955972967602
+            },
+            "reading_notes": {
+              "precision": 0.8855371291824994,
+              "recall": 0.7733333333333333,
+              "mAP50": 0.8250701151580075,
+              "mAP50-95": 0.6396548072766957
+            },
+            "slouching": {
+              "precision": 1.0,
+              "recall": 0.0,
+              "mAP50": 0.0,
+              "mAP50-95": 0.0
+            }
+          }
+        }
+      },
+      "frames_held_out": {
+        "v1": {
+          "touching_face": {
+            "f1": 0.825531914893617,
+            "precision": 1.0,
+            "recall": 0.7028985507246377,
+            "clip_rate": {
+              "arms_crossed": 0.0,
+              "desk_hands": 0.0,
+              "gestures": 0.0,
+              "looking_away": 0.0,
+              "reading_notes_desk": 0.0,
+              "reading_notes_held": 0.0,
+              "slouching": 0.0,
+              "smile": 0.0,
+              "touching_face": 0.703,
+              "upright": 0.0
+            }
+          },
+          "arms_crossed": {
+            "f1": 0.945945945945946,
+            "precision": 0.8974358974358975,
+            "recall": 1.0,
+            "clip_rate": {
+              "arms_crossed": 1.0,
+              "desk_hands": 0.0,
+              "gestures": 0.0,
+              "looking_away": 0.0,
+              "reading_notes_desk": 0.0,
+              "reading_notes_held": 0.116,
+              "slouching": 0.0,
+              "smile": 0.0,
+              "touching_face": 0.0,
+              "upright": 0.0
+            }
+          },
+          "reading_notes": {
+            "f1": 0.688372093023256,
+            "precision": 0.961038961038961,
+            "recall": 0.5362318840579711,
+            "clip_rate": {
+              "arms_crossed": 0.0,
+              "desk_hands": 0.0,
+              "gestures": 0.0,
+              "looking_away": 0.0,
+              "reading_notes_held": 0.536,
+              "slouching": 0.0,
+              "smile": 0.0,
+              "touching_face": 0.022,
+              "upright": 0.0
+            }
+          },
+          "slouching": {
+            "f1": 0.1476510067114094,
+            "precision": 0.8461538461538461,
+            "recall": 0.08088235294117647,
+            "clip_rate": {
+              "arms_crossed": 0.0,
+              "desk_hands": 0.0,
+              "gestures": 0.0,
+              "looking_away": 0.0,
+              "reading_notes_desk": 0.0,
+              "reading_notes_held": 0.0,
+              "slouching": 0.081,
+              "smile": 0.0,
+              "touching_face": 0.014,
+              "upright": 0.0
+            }
+          }
+        },
+        "v0": {
+          "touching_face": {
+            "f1": 0.20779220779220778,
+            "precision": 1.0,
+            "recall": 0.11594202898550725,
+            "clip_rate": {
+              "arms_crossed": 0.0,
+              "desk_hands": 0.0,
+              "gestures": 0.0,
+              "looking_away": 0.0,
+              "reading_notes_desk": 0.0,
+              "reading_notes_held": 0.0,
+              "slouching": 0.0,
+              "smile": 0.0,
+              "touching_face": 0.116,
+              "upright": 0.0
+            }
+          },
+          "arms_crossed": {
+            "f1": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "clip_rate": {
+              "arms_crossed": 1.0,
+              "desk_hands": 0.0,
+              "gestures": 0.0,
+              "looking_away": 0.0,
+              "reading_notes_desk": 0.0,
+              "reading_notes_held": 0.0,
+              "slouching": 0.0,
+              "smile": 0.0,
+              "touching_face": 0.0,
+              "upright": 0.0
+            }
+          },
+          "reading_notes": {
+            "f1": 0.18414322250639387,
+            "precision": 0.11180124223602485,
+            "recall": 0.5217391304347826,
+            "clip_rate": {
+              "arms_crossed": 1.0,
+              "desk_hands": 0.82,
+              "gestures": 0.343,
+              "looking_away": 0.186,
+              "reading_notes_held": 0.522,
+              "slouching": 0.331,
+              "smile": 0.986,
+              "touching_face": 0.428,
+              "upright": 0.7
+            }
+          },
+          "slouching": {
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "clip_rate": {
+              "arms_crossed": 0.0,
+              "desk_hands": 0.0,
+              "gestures": 0.0,
+              "looking_away": 0.0,
+              "reading_notes_desk": 0.0,
+              "reading_notes_held": 0.0,
+              "slouching": 0.0,
+              "smile": 0.0,
+              "touching_face": 0.0,
+              "upright": 0.0
+            }
+          }
+        }
+      },
+      "forgetting_test_rf": {
+        "mAP50": 0.9539136182665278,
+        "mAP50-95": 0.7285305881145138,
+        "per_class": {
+          "touching_face": {
+            "precision": 0.8665168763275282,
+            "recall": 0.9038461538461539,
+            "mAP50": 0.901181380808394,
+            "mAP50-95": 0.6145697286798559
+          },
+          "arms_crossed": {
+            "precision": 0.9662705417322796,
+            "recall": 0.9549306483736378,
+            "mAP50": 0.9660857897806628,
+            "mAP50-95": 0.7471302258488371
+          },
+          "slouching": {
+            "precision": 0.9733529592027658,
+            "recall": 0.9874124497050978,
+            "mAP50": 0.9944736842105264,
+            "mAP50-95": 0.8238918098148484
+          }
+        }
+      }
+    },
+    {
+      "held_out": "p07",
+      "best_epoch": 2,
+      "map_held_out": {
+        "v1": {
+          "mAP50": 0.6931797998727682,
+          "mAP50-95": 0.44919957229230734,
+          "per_class": {
+            "touching_face": {
+              "precision": 0.9815650695493789,
+              "recall": 0.6132075471698113,
+              "mAP50": 0.868264167033654,
+              "mAP50-95": 0.436760547447615
+            },
+            "arms_crossed": {
+              "precision": 0.15146369647246327,
+              "recall": 0.7291666666666666,
+              "mAP50": 0.4661192823240139,
+              "mAP50-95": 0.3377123767465537
+            },
+            "reading_notes": {
+              "precision": 0.6402424090490881,
+              "recall": 0.7837837837837838,
+              "mAP50": 0.7380680017154588,
+              "mAP50-95": 0.4877971266302571
+            },
+            "slouching": {
+              "precision": 0.8292921552995759,
+              "recall": 0.5060809952449465,
+              "mAP50": 0.7002677484179463,
+              "mAP50-95": 0.5345282383448037
+            }
+          }
+        },
+        "v0": {
+          "mAP50": 0.2622374772370998,
+          "mAP50-95": 0.14127422125836145,
+          "per_class": {
+            "touching_face": {
+              "precision": 1.0,
+              "recall": 0.060618532938671935,
+              "mAP50": 0.42317654997221565,
+              "mAP50-95": 0.12740460469536172
+            },
+            "arms_crossed": {
+              "precision": 1.0,
+              "recall": 0.0,
+              "mAP50": 0.0,
+              "mAP50-95": 0.0
+            },
+            "reading_notes": {
+              "precision": 0.9158353256930624,
+              "recall": 0.5883932403050058,
+              "mAP50": 0.6257733589761835,
+              "mAP50-95": 0.43769228033808394
+            },
+            "slouching": {
+              "precision": 1.0,
+              "recall": 0.0,
+              "mAP50": 0.0,
+              "mAP50-95": 0.0
+            }
+          }
+        }
+      },
+      "frames_held_out": {
+        "v1": {
+          "touching_face": {
+            "f1": 0.5027322404371585,
+            "precision": 1.0,
+            "recall": 0.3357664233576642,
+            "clip_rate": {
+              "arms_crossed": 0.0,
+              "desk_hands": 0.0,
+              "gestures": 0.0,
+              "looking_away": 0.0,
+              "reading_notes_desk": 0.0,
+              "reading_notes_held": 0.0,
+              "slouching": 0.0,
+              "smile": 0.0,
+              "touching_face": 0.336,
+              "upright": 0.0
+            }
+          },
+          "arms_crossed": {
+            "f1": 0.4301075268817204,
+            "precision": 0.3048780487804878,
+            "recall": 0.7299270072992701,
+            "clip_rate": {
+              "arms_crossed": 0.73,
+              "desk_hands": 0.252,
+              "gestures": 0.22,
+              "looking_away": 0.381,
+              "reading_notes_desk": 0.0,
+              "reading_notes_held": 0.015,
+              "slouching": 0.058,
+              "smile": 0.095,
+              "touching_face": 0.088,
+              "upright": 0.554
+            }
+          },
+          "reading_notes": {
+            "f1": 0.4972375690607735,
+            "precision": 0.9574468085106383,
+            "recall": 0.3358208955223881,
+            "clip_rate": {
+              "arms_crossed": 0.0,
+              "desk_hands": 0.015,
+              "gestures": 0.0,
+              "looking_away": 0.0,
+              "reading_notes_held": 0.336,
+              "slouching": 0.0,
+              "smile": 0.0,
+              "touching_face": 0.0,
+              "upright": 0.0
+            }
+          },
+          "slouching": {
+            "f1": 0.19736842105263158,
+            "precision": 1.0,
+            "recall": 0.10948905109489052,
+            "clip_rate": {
+              "arms_crossed": 0.0,
+              "desk_hands": 0.0,
+              "gestures": 0.0,
+              "looking_away": 0.0,
+              "reading_notes_desk": 0.0,
+              "reading_notes_held": 0.0,
+              "slouching": 0.109,
+              "smile": 0.0,
+              "touching_face": 0.0,
+              "upright": 0.0
+            }
+          }
+        },
+        "v0": {
+          "touching_face": {
+            "f1": 0.0704225352112676,
+            "precision": 1.0,
+            "recall": 0.0364963503649635,
+            "clip_rate": {
+              "arms_crossed": 0.0,
+              "desk_hands": 0.0,
+              "gestures": 0.0,
+              "looking_away": 0.0,
+              "reading_notes_desk": 0.0,
+              "reading_notes_held": 0.0,
+              "slouching": 0.0,
+              "smile": 0.0,
+              "touching_face": 0.036,
+              "upright": 0.0
+            }
+          },
+          "arms_crossed": {
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "clip_rate": {
+              "arms_crossed": 0.0,
+              "desk_hands": 0.0,
+              "gestures": 0.0,
+              "looking_away": 0.0,
+              "reading_notes_desk": 0.0,
+              "reading_notes_held": 0.0,
+              "slouching": 0.0,
+              "smile": 0.0,
+              "touching_face": 0.0,
+              "upright": 0.0
+            }
+          },
+          "reading_notes": {
+            "f1": 0.17391304347826086,
+            "precision": 0.11827956989247312,
+            "recall": 0.3283582089552239,
+            "clip_rate": {
+              "arms_crossed": 0.0,
+              "desk_hands": 0.089,
+              "gestures": 0.356,
+              "looking_away": 0.424,
+              "reading_notes_held": 0.328,
+              "slouching": 0.0,
+              "smile": 0.518,
+              "touching_face": 0.0,
+              "upright": 1.0
+            }
+          },
+          "slouching": {
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "clip_rate": {
+              "arms_crossed": 0.0,
+              "desk_hands": 0.0,
+              "gestures": 0.0,
+              "looking_away": 0.0,
+              "reading_notes_desk": 0.0,
+              "reading_notes_held": 0.0,
+              "slouching": 0.0,
+              "smile": 0.0,
+              "touching_face": 0.0,
+              "upright": 0.0
+            }
+          }
+        }
+      },
+      "forgetting_test_rf": {
+        "mAP50": 0.9420299256552428,
+        "mAP50-95": 0.7065092523732868,
+        "per_class": {
+          "touching_face": {
+            "precision": 0.8694544733294868,
+            "recall": 0.8325438505635491,
+            "mAP50": 0.8818693824214319,
+            "mAP50-95": 0.5817413614238793
+          },
+          "arms_crossed": {
+            "precision": 0.9564456640054545,
+            "recall": 0.9533333333333334,
+            "mAP50": 0.9708630227494247,
+            "mAP50-95": 0.7294250456608597
+          },
+          "slouching": {
+            "precision": 0.9059094548491463,
+            "recall": 1.0,
+            "mAP50": 0.9733573717948718,
+            "mAP50-95": 0.8083613500351208
           }
         }
       }

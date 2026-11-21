@@ -1,33 +1,50 @@
 import json
 from collections import Counter
 
+import numpy as np
+
 from common.paths import ARTIFACTS, DATA, REPO_ROOT
 from report import CALIB, _datasets, _load, _num
 
 OUT = REPO_ROOT / "docs" / "model-report-v1.md"
 AUTOLABEL = DATA / "inhouse" / "derived" / "autolabel_summary.json"
+FROZEN = CALIB / "v1_4p"
 
 
 def _folds(folds: list[dict]) -> str:
     return ", ".join(f"{f['held_out']} {_num(f['test']['f1'], 2)}" for f in folds)
 
 
+def _mean_of(folds: list[dict], people: list[str]) -> float | None:
+    values = [f["test"]["f1"] for f in folds if f["held_out"] in people]
+    return float(np.mean(values)) if values else None
+
+
+def _words(n: int) -> str:
+    return {4: "four", 6: "six", 7: "seven"}.get(n, str(n))
+
+
 def data_section(inhouse: dict) -> list[str]:
     d = inhouse["data"]
+    n = len(d["people"])
     return [
         "## Data",
         "",
-        f"- {len(d['people'])} team members ({', '.join(d['people'])}), "
-        f"{len(d['sessions'])} sessions, recorded on their own devices with camera effects off "
-        "and consent v1.0 (analysis, model training).",
+        f"- {n} team members ({', '.join(d['people'])}), {len(d['sessions'])} sessions, "
+        "recorded on their own devices with camera effects off and consent v1.0 (analysis, "
+        "model training).",
         "- Part A: 10 behaviour clips of about 30 s per session. Part B: interview answers "
-        "of 1 to 1.5 min in Indonesian and English.",
+        "of 1 to 1.5 min in Indonesian and English. p06 and p07 recorded Part A only.",
         f"- {d['frames']:,} frames sampled at 5 fps with a face found; MediaPipe Face "
         "Landmarker and YOLO26n-pose features extracted once and shared by every model.",
-        f"- Baseline: {d['baseline']}.",
-        "- Evaluation: leave one person out (LOPO). Each number is the mean over the four "
-        "held-out people; nothing about the held-out person is used to pick constants, "
-        "weights or thresholds.",
+        f"- Baseline: {d['baseline']}. Sessions without answers use the first 2 s of their "
+        "`upright` clip instead, and those frames are never scored.",
+        "- p06's `upright` file holds the looking-away behaviour after its first seconds, so "
+        "its frames from 7 s on are scored as `looking_away` and its first 2 s are only the "
+        "baseline.",
+        f"- Evaluation: leave one person out (LOPO). Each number is the mean over the "
+        f"{_words(n)} held-out people; nothing about the held-out person is used to pick "
+        "constants, weights or thresholds.",
         "",
     ]
 
@@ -46,14 +63,13 @@ def face_section(inhouse: dict) -> list[str]:
         f"| **{_num(s['smile_rel']['lopo_f1'])}** | {_folds(s['smile_rel']['folds'])} |",
         f"| Gaze down (notes on the desk) | — | **{_num(g['lopo_f1'])}** | {_folds(g['folds'])} |",
         "",
-        "- v0 constants are fixed, so their F1 is measured on all four people.",
+        "- v0 constants are fixed, so their F1 is measured on every person.",
         f"- **Eye contact**: kX {p['kX']:.1f}, kY {p['kY']:.1f}, tolerance "
-        f"{p['toleranceDeg']} deg, now chosen on consented team recordings instead of "
-        "Columbia Gaze. Positives are the `upright` and `smile` clips, negatives "
-        "`looking_away`.",
+        f"{p['toleranceDeg']} deg, chosen on consented team recordings instead of Columbia "
+        "Gaze. Positives are the `upright` and `smile` clips, negatives `looking_away`.",
         f"- **Smile**: the score minus the person's calibration baseline, threshold "
         f"{s['smile_rel']['threshold']:.4f} ({s['smile_rel']['threshold_rule']}). Ranking is "
-        f"good (LOPO AUC {_num(s['smile_rel']['lopo_auc'])}) but the F1 is held down by the "
+        f"fair (LOPO AUC {_num(s['smile_rel']['lopo_auc'])}) but the F1 is held down by the "
         "strict false-positive cap and by frames inside smile clips with no smile. Smile "
         "stays feedback only and is not in the overall score (BR-09).",
         f"- **Gaze down**: pitch below the baseline by {g['params']['angleDeg']:g} deg or more "
@@ -61,6 +77,60 @@ def face_section(inhouse: dict) -> list[str]:
         f"{g['params']['windowS']:g} s. It misses people who read by moving only their eyes.",
         "",
     ]
+
+
+def holdout_section(inhouse: dict, posture: dict, lopo: dict | None) -> list[str]:
+    rules = _load(CALIB / "holdout_v1.json")
+    detector = _load(ARTIFACTS / "yolo" / "v1_holdout.json")
+    frozen = _load(FROZEN / "inhouse.json")
+    if not (rules and frozen):
+        return []
+    new = rules["held_out_people"]
+    everyone = len(inhouse["data"]["people"])
+    seen = rules["frozen_people"]
+    lines = [
+        f"## Test on people the first models never saw ({', '.join(new)})",
+        "",
+        f"The first v1 was fitted on {', '.join(seen)} only. Before refitting, its frozen "
+        f"constants, pose rules and detector were scored on {', '.join(new)}. This is the "
+        "most honest number for a new user. The last column is the refit: each of these "
+        "people held out from a model fitted on everyone else.",
+        "",
+        f"| Signal | LOPO on {_words(len(seen))} people | Frozen v1 on the new people "
+        f"| Refit, LOPO on the new people | Refit, LOPO on all {_words(everyone)} |",
+        "|---|---|---|---|---|",
+    ]
+    refit_face = {
+        "eye_contact": inhouse["eye_contact"],
+        "smile": inhouse["smile"]["smile_rel"],
+        "gaze_down": inhouse["gaze_down"],
+    }
+    for name, r in rules["face"].items():
+        f = refit_face[name]
+        lines.append(
+            f"| {name.replace('_', ' ')} | {_num(r['frozen_lopo_f1'])} | **{_num(r['mean_f1'])}** "
+            f"| {_num(_mean_of(f['folds'], new))} | {_num(f['lopo_f1'])} |"
+        )
+    for name, r in rules["posture"].items():
+        f = posture["behaviours"][name]
+        lines.append(
+            f"| {name} (pose rule) | {_num(r['frozen_lopo_f1'])} | **{_num(r['mean_f1'])}** "
+            f"| {_num(_mean_of(f['folds'], new))} | {_num(f['lopo_f1'])} |"
+        )
+    if detector and lopo:
+        frozen_lopo = _load(FROZEN / "v1_lopo.json")
+        for name, r in detector["summary"].items():
+            folds = [
+                {"held_out": f["held_out"], "test": f["frames_held_out"]["v1"][name]}
+                for f in lopo["folds"]
+            ]
+            old = frozen_lopo["summary"][name]["detector_v1_lopo_f1"] if frozen_lopo else None
+            lines.append(
+                f"| {name} (detector) | {_num(old)} | **{_num(r['v1'])}** "
+                f"| {_num(_mean_of(folds, new))} "
+                f"| {_num(lopo['summary'][name]['detector_v1_lopo_f1'])} |"
+            )
+    return [*lines, ""]
 
 
 def posture_section(posture: dict, lopo: dict | None) -> list[str]:
@@ -86,17 +156,18 @@ def posture_section(posture: dict, lopo: dict | None) -> list[str]:
     return [*lines, ""]
 
 
-def detector_section(lopo: dict | None) -> list[str]:
+def detector_section(lopo: dict | None, people: int) -> list[str]:
     m = _load(ARTIFACTS / "yolo" / "v1" / "metrics.json")
     lines = ["## Behaviour detector v1 (YOLO26n)", ""]
     if not (lopo and m):
         return [*lines, "_Not trained yet._", ""]
     s = lopo["settings"]
+    detector_classes = [b for b, v in lopo["summary"].items() if v["use"] == "detector"]
     lines += [
         f"Fine-tuned from v0 with the first {s['freeze']} layers frozen, lr0 {s['lr0']}, on "
         "auto-labelled in-house frames plus a replay sample of the v0 training data. The "
-        f"final model is trained on all four people for {m['epochs']} epochs (the mean best "
-        "epoch of the LOPO folds).",
+        f"final model is trained on all {_words(people)} people for {m['epochs']} epochs (the "
+        "mean best epoch of the LOPO folds).",
         "",
         "| Held-out person | Best epoch | v0 mAP50 | v1 mAP50 | v1 mAP50 on v0 test_rf |",
         "|---|---|---|---|---|",
@@ -117,12 +188,12 @@ def detector_section(lopo: dict | None) -> list[str]:
     for c, r in m["v0_test_rf"]["per_class"].items():
         v1 = m["test_rf"]["per_class"].get(c, {})
         lines.append(f"| {c} | {_num(r['mAP50'])} | {_num(v1.get('mAP50'))} |")
+    used = ", ".join(f"`{c}`" for c in detector_classes) or "no class"
     lines += [
         f"| all | {_num(m['v0_test_rf']['mAP50'])} | {_num(m['test_rf']['mAP50'])} |",
         "",
-        "v1 is promoted: it is used only for `reading_notes`, where it wins clearly on held-out "
-        "people, and the small arms_crossed drop on the public set does not reach the app "
-        "because arms_crossed comes from the pose rule.",
+        f"The app takes {used} from the detector and every other behaviour from the pose "
+        "rules, whichever has the better LOPO F1.",
     ]
     parity = _load(ARTIFACTS / "yolo" / "v1" / "onnx_parity.json")
     if parity:
@@ -173,6 +244,7 @@ def main() -> None:
     inhouse = _load(CALIB / "inhouse.json")
     posture = _load(CALIB / "inhouse_posture.json")
     lopo = _load(ARTIFACTS / "yolo" / "v1_lopo.json")
+    people = len(inhouse["data"]["people"])
     lines = [
         "# EchoCV model report v1",
         "",
@@ -184,20 +256,28 @@ def main() -> None:
         "did not see.",
         "",
         *data_section(inhouse),
+        *holdout_section(inhouse, posture, lopo),
         *face_section(inhouse),
         *posture_section(posture, lopo),
-        *detector_section(lopo),
+        *detector_section(lopo, people),
         *speech_section(),
         "## Known gaps",
         "",
-        "- **Four people only.** The data comes from four team members, with little variety "
-        "in faces, lighting, rooms and webcams, so the numbers are likely optimistic. The "
-        "third sessions and new participants are kept back as an untouched test set.",
-        "- **Slouching is weak** (pose rule LOPO F1 below the other behaviours). People slouch "
-        "in different directions and laptop webcams show little of the torso.",
+        f"- **{_words(people).capitalize()} people only**, all team members, so the numbers "
+        "are likely optimistic. The frozen test above shows how much: the pose rules for "
+        "arms_crossed, slouching and reading_notes lost a lot on new people.",
+        "- **Loose paper notes are not detected.** The object signal only knows books and "
+        "phones (COCO classes), so a person holding loose paper gets no reading_notes frames "
+        "from auto-labelling, and the detector cannot learn it. Labelling a few hundred of "
+        "those frames by hand would close this.",
+        "- **Slouching is weak.** People slouch in different directions and laptop webcams "
+        "show little of the torso; some slouching clips look almost upright.",
         "- **arms_crossed** depends on the arms being in frame; with a close webcam only the "
         "upper chest shows.",
         "- **Gaze down** misses people who look down with their eyes but not their head.",
+        "- **The smile threshold follows the strictest training person.** The cap keeps false "
+        "smiles at 2% or less for every training person, so one person with a high neutral "
+        "score raises it for everyone.",
         "- **Clip labels are noisy.** Every frame of a clip gets the clip's label, including "
         "frames where the behaviour pauses.",
         "- **LiteRT (.tflite) export of detector v1 is pending**: run "

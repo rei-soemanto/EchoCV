@@ -1,5 +1,5 @@
 {
-  "created": "2026-11-20T19:52:08+00:00",
+  "created": "2026-11-21T06:56:10+00:00",
   "base_model": "artifacts/yolo/v0/best.pt (fine-tuned from yolo26n.pt, AGPL-3.0)",
   "commercially_safe_training_data": true,
   "datasets": [
@@ -44,5 +44,5 @@
       "caveat": "Personal data: kept off git; delete a participant's derived data on withdrawal."
     }
   ],
-  "notes": "Fine-tuned on in-house frames from p01, p02, p03, p04 plus a v0 replay sample."
+  "notes": "Fine-tuned on in-house frames from p01, p02, p03, p04, p05, p06, p07 plus a v0 replay sample."
 }

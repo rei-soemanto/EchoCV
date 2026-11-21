@@ -1,11 +1,14 @@
 {
   "data": {
-    "frames": 20161,
+    "frames": 26208,
     "people": [
       "p01",
       "p02",
       "p03",
-      "p04"
+      "p04",
+      "p05",
+      "p06",
+      "p07"
     ],
     "sessions": [
       "p01_s1",
@@ -13,7 +16,10 @@
       "p02_s1",
       "p02_s2",
       "p03_s1",
-      "p04_s1"
+      "p04_s1",
+      "p05_s1",
+      "p06_s1",
+      "p07_s1"
     ],
     "baseline": "median of the first 2 s of each answer (Part A frames use the session's answers), as the in-app look-at-camera calibration",
     "evaluation": "leave one person out"
@@ -26,91 +32,153 @@
     "negatives": [
       "looking_away"
     ],
-    "lopo_f1": 0.8814068888535731,
-    "v0_lopo_f1": 0.7223047780284695,
+    "lopo_f1": 0.8911219051854585,
+    "v0_lopo_f1": 0.7039069813246097,
     "folds": [
       {
         "held_out": "p01",
         "params": {
-          "f1": 0.892278360343184,
-          "kX": 238.73578117086348,
+          "f1": 0.9017905588714054,
+          "kX": 119.36789058543174,
           "kY": 92.89301975723481,
-          "toleranceDeg": 12.5
+          "toleranceDeg": 12.0
         },
         "test": {
-          "f1": 0.9116981132075471,
-          "precision": 0.8616262482168331,
-          "recall": 0.967948717948718,
+          "f1": 0.9069767441860465,
+          "precision": 0.8297872340425532,
+          "recall": 1.0,
           "n": 934,
           "positives": 624
         },
         "clip_rate": {
-          "looking_away": 0.313,
-          "smile": 0.944,
-          "upright": 0.991
+          "looking_away": 0.413,
+          "smile": 1.0,
+          "upright": 1.0
         }
       },
       {
         "held_out": "p02",
         "params": {
-          "f1": 0.947047619047619,
+          "f1": 0.9386281588447654,
           "kX": 83.55752340980222,
           "kY": 92.89301975723481,
-          "toleranceDeg": 8.0
+          "toleranceDeg": 9.0
         },
         "test": {
-          "f1": 0.7864823348694316,
-          "precision": 0.7091412742382271,
-          "recall": 0.8827586206896552,
+          "f1": 0.7958883994126285,
+          "precision": 0.6930946291560103,
+          "recall": 0.9344827586206896,
           "n": 434,
           "positives": 290
         },
         "clip_rate": {
-          "looking_away": 0.729,
-          "smile": 0.911,
-          "upright": 0.854
+          "looking_away": 0.833,
+          "smile": 0.945,
+          "upright": 0.924
         }
       },
       {
         "held_out": "p03",
         "params": {
-          "f1": 0.9321302471557473,
-          "kX": 119.36789058543174,
+          "f1": 0.9284476355533547,
+          "kX": 83.55752340980222,
           "kY": 92.89301975723481,
           "toleranceDeg": 8.5
         },
         "test": {
-          "f1": 0.8606224627875507,
-          "precision": 0.8174807197943444,
-          "recall": 0.9085714285714286,
+          "f1": 0.8633288227334236,
+          "precision": 0.8200514138817481,
+          "recall": 0.9114285714285715,
           "n": 520,
           "positives": 350
         },
         "clip_rate": {
-          "looking_away": 0.418,
-          "smile": 0.841,
+          "looking_away": 0.412,
+          "smile": 0.847,
           "upright": 0.977
         }
       },
       {
         "held_out": "p04",
         "params": {
-          "f1": 0.9027620128641695,
+          "f1": 0.9099571224392567,
           "kX": 83.55752340980222,
           "kY": 92.89301975723481,
-          "toleranceDeg": 8.0
+          "toleranceDeg": 9.0
         },
         "test": {
-          "f1": 0.966824644549763,
-          "precision": 0.9839228295819936,
-          "recall": 0.9503105590062112,
+          "f1": 0.9749216300940439,
+          "precision": 0.9841772151898734,
+          "recall": 0.9658385093167702,
           "n": 489,
           "positives": 322
         },
         "clip_rate": {
           "looking_away": 0.03,
-          "smile": 0.902,
+          "smile": 0.935,
           "upright": 0.994
+        }
+      },
+      {
+        "held_out": "p05",
+        "params": {
+          "f1": 0.9177949709864603,
+          "kX": 83.55752340980222,
+          "kY": 92.89301975723481,
+          "toleranceDeg": 9.0
+        },
+        "test": {
+          "f1": 0.9228571428571428,
+          "precision": 0.8947368421052632,
+          "recall": 0.9528023598820059,
+          "n": 497,
+          "positives": 339
+        },
+        "clip_rate": {
+          "looking_away": 0.241,
+          "smile": 0.952,
+          "upright": 0.953
+        }
+      },
+      {
+        "held_out": "p06",
+        "params": {
+          "f1": 0.9246364037020715,
+          "kX": 83.55752340980222,
+          "kY": 92.89301975723481,
+          "toleranceDeg": 8.5
+        },
+        "test": {
+          "f1": 0.8,
+          "precision": 0.96,
+          "recall": 0.6857142857142857,
+          "n": 219,
+          "positives": 140
+        },
+        "clip_rate": {
+          "looking_away": 0.051,
+          "smile": 0.686
+        }
+      },
+      {
+        "held_out": "p07",
+        "params": {
+          "f1": 0.9113625648279113,
+          "kX": 83.55752340980222,
+          "kY": 92.89301975723481,
+          "toleranceDeg": 8.5
+        },
+        "test": {
+          "f1": 0.9738805970149254,
+          "precision": 0.9666666666666667,
+          "recall": 0.981203007518797,
+          "n": 325,
+          "positives": 266
+        },
+        "clip_rate": {
+          "looking_away": 0.153,
+          "smile": 0.971,
+          "upright": 0.992
         }
       }
     ],
@@ -174,18 +242,63 @@
           "smile": 0.673,
           "upright": 0.852
         }
+      },
+      {
+        "held_out": "p05",
+        "test": {
+          "f1": 0.8,
+          "precision": 0.9296875,
+          "recall": 0.7020648967551623,
+          "n": 497,
+          "positives": 339
+        },
+        "clip_rate": {
+          "looking_away": 0.114,
+          "smile": 0.714,
+          "upright": 0.69
+        }
+      },
+      {
+        "held_out": "p06",
+        "test": {
+          "f1": 0.45161290322580644,
+          "precision": 0.9130434782608695,
+          "recall": 0.3,
+          "n": 219,
+          "positives": 140
+        },
+        "clip_rate": {
+          "looking_away": 0.051,
+          "smile": 0.3
+        }
+      },
+      {
+        "held_out": "p07",
+        "test": {
+          "f1": 0.7865168539325843,
+          "precision": 0.9776536312849162,
+          "recall": 0.6578947368421053,
+          "n": 325,
+          "positives": 266
+        },
+        "clip_rate": {
+          "looking_away": 0.068,
+          "smile": 0.569,
+          "upright": 0.752
+        }
       }
     ],
     "params": {
-      "kX": 119.36789058543174,
+      "kX": 83.55752340980222,
       "kY": 92.89301975723481,
-      "toleranceDeg": 8.5
+      "toleranceDeg": 9.0
     },
     "answers_contact_rate_by_person": {
-      "p01": 0.924,
-      "p02": 0.558,
-      "p03": 0.848,
-      "p04": 0.995
+      "p01": 0.963,
+      "p02": 0.591,
+      "p03": 0.881,
+      "p04": 0.999,
+      "p05": 0.803
     }
   },
   "smile": {
@@ -199,57 +312,57 @@
       "gestures"
     ],
     "smile": {
-      "lopo_f1": 0.4674859505140358,
-      "lopo_auc": 0.8816310646451013,
-      "threshold": 0.012202199755608987,
+      "lopo_f1": 0.4218668275486027,
+      "lopo_auc": 0.8832323233975037,
+      "threshold": 0.19860529238581676,
       "threshold_rule": "false-positive rate <= 2% on the non-smile clips of every training person",
       "folds": [
         {
           "held_out": "p01",
-          "threshold": 0.0023535541118122013,
+          "threshold": 0.19860529238581676,
           "auc": 0.9433008947815296,
           "test": {
-            "f1": 0.6496519721577726,
-            "precision": 0.5026929982046678,
-            "recall": 0.9180327868852459,
+            "f1": 0.17313432835820897,
+            "precision": 0.9666666666666667,
+            "recall": 0.09508196721311475,
             "n": 1560,
             "positives": 305
           },
           "clip_rate": {
-            "desk_hands": 0.382,
-            "gestures": 0.202,
-            "looking_away": 0.129,
-            "smile": 0.918,
-            "upright": 0.176
+            "desk_hands": 0.003,
+            "gestures": 0.0,
+            "looking_away": 0.0,
+            "smile": 0.095,
+            "upright": 0.0
           }
         },
         {
           "held_out": "p02",
-          "threshold": 0.012202199755608987,
+          "threshold": 0.19860529238581676,
           "auc": 0.7987128011336797,
           "test": {
-            "f1": 0.26900584795321636,
-            "precision": 0.92,
-            "recall": 0.15753424657534246,
+            "f1": 0.013605442176870748,
+            "precision": 1.0,
+            "recall": 0.00684931506849315,
             "n": 726,
             "positives": 146
           },
           "clip_rate": {
             "desk_hands": 0.0,
             "gestures": 0.0,
-            "looking_away": 0.014,
-            "smile": 0.158,
+            "looking_away": 0.0,
+            "smile": 0.007,
             "upright": 0.0
           }
         },
         {
           "held_out": "p03",
-          "threshold": 0.012202199755608987,
+          "threshold": 0.19860529238581676,
           "auc": 0.9217043810024996,
           "test": {
-            "f1": 0.45614035087719296,
+            "f1": 0.16666666666666666,
             "precision": 1.0,
-            "recall": 0.29545454545454547,
+            "recall": 0.09090909090909091,
             "n": 867,
             "positives": 176
           },
@@ -257,83 +370,139 @@
             "desk_hands": 0.0,
             "gestures": 0.0,
             "looking_away": 0.0,
-            "smile": 0.295,
+            "smile": 0.091,
             "upright": 0.0
           }
         },
         {
           "held_out": "p04",
-          "threshold": 0.012202199755608987,
+          "threshold": 0.19860529238581676,
           "auc": 0.8628061816626962,
           "test": {
-            "f1": 0.49514563106796117,
-            "precision": 0.9622641509433962,
-            "recall": 0.3333333333333333,
+            "f1": 0.41450777202072536,
+            "precision": 1.0,
+            "recall": 0.26143790849673204,
             "n": 795,
             "positives": 153
           },
           "clip_rate": {
             "desk_hands": 0.0,
             "gestures": 0.0,
-            "looking_away": 0.012,
-            "smile": 0.333,
+            "looking_away": 0.0,
+            "smile": 0.261,
             "upright": 0.0
+          }
+        },
+        {
+          "held_out": "p05",
+          "threshold": 0.19860529238581676,
+          "auc": 0.7885235870048954,
+          "test": {
+            "f1": 0.5,
+            "precision": 0.95,
+            "recall": 0.3392857142857143,
+            "n": 810,
+            "positives": 168
+          },
+          "clip_rate": {
+            "desk_hands": 0.0,
+            "gestures": 0.006,
+            "looking_away": 0.013,
+            "smile": 0.339,
+            "upright": 0.0
+          }
+        },
+        {
+          "held_out": "p06",
+          "threshold": 0.13088394263982772,
+          "auc": 0.9960295291300878,
+          "test": {
+            "f1": 0.9351535836177475,
+            "precision": 0.8954248366013072,
+            "recall": 0.9785714285714285,
+            "n": 498,
+            "positives": 140
+          },
+          "clip_rate": {
+            "desk_hands": 0.086,
+            "gestures": 0.014,
+            "looking_away": 0.025,
+            "smile": 0.979
+          }
+        },
+        {
+          "held_out": "p07",
+          "threshold": 0.19860529238581676,
+          "auc": 0.8715488890671372,
+          "test": {
+            "f1": 0.75,
+            "precision": 0.9655172413793104,
+            "recall": 0.6131386861313869,
+            "n": 592,
+            "positives": 137
+          },
+          "clip_rate": {
+            "desk_hands": 0.0,
+            "gestures": 0.015,
+            "looking_away": 0.0,
+            "smile": 0.613,
+            "upright": 0.008
           }
         }
       ]
     },
     "smile_rel": {
-      "lopo_f1": 0.4791934988407468,
-      "lopo_auc": 0.8816186552662233,
-      "threshold": 0.011469587571825889,
+      "lopo_f1": 0.42373018158586984,
+      "lopo_auc": 0.883225232323859,
+      "threshold": 0.1946827232568993,
       "threshold_rule": "false-positive rate <= 2% on the non-smile clips of every training person",
       "folds": [
         {
           "held_out": "p01",
-          "threshold": 0.0017637021087808515,
+          "threshold": 0.1946827232568993,
           "auc": 0.9432512572660179,
           "test": {
-            "f1": 0.6897404202719407,
-            "precision": 0.5535714285714286,
-            "recall": 0.9147540983606557,
+            "f1": 0.17313432835820897,
+            "precision": 0.9666666666666667,
+            "recall": 0.09508196721311475,
             "n": 1560,
             "positives": 305
           },
           "clip_rate": {
-            "desk_hands": 0.316,
-            "gestures": 0.155,
-            "looking_away": 0.11,
-            "smile": 0.915,
-            "upright": 0.141
+            "desk_hands": 0.003,
+            "gestures": 0.0,
+            "looking_away": 0.0,
+            "smile": 0.095,
+            "upright": 0.0
           }
         },
         {
           "held_out": "p02",
-          "threshold": 0.011469587571825889,
+          "threshold": 0.1946827232568993,
           "auc": 0.7987128011336797,
           "test": {
-            "f1": 0.26900584795321636,
-            "precision": 0.92,
-            "recall": 0.15753424657534246,
+            "f1": 0.013605442176870748,
+            "precision": 1.0,
+            "recall": 0.00684931506849315,
             "n": 726,
             "positives": 146
           },
           "clip_rate": {
             "desk_hands": 0.0,
             "gestures": 0.0,
-            "looking_away": 0.014,
-            "smile": 0.158,
+            "looking_away": 0.0,
+            "smile": 0.007,
             "upright": 0.0
           }
         },
         {
           "held_out": "p03",
-          "threshold": 0.011469587571825889,
+          "threshold": 0.1946827232568993,
           "auc": 0.9217043810024996,
           "test": {
-            "f1": 0.462882096069869,
+            "f1": 0.16666666666666666,
             "precision": 1.0,
-            "recall": 0.30113636363636365,
+            "recall": 0.09090909090909091,
             "n": 867,
             "positives": 176
           },
@@ -341,37 +510,93 @@
             "desk_hands": 0.0,
             "gestures": 0.0,
             "looking_away": 0.0,
-            "smile": 0.301,
+            "smile": 0.091,
             "upright": 0.0
           }
         },
         {
           "held_out": "p04",
-          "threshold": 0.011469587571825889,
+          "threshold": 0.1946827232568993,
           "auc": 0.8628061816626962,
           "test": {
-            "f1": 0.49514563106796117,
-            "precision": 0.9622641509433962,
-            "recall": 0.3333333333333333,
+            "f1": 0.41450777202072536,
+            "precision": 1.0,
+            "recall": 0.26143790849673204,
             "n": 795,
             "positives": 153
           },
           "clip_rate": {
             "desk_hands": 0.0,
             "gestures": 0.0,
-            "looking_away": 0.012,
-            "smile": 0.333,
+            "looking_away": 0.0,
+            "smile": 0.261,
             "upright": 0.0
+          }
+        },
+        {
+          "held_out": "p05",
+          "threshold": 0.1946827232568993,
+          "auc": 0.7885235870048954,
+          "test": {
+            "f1": 0.5130434782608696,
+            "precision": 0.9516129032258065,
+            "recall": 0.35119047619047616,
+            "n": 810,
+            "positives": 168
+          },
+          "clip_rate": {
+            "desk_hands": 0.0,
+            "gestures": 0.006,
+            "looking_away": 0.013,
+            "smile": 0.351,
+            "upright": 0.0
+          }
+        },
+        {
+          "held_out": "p06",
+          "threshold": 0.1295115981826326,
+          "auc": 0.9960295291300878,
+          "test": {
+            "f1": 0.9351535836177475,
+            "precision": 0.8954248366013072,
+            "recall": 0.9785714285714285,
+            "n": 498,
+            "positives": 140
+          },
+          "clip_rate": {
+            "desk_hands": 0.086,
+            "gestures": 0.014,
+            "looking_away": 0.025,
+            "smile": 0.979
+          }
+        },
+        {
+          "held_out": "p07",
+          "threshold": 0.1946827232568993,
+          "auc": 0.8715488890671372,
+          "test": {
+            "f1": 0.75,
+            "precision": 0.9655172413793104,
+            "recall": 0.6131386861313869,
+            "n": 592,
+            "positives": 137
+          },
+          "clip_rate": {
+            "desk_hands": 0.0,
+            "gestures": 0.015,
+            "looking_away": 0.0,
+            "smile": 0.613,
+            "upright": 0.008
           }
         }
       ]
     },
     "v0_threshold_all_people": {
-      "f1": 0.12949640287769784,
-      "precision": 1.0,
-      "recall": 0.06923076923076923,
-      "n": 3948,
-      "positives": 780
+      "f1": 0.3801980198019802,
+      "precision": 0.993103448275862,
+      "recall": 0.23510204081632652,
+      "n": 5848,
+      "positives": 1225
     },
     "use": "smile_rel"
   },
@@ -387,28 +612,28 @@
     ],
     "sign": 1.0,
     "kY": 92.89301975723481,
-    "lopo_f1": 0.6732521590638054,
+    "lopo_f1": 0.7392654833258471,
     "folds": [
       {
         "held_out": "p01",
         "params": {
-          "f1": 0.7403726708074534,
+          "f1": 0.78475073313783,
           "angleDeg": 9.0,
-          "windowS": 2.0,
+          "windowS": 1.0,
           "minFraction": 0.5,
-          "kY": 92.89301975723481
+          "kY": 0.0
         },
         "test": {
-          "f1": 0.9113924050632911,
+          "f1": 0.8662900188323918,
           "precision": 1.0,
-          "recall": 0.8372093023255814,
+          "recall": 0.7641196013289037,
           "n": 1551,
           "positives": 301
         },
         "clip_rate": {
           "desk_hands": 0.0,
           "gestures": 0.0,
-          "reading_notes_desk": 0.837,
+          "reading_notes_desk": 0.764,
           "smile": 0.0,
           "upright": 0.0
         }
@@ -416,7 +641,7 @@
       {
         "held_out": "p02",
         "params": {
-          "f1": 0.8125,
+          "f1": 0.8169154228855722,
           "angleDeg": 9.0,
           "windowS": 2.0,
           "minFraction": 0.5,
@@ -440,48 +665,119 @@
       {
         "held_out": "p03",
         "params": {
-          "f1": 0.8121827411167513,
-          "angleDeg": 6.0,
+          "f1": 0.8042666666666667,
+          "angleDeg": 9.0,
           "windowS": 2.0,
           "minFraction": 0.5,
           "kY": 0.0
         },
         "test": {
-          "f1": 0.6188524590163934,
-          "precision": 0.4603658536585366,
+          "f1": 0.8579545454545454,
+          "precision": 0.7864583333333334,
           "recall": 0.94375,
           "n": 857,
           "positives": 160
         },
         "clip_rate": {
-          "desk_hands": 0.936,
+          "desk_hands": 0.293,
           "gestures": 0.0,
           "reading_notes_desk": 0.944,
-          "smile": 0.261,
+          "smile": 0.0,
           "upright": 0.0
         }
       },
       {
         "held_out": "p04",
         "params": {
-          "f1": 0.8947849954254345,
+          "f1": 0.8708677685950413,
+          "angleDeg": 10.0,
+          "windowS": 2.0,
+          "minFraction": 0.5,
+          "kY": 0.0
+        },
+        "test": {
+          "f1": 0.17894736842105263,
+          "precision": 0.7391304347826086,
+          "recall": 0.10179640718562874,
+          "n": 795,
+          "positives": 167
+        },
+        "clip_rate": {
+          "desk_hands": 0.0,
+          "gestures": 0.042,
+          "reading_notes_desk": 0.102,
+          "smile": 0.0,
+          "upright": 0.0
+        }
+      },
+      {
+        "held_out": "p05",
+        "params": {
+          "f1": 0.813700051894136,
           "angleDeg": 10.0,
           "windowS": 2.0,
           "minFraction": 0.5,
           "kY": 92.89301975723481
         },
         "test": {
-          "f1": 0.36444444444444446,
-          "precision": 0.7068965517241379,
-          "recall": 0.24550898203592814,
-          "n": 795,
-          "positives": 167
+          "f1": 0.807843137254902,
+          "precision": 1.0,
+          "recall": 0.6776315789473685,
+          "n": 804,
+          "positives": 152
         },
         "clip_rate": {
           "desk_hands": 0.0,
-          "gestures": 0.076,
-          "reading_notes_desk": 0.246,
-          "smile": 0.039,
+          "gestures": 0.0,
+          "reading_notes_desk": 0.678,
+          "smile": 0.0,
+          "upright": 0.0
+        }
+      },
+      {
+        "held_out": "p06",
+        "params": {
+          "f1": 0.8371352785145889,
+          "angleDeg": 9.0,
+          "windowS": 2.0,
+          "minFraction": 0.5,
+          "kY": 92.89301975723481
+        },
+        "test": {
+          "f1": 0.699724517906336,
+          "precision": 0.5594713656387665,
+          "recall": 0.9338235294117647,
+          "n": 555,
+          "positives": 136
+        },
+        "clip_rate": {
+          "desk_hands": 0.468,
+          "gestures": 0.114,
+          "reading_notes_desk": 0.934,
+          "smile": 0.136
+        }
+      },
+      {
+        "held_out": "p07",
+        "params": {
+          "f1": 0.7949622166246851,
+          "angleDeg": 9.0,
+          "windowS": 2.0,
+          "minFraction": 0.5,
+          "kY": 92.89301975723481
+        },
+        "test": {
+          "f1": 0.9657794676806084,
+          "precision": 1.0,
+          "recall": 0.9338235294117647,
+          "n": 669,
+          "positives": 136
+        },
+        "clip_rate": {
+          "desk_hands": 0.0,
+          "gestures": 0.0,
+          "reading_notes_desk": 0.934,
+          "smile": 0.0,
           "upright": 0.0
         }
       }

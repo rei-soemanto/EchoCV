@@ -6,23 +6,42 @@ v1 adds the team's own laptop-webcam recordings to the public data used by v0 (`
 
 ## Data
 
-- 4 team members (p01, p02, p03, p04), 6 sessions, recorded on their own devices with camera effects off and consent v1.0 (analysis, model training).
-- Part A: 10 behaviour clips of about 30 s per session. Part B: interview answers of 1 to 1.5 min in Indonesian and English.
-- 20,161 frames sampled at 5 fps with a face found; MediaPipe Face Landmarker and YOLO26n-pose features extracted once and shared by every model.
-- Baseline: median of the first 2 s of each answer (Part A frames use the session's answers), as the in-app look-at-camera calibration.
-- Evaluation: leave one person out (LOPO). Each number is the mean over the four held-out people; nothing about the held-out person is used to pick constants, weights or thresholds.
+- 7 team members (p01, p02, p03, p04, p05, p06, p07), 9 sessions, recorded on their own devices with camera effects off and consent v1.0 (analysis, model training).
+- Part A: 10 behaviour clips of about 30 s per session. Part B: interview answers of 1 to 1.5 min in Indonesian and English. p06 and p07 recorded Part A only.
+- 26,208 frames sampled at 5 fps with a face found; MediaPipe Face Landmarker and YOLO26n-pose features extracted once and shared by every model.
+- Baseline: median of the first 2 s of each answer (Part A frames use the session's answers), as the in-app look-at-camera calibration. Sessions without answers use the first 2 s of their `upright` clip instead, and those frames are never scored.
+- p06's `upright` file holds the looking-away behaviour after its first seconds, so its frames from 7 s on are scored as `looking_away` and its first 2 s are only the baseline.
+- Evaluation: leave one person out (LOPO). Each number is the mean over the seven held-out people; nothing about the held-out person is used to pick constants, weights or thresholds.
+
+## Test on people the first models never saw (p05, p06, p07)
+
+The first v1 was fitted on p01, p02, p03, p04 only. Before refitting, its frozen constants, pose rules and detector were scored on p05, p06, p07. This is the most honest number for a new user. The last column is the refit: each of these people held out from a model fitted on everyone else.
+
+| Signal | LOPO on four people | Frozen v1 on the new people | Refit, LOPO on the new people | Refit, LOPO on all seven |
+|---|---|---|---|---|
+| eye contact | 0.881 | **0.886** | 0.899 | 0.891 |
+| smile | 0.479 | **0.638** | 0.733 | 0.424 |
+| gaze down | 0.673 | **0.838** | 0.824 | 0.739 |
+| touching_face (pose rule) | 0.678 | **0.862** | 0.856 | 0.802 |
+| arms_crossed (pose rule) | 0.763 | **0.390** | 0.312 | 0.510 |
+| slouching (pose rule) | 0.501 | **0.372** | 0.192 | 0.417 |
+| reading_notes (pose rule) | 0.820 | **0.223** | 0.311 | 0.668 |
+| touching_face (detector) | 0.553 | **0.631** | 0.716 | 0.749 |
+| arms_crossed (detector) | 0.411 | **0.492** | 0.493 | 0.401 |
+| reading_notes (detector) | 0.951 | **0.355** | 0.518 | 0.766 |
+| slouching (detector) | 0.412 | **0.000** | 0.115 | 0.158 |
 
 ## Eye contact, smile and gaze down
 
 | Signal | v0 F1 | v1 LOPO F1 | Per held-out person (v1) |
 |---|---|---|---|
-| Eye contact | 0.722 | **0.881** | p01 0.91, p02 0.79, p03 0.86, p04 0.97 |
-| Smile (relative to baseline) | 0.129 | **0.479** | p01 0.69, p02 0.27, p03 0.46, p04 0.50 |
-| Gaze down (notes on the desk) | — | **0.673** | p01 0.91, p02 0.80, p03 0.62, p04 0.36 |
+| Eye contact | 0.704 | **0.891** | p01 0.91, p02 0.80, p03 0.86, p04 0.97, p05 0.92, p06 0.80, p07 0.97 |
+| Smile (relative to baseline) | 0.380 | **0.424** | p01 0.17, p02 0.01, p03 0.17, p04 0.41, p05 0.51, p06 0.94, p07 0.75 |
+| Gaze down (notes on the desk) | — | **0.739** | p01 0.87, p02 0.80, p03 0.86, p04 0.18, p05 0.81, p06 0.70, p07 0.97 |
 
-- v0 constants are fixed, so their F1 is measured on all four people.
-- **Eye contact**: kX 119.4, kY 92.9, tolerance 8.5 deg, now chosen on consented team recordings instead of Columbia Gaze. Positives are the `upright` and `smile` clips, negatives `looking_away`.
-- **Smile**: the score minus the person's calibration baseline, threshold 0.0115 (false-positive rate <= 2% on the non-smile clips of every training person). Ranking is good (LOPO AUC 0.882) but the F1 is held down by the strict false-positive cap and by frames inside smile clips with no smile. Smile stays feedback only and is not in the overall score (BR-09).
+- v0 constants are fixed, so their F1 is measured on every person.
+- **Eye contact**: kX 83.6, kY 92.9, tolerance 9.0 deg, chosen on consented team recordings instead of Columbia Gaze. Positives are the `upright` and `smile` clips, negatives `looking_away`.
+- **Smile**: the score minus the person's calibration baseline, threshold 0.1947 (false-positive rate <= 2% on the non-smile clips of every training person). Ranking is fair (LOPO AUC 0.883) but the F1 is held down by the strict false-positive cap and by frames inside smile clips with no smile. Smile stays feedback only and is not in the overall score (BR-09).
 - **Gaze down**: pitch below the baseline by 9 deg or more in at least 50% of the frames of the last 2 s. It misses people who read by moving only their eyes.
 
 ## Behaviours: pose rule against detector
@@ -31,36 +50,39 @@ The pose rule is a per-behaviour logistic model on calibration-relative face and
 
 | Behaviour | Pose rule LOPO F1 | Pose rule AUC | Detector v0 F1 | Detector v1 F1 | Shipped |
 |---|---|---|---|---|---|
-| touching_face | 0.678 | 0.861 | 0.608 | 0.553 | pose rule |
-| arms_crossed | 0.763 | 0.927 | 0.024 | 0.411 | pose rule |
-| slouching | 0.501 | 0.905 | 0.000 | 0.412 | pose rule |
-| reading_notes | 0.820 | 0.976 | 0.526 | 0.951 | detector |
+| touching_face | 0.802 | 0.916 | 0.403 | 0.749 | pose rule |
+| arms_crossed | 0.510 | 0.867 | 0.269 | 0.401 | pose rule |
+| slouching | 0.417 | 0.777 | 0.000 | 0.158 | pose rule |
+| reading_notes | 0.668 | 0.768 | 0.442 | 0.766 | detector |
 
 ## Behaviour detector v1 (YOLO26n)
 
-Fine-tuned from v0 with the first 10 layers frozen, lr0 0.002, on auto-labelled in-house frames plus a replay sample of the v0 training data. The final model is trained on all four people for 5 epochs (the mean best epoch of the LOPO folds).
+Fine-tuned from v0 with the first 10 layers frozen, lr0 0.002, on auto-labelled in-house frames plus a replay sample of the v0 training data. The final model is trained on all seven people for 11 epochs (the mean best epoch of the LOPO folds).
 
 | Held-out person | Best epoch | v0 mAP50 | v1 mAP50 | v1 mAP50 on v0 test_rf |
 |---|---|---|---|---|
-| p01 | 1 | 0.385 | 0.595 | 0.955 |
-| p02 | 1 | 0.314 | 0.622 | 0.951 |
-| p03 | 12 | 0.371 | 0.911 | 0.952 |
-| p04 | 6 | 0.222 | 0.674 | 0.955 |
+| p01 | 9 | 0.395 | 0.591 | 0.959 |
+| p02 | 14 | 0.318 | 0.704 | 0.949 |
+| p03 | 19 | 0.345 | 0.937 | 0.960 |
+| p04 | 9 | 0.223 | 0.714 | 0.946 |
+| p05 | 3 | 0.436 | 0.903 | 0.949 |
+| p06 | 19 | 0.535 | 0.761 | 0.954 |
+| p07 | 2 | 0.262 | 0.693 | 0.942 |
 
 Forgetting check on the v0 test set (public Roboflow images, no reading_notes):
 
 | Class | v0 mAP50 | v1 mAP50 |
 |---|---|---|
-| touching_face | 0.926 | 0.920 |
-| arms_crossed | 0.984 | 0.948 |
-| slouching | 0.994 | 0.994 |
-| all | 0.968 | 0.954 |
+| touching_face | 0.926 | 0.909 |
+| arms_crossed | 0.984 | 0.964 |
+| slouching | 0.994 | 0.993 |
+| all | 0.968 | 0.955 |
 
-v1 is promoted: it is used only for `reading_notes`, where it wins clearly on held-out people, and the small arms_crossed drop on the public set does not reach the app because arms_crossed comes from the pose rule.
+The app takes `reading_notes` from the detector and every other behaviour from the pose rules, whichever has the better LOPO F1.
 
-ONNX export parity: **pass**: 20/21 PyTorch detections matched in ONNX (IoU >= 0.9) on 20 labelled images; max confidence difference 0.032.
+ONNX export parity: **pass**: 20/20 PyTorch detections matched in ONNX (IoU >= 0.9) on 20 labelled images; max confidence difference 0.019.
 
-Auto-labelled frames (the clip name is the label; a frame is kept only when the pose rule agrees and a box can be built): arms_crossed 458, negative 3,503, reading_notes 686, slouching 552, touching_face 532.
+Auto-labelled frames (the clip name is the label; a frame is kept only when the pose rule agrees and a box can be built): arms_crossed 660, negative 4,904, reading_notes 801, slouching 837, touching_face 894.
 
 Training data:
 
@@ -78,9 +100,11 @@ _Waiting for the corrected transcripts._ The answers and Part A clips are cut at
 
 ## Known gaps
 
-- **Four people only.** The data comes from four team members, with little variety in faces, lighting, rooms and webcams, so the numbers are likely optimistic. The third sessions and new participants are kept back as an untouched test set.
-- **Slouching is weak** (pose rule LOPO F1 below the other behaviours). People slouch in different directions and laptop webcams show little of the torso.
+- **Seven people only**, all team members, so the numbers are likely optimistic. The frozen test above shows how much: the pose rules for arms_crossed, slouching and reading_notes lost a lot on new people.
+- **Loose paper notes are not detected.** The object signal only knows books and phones (COCO classes), so a person holding loose paper gets no reading_notes frames from auto-labelling, and the detector cannot learn it. Labelling a few hundred of those frames by hand would close this.
+- **Slouching is weak.** People slouch in different directions and laptop webcams show little of the torso; some slouching clips look almost upright.
 - **arms_crossed** depends on the arms being in frame; with a close webcam only the upper chest shows.
 - **Gaze down** misses people who look down with their eyes but not their head.
+- **The smile threshold follows the strictest training person.** The cap keeps false smiles at 2% or less for every training person, so one person with a high neutral score raises it for everyone.
 - **Clip labels are noisy.** Every frame of a clip gets the clip's label, including frames where the behaviour pauses.
 - **LiteRT (.tflite) export of detector v1 is pending**: run `ml/yolo/export_litert.ipynb` in Colab.

@@ -5,10 +5,11 @@ import pandas as pd
 from sklearn.metrics import roc_auc_score
 
 from calib.inhouse_face import FACE_CSV
-from calib.paths import RESULTS, SHARED
+from calib.paths import RESULTS
 from calib.rules import f1, gaze_error
 
 BASELINE_S = 2.0
+FALLBACK_CLIP = "upright"
 BASE_COLS = ["yaw", "pitch", "iris_x", "iris_y_corner", "smile"]
 CONTACT_POS = ("upright", "smile")
 CONTACT_NEG = ("looking_away",)
@@ -25,26 +26,47 @@ WINDOWS_S = (1.0, 2.0, 3.0, 4.0)
 FRACTIONS = (0.5, 0.6, 0.7, 0.8)
 FPS = 5.0
 OUT = RESULTS / "inhouse.json"
+RELABEL_CSV = FACE_CSV.parent.parent / "relabel.csv"
+
+
+def apply_relabel(df: pd.DataFrame, path=RELABEL_CSV) -> pd.DataFrame:
+    if not path.exists():
+        return df
+    df = df.copy()
+    for r in pd.read_csv(path, keep_default_na=False).itertuples():
+        m = (df["stem"] == r.stem) & (df["t"] >= float(r.start)) & (df["t"] < float(r.end))
+        df.loc[m, "clip"] = r.clip
+    return df[df["clip"] != ""]
 
 
 def load(path=FACE_CSV) -> pd.DataFrame:
-    df = pd.read_csv(path)
+    df = apply_relabel(pd.read_csv(path))
     df = df[df["detected"].fillna(False).astype(bool)].copy()
     df["sid"] = df["person"] + "_" + df["session"]
     return df.sort_values(["stem", "t"]).reset_index(drop=True)
 
 
-def add_baselines(df: pd.DataFrame) -> pd.DataFrame:
+def session_baseline(df: pd.DataFrame, cols: list[str]) -> tuple[pd.DataFrame, pd.Series]:
     starts = df[(df["part"] == "B") & (df["t"] <= BASELINE_S)]
-    per_answer = starts.groupby("stem")[BASE_COLS].median()
-    per_session = starts.groupby("sid")[BASE_COLS].median()
-    base = pd.DataFrame(index=df.index, columns=BASE_COLS, dtype=float)
+    per_answer = starts.groupby("stem")[cols].median()
+    per_session = starts.groupby("sid")[cols].median()
+    upright = df[(df["part"] == "A") & (df["clip"] == FALLBACK_CLIP)]
+    upright = upright[~upright["sid"].isin(per_session.index)]
+    first = upright.groupby("stem")["t"].transform("min")
+    fallback = upright[upright["t"] <= first + BASELINE_S]
+    sessions = pd.concat([per_session, fallback.groupby("sid")[cols].median()])
+    base = pd.DataFrame(index=df.index, columns=cols, dtype=float)
     answers = df["part"] == "B"
     base.loc[answers] = per_answer.reindex(df.loc[answers, "stem"]).to_numpy()
-    base.loc[~answers] = per_session.reindex(df.loc[~answers, "sid"]).to_numpy()
+    base.loc[~answers] = sessions.reindex(df.loc[~answers, "sid"]).to_numpy()
+    return base, pd.Series(df.index.isin(fallback.index), index=df.index)
+
+
+def add_baselines(df: pd.DataFrame) -> pd.DataFrame:
+    base, is_baseline = session_baseline(df, BASE_COLS)
     for c in BASE_COLS:
         df[f"b_{c}"] = base[c].astype(float)
-    return df.dropna(subset=[f"b_{c}" for c in BASE_COLS])
+    return df[~is_baseline].dropna(subset=[f"b_{c}" for c in BASE_COLS])
 
 
 def errors(df: pd.DataFrame, k_x: float, k_y: float) -> np.ndarray:
@@ -236,9 +258,11 @@ def gaze_down(df: pd.DataFrame, k_y: float) -> dict:
 
 
 def main() -> None:
-    v0 = json.loads((SHARED / "thresholds.json").read_text(encoding="utf-8"))
+    v0_eye = json.loads((RESULTS / "eye_contact.json").read_text(encoding="utf-8"))["params"]
+    v0_smile = json.loads((RESULTS / "smile.json").read_text(encoding="utf-8"))["threshold"]
     df = add_baselines(load())
-    eye = eye_contact(df, v0["eyeContact"])
+    print(json.dumps(df.groupby("person").size().to_dict()))
+    eye = eye_contact(df, v0_eye)
     result = {
         "data": {
             "frames": int(len(df)),
@@ -249,7 +273,7 @@ def main() -> None:
             "evaluation": "leave one person out",
         },
         "eye_contact": eye,
-        "smile": smile(df, v0["smile"]["threshold"]),
+        "smile": smile(df, v0_smile),
         "gaze_down": gaze_down(df, eye["params"]["kY"]),
     }
     RESULTS.mkdir(parents=True, exist_ok=True)

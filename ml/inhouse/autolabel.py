@@ -8,6 +8,7 @@ from pathlib import Path
 import yaml
 
 from inhouse.extract_pose import DERIVED, FRAMES, POSE_CSV, read_csv
+from inhouse.relabel import relabelled
 from yolo.build_dataset import CLASSES, _write
 from yolo.build_dataset import OUT as BEHAVIOUR
 
@@ -179,7 +180,7 @@ def decide(row: dict, scores: dict, thresholds: dict) -> tuple[str, list] | None
 
 
 def load_rows() -> list[dict]:
-    pose = {r["frame"]: r for r in read_csv(POSE_CSV)}
+    pose = {r["frame"]: r for r in relabelled(read_csv(POSE_CSV))}
     face = {r["frame"]: r for r in read_csv(FACE_CSV)}
     scores = {r["frame"]: r for r in read_csv(SCORES_CSV)}
     rows = []

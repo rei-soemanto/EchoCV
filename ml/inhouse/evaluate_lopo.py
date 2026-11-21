@@ -10,6 +10,7 @@ from common.paths import ARTIFACTS
 from common.provenance import write_provenance
 from inhouse.autolabel import BEHAVIOUR, CLIP_CLASS, POSTURE_JSON
 from inhouse.extract_pose import FRAMES, POSE_CSV, read_csv
+from inhouse.relabel import relabelled
 from yolo.build_dataset import CLASSES
 from yolo.evaluate import _metrics
 from yolo.train import RUNS, train
@@ -17,6 +18,7 @@ from yolo.train import RUNS, train
 V0 = ARTIFACTS / "yolo" / "v0" / "best.pt"
 OUT = ARTIFACTS / "yolo" / "v1"
 REPORT = ARTIFACTS / "yolo" / "v1_lopo.json"
+HOLDOUT_REPORT = ARTIFACTS / "yolo" / "v1_holdout.json"
 CONF = 0.25
 WINDOW = 3
 SKIP_FOR = {"reading_notes": ("reading_notes_desk",)}
@@ -82,6 +84,21 @@ def best_epoch(run: Path) -> int:
     return int(float(best["epoch"]))
 
 
+def holdout(model, v0, part_a: list[dict], people: list[str], weights: str) -> None:
+    per = {}
+    for pid in people:
+        rows = [r for r in part_a if r["person"] == pid]
+        per[pid] = {"v1": frame_scores(model, rows), "v0": frame_scores(v0, rows)}
+    summary = {
+        b: {m: float(np.mean([per[p][m][b]["f1"] for p in people])) for m in ("v1", "v0")}
+        for b in CLASSES
+    }
+    shown = Path(weights).resolve().relative_to(ARTIFACTS.parent.resolve()).as_posix()
+    report = {"weights": shown, "people": people, "summary": summary, "per_person": per}
+    HOLDOUT_REPORT.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(json.dumps(summary, indent=2))
+
+
 def main() -> None:
     from ultralytics import YOLO
 
@@ -91,17 +108,24 @@ def main() -> None:
     ap.add_argument("--lr0", type=float, default=0.002)
     ap.add_argument("--only", default="")
     ap.add_argument("--skip-final", action="store_true")
+    ap.add_argument("--prefix", default="v1_lopo")
+    ap.add_argument("--holdout", default="")
+    ap.add_argument("--weights", default=str(OUT / "best.pt"))
     args = ap.parse_args()
 
-    part_a = [r for r in read_csv(POSE_CSV) if r["part"] == "A"]
+    part_a = [r for r in relabelled(read_csv(POSE_CSV)) if r["part"] == "A"]
     people = sorted({r["person"] for r in part_a})
     rule = json.loads(POSTURE_JSON.read_text(encoding="utf-8"))["behaviours"]
     v0 = YOLO(V0)
+    if args.holdout:
+        held = args.holdout.split(",")
+        holdout(YOLO(args.weights), v0, part_a, held, args.weights)
+        return
     folds = []
     for held in people:
         if args.only and held != args.only:
             continue
-        name = f"v1_lopo_{held}"
+        name = f"{args.prefix}_{held}"
         run = RUNS / name
         if not (run / "weights" / "best.pt").exists():
             train(
@@ -153,7 +177,8 @@ def main() -> None:
         )
         summary[behaviour]["use"] = best[0]
     report = {
-        "settings": vars(args) | {"conf": CONF, "smoothing_frames": WINDOW},
+        "settings": {k: v for k, v in vars(args).items() if k not in ("holdout", "weights")}
+        | {"conf": CONF, "smoothing_frames": WINDOW},
         "summary": summary,
         "folds": folds,
         "v0_test_rf": _metrics(v0, "test_rf"),
@@ -166,7 +191,7 @@ def main() -> None:
     epochs = max(5, round(float(np.mean([f["best_epoch"] for f in folds]))))
     train(
         data=str(BEHAVIOUR / "data_inhouse_all.yaml"),
-        name="v1_all",
+        name=f"{args.prefix}_all",
         weights=str(V0),
         epochs=epochs,
         patience=epochs,
@@ -174,7 +199,7 @@ def main() -> None:
         lr0=args.lr0,
         plots=False,
     )
-    final = RUNS / "v1_all" / "weights" / "last.pt"
+    final = RUNS / f"{args.prefix}_all" / "weights" / "last.pt"
     OUT.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(final, OUT / "best.pt")
     model = YOLO(OUT / "best.pt")

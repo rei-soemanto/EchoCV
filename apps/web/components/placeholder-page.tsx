@@ -1,21 +1,21 @@
-import Link from "next/link";
-
-// Temporary shell for routes that exist in the architecture but aren't built yet.
+// Page frame for routes whose content lands in a later sprint: the design's page header
+// (Display/H1 + body) so the shell and navigation can be reviewed end to end now.
 export function PlaceholderPage({
   title,
   description,
+  children,
 }: {
   title: string;
   description: string;
+  children?: React.ReactNode;
 }) {
   return (
-    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-4 px-6 py-16">
-      <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
-      <p className="text-muted-foreground">{description}</p>
-      <p className="text-sm text-muted-foreground">Not built yet.</p>
-      <Link href="/" className="text-sm underline underline-offset-4">
-        Back to home
-      </Link>
-    </main>
+    <div className="flex flex-col gap-6">
+      <header className="flex flex-col gap-2">
+        <h1 className="text-h1">{title}</h1>
+        <p className="text-body max-w-2xl text-ink-secondary">{description}</p>
+      </header>
+      {children}
+    </div>
   );
 }

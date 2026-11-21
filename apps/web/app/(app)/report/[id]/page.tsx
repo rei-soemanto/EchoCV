@@ -4,8 +4,8 @@ export default async function ReportPage(props: PageProps<"/report/[id]">) {
   const { id } = await props.params;
   return (
     <PlaceholderPage
-      title={`Report ${id}`}
-      description="Scores and time-stamped feedback for one session."
+      title="Laporan sesi"
+      description={`Skor dan umpan balik dengan stempel waktu untuk sesi ${id}.`}
     />
   );
 }

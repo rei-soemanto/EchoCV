@@ -1,0 +1,483 @@
+{
+  "version": "0.1.0",
+  "enums": {
+    "job_fields": ["IT"],
+    "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+    "languages": ["id", "en"],
+    "question_sets": ["general", "behavioral", "role_specific"],
+    "roles": [
+      "Backend developer",
+      "Frontend developer",
+      "Fullstack developer",
+      "Mobile developer",
+      "QA engineer",
+      "Data / AI engineer",
+      "UI/UX designer"
+    ]
+  },
+  "questions": [
+    {
+      "id": "q01",
+      "question_set": "general",
+      "category": "introduction",
+      "job_field": "IT",
+      "roles": ["all"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 90,
+      "text": {
+        "id": "Perkenalkan diri Anda dan ceritakan latar belakang pendidikan Anda.",
+        "en": "Introduce yourself and your educational background."
+      },
+      "tags": ["introduction", "quick_start"]
+    },
+    {
+      "id": "q02",
+      "question_set": "general",
+      "category": "motivation",
+      "job_field": "IT",
+      "roles": ["all"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 90,
+      "text": {
+        "id": "Mengapa Anda tertarik bekerja di bidang IT?",
+        "en": "Why do you want to work in IT?"
+      },
+      "tags": ["motivation", "it_career"]
+    },
+    {
+      "id": "q03",
+      "question_set": "behavioral",
+      "category": "behavioral_star",
+      "job_field": "IT",
+      "roles": ["all"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Ceritakan proyek paling menantang yang pernah Anda kerjakan. Apa peran Anda dan bagaimana hasilnya?",
+        "en": "Tell me about the most challenging project you have worked on. What was your role and what was the result?"
+      },
+      "tags": ["star", "project", "ownership"]
+    },
+    {
+      "id": "q04",
+      "question_set": "behavioral",
+      "category": "behavioral_star",
+      "job_field": "IT",
+      "roles": ["all"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Ceritakan saat Anda berbeda pendapat dengan anggota tim. Bagaimana Anda menyelesaikannya?",
+        "en": "Tell me about a time you disagreed with a teammate. How did you resolve it?"
+      },
+      "tags": ["star", "teamwork", "conflict_resolution"]
+    },
+    {
+      "id": "q05",
+      "question_set": "behavioral",
+      "category": "behavioral_star",
+      "job_field": "IT",
+      "roles": ["all"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Ceritakan pengalaman ketika Anda gagal atau melakukan kesalahan. Apa yang Anda pelajari?",
+        "en": "Tell me about a time you failed or made a mistake. What did you learn?"
+      },
+      "tags": ["star", "growth_mindset", "accountability"]
+    },
+    {
+      "id": "q06",
+      "question_set": "behavioral",
+      "category": "situational",
+      "job_field": "IT",
+      "roles": ["all"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 90,
+      "text": {
+        "id": "Bagaimana Anda menangani tenggat waktu yang sangat ketat dengan banyak tugas sekaligus?",
+        "en": "How would you handle a very tight deadline with several tasks at once?"
+      },
+      "tags": ["situational", "prioritization", "time_management"]
+    },
+    {
+      "id": "q07",
+      "question_set": "behavioral",
+      "category": "behavioral_star",
+      "job_field": "IT",
+      "roles": ["all"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Ceritakan bagaimana Anda mempelajari teknologi baru dalam waktu singkat.",
+        "en": "Tell me how you learned a new technology in a short time."
+      },
+      "tags": ["star", "adaptability", "learning"]
+    },
+    {
+      "id": "q08",
+      "question_set": "general",
+      "category": "self_assessment",
+      "job_field": "IT",
+      "roles": ["all"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 90,
+      "text": {
+        "id": "Apa kelebihan dan kekurangan terbesar Anda?",
+        "en": "What are your greatest strengths and weaknesses?"
+      },
+      "tags": ["self_assessment", "strengths_weaknesses"]
+    },
+    {
+      "id": "q09",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Backend developer", "Fullstack developer", "Data / AI engineer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Jelaskan perbedaan database SQL dan NoSQL, dan kapan Anda memilih masing-masing.",
+        "en": "Explain the difference between SQL and NoSQL databases and when you would choose each."
+      },
+      "tags": ["databases", "sql", "nosql", "architecture"]
+    },
+    {
+      "id": "q10",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Backend developer", "Frontend developer", "Fullstack developer", "QA engineer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Jelaskan apa yang terjadi ketika Anda mengetik alamat sebuah situs web di browser.",
+        "en": "Explain what happens when you type a website address into a browser."
+      },
+      "tags": ["web_fundamentals", "http", "dns", "browser"]
+    },
+    {
+      "id": "q11",
+      "question_set": "role_specific",
+      "category": "situational_technical",
+      "job_field": "IT",
+      "roles": [
+        "Backend developer",
+        "Frontend developer",
+        "Fullstack developer",
+        "Mobile developer",
+        "QA engineer",
+        "Data / AI engineer"
+      ],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Aplikasi yang Anda buat tiba-tiba error di production. Apa langkah-langkah Anda?",
+        "en": "An app you built suddenly fails in production. What do you do?"
+      },
+      "tags": ["debugging", "incident_response", "production"]
+    },
+    {
+      "id": "q12",
+      "question_set": "general",
+      "category": "career_goals",
+      "job_field": "IT",
+      "roles": ["all"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 90,
+      "text": {
+        "id": "Di mana Anda melihat diri Anda lima tahun ke depan?",
+        "en": "Where do you see yourself in five years?"
+      },
+      "tags": ["career_goals", "growth"]
+    },
+    {
+      "id": "q13",
+      "question_set": "general",
+      "category": "work_style",
+      "job_field": "IT",
+      "roles": ["all"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 90,
+      "text": {
+        "id": "Lingkungan kerja dan pola kolaborasi tim seperti apa yang membuat Anda bekerja paling efektif?",
+        "en": "What kind of work environment and team collaboration style helps you perform at your best?"
+      },
+      "tags": ["teamwork", "work_style", "culture_fit"]
+    },
+    {
+      "id": "q14",
+      "question_set": "behavioral",
+      "category": "behavioral_star",
+      "job_field": "IT",
+      "roles": ["all"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Ceritakan pengalaman ketika kebutuhan proyek tiba-tiba berubah di tengah jalan atau terasa kurang jelas. Bagaimana Anda menghadapinya?",
+        "en": "Tell me about a time project requirements changed midway or were unclear. How did you handle it?"
+      },
+      "tags": ["star", "ambiguity", "communication"]
+    },
+    {
+      "id": "q15",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Backend developer", "Fullstack developer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda merancang REST API yang aman, konsisten, dan mudah dipelihara oleh tim?",
+        "en": "How do you design a REST API that is secure, consistent, and easy for a team to maintain?"
+      },
+      "tags": ["backend", "api_design", "security"]
+    },
+    {
+      "id": "q16",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Backend developer", "Fullstack developer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana cara Anda mendiagnosis dan mengatasi query database yang berjalan lambat pada aplikasi yang ramai diakses?",
+        "en": "How would you diagnose and fix a slow database query in a high-traffic application?"
+      },
+      "tags": ["backend", "databases", "performance"]
+    },
+    {
+      "id": "q17",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Frontend developer", "Fullstack developer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda menjaga performa halaman web dan aksesibilitas antarmuka agar tetap cepat dan nyaman digunakan di berbagai perangkat?",
+        "en": "How do you keep a web application fast and accessible across different screen sizes and devices?"
+      },
+      "tags": ["frontend", "performance", "accessibility"]
+    },
+    {
+      "id": "q18",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Frontend developer", "Fullstack developer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda mengatur state aplikasi dan pemanggilan API di sisi frontend agar kode tetap rapi dan tidak memicu bug?",
+        "en": "How do you manage application state and API data fetching on the frontend to keep code clean and avoid bugs?"
+      },
+      "tags": ["frontend", "state_management", "api_integration"]
+    },
+    {
+      "id": "q19",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Frontend developer", "UI/UX designer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Ceritakan bagaimana Anda menerjemahkan desain antarmuka menjadi komponen yang konsisten dan responsif, serta bagaimana kolaborasi Anda dengan desainer atau developer.",
+        "en": "Describe how you turn interface designs into consistent, responsive components and collaborate between design and engineering."
+      },
+      "tags": ["ui_engineering", "design_system", "collaboration"]
+    },
+    {
+      "id": "q20",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Mobile developer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Tantangan apa saja yang paling sering Anda hadapi saat mengembangkan aplikasi mobile, seperti manajemen siklus hidup layar atau ukuran perangkat yang beragam?",
+        "en": "What are the main challenges you face when building mobile apps, such as screen lifecycle management or varying device sizes?"
+      },
+      "tags": ["mobile", "lifecycle", "responsive_ui"]
+    },
+    {
+      "id": "q21",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Mobile developer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda menangani kondisi jaringan internet yang lambat atau terputus pada aplikasi mobile?",
+        "en": "How do you handle slow or offline network conditions in a mobile application?"
+      },
+      "tags": ["mobile", "offline_support", "networking"]
+    },
+    {
+      "id": "q22",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Mobile developer", "Frontend developer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Jika aplikasi terasa patah-patah atau boros memori saat di-scroll, langkah apa yang Anda lakukan untuk menemukan penyebabnya?",
+        "en": "If an app feels laggy or consumes too much memory while scrolling, how do you profile and find the root cause?"
+      },
+      "tags": ["mobile", "frontend", "profiling", "performance"]
+    },
+    {
+      "id": "q23",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["QA engineer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda menyusun test case dan menentukan prioritas pengujian ketika waktu rilis fitur sangat terbatas?",
+        "en": "How do you write test cases and prioritize what to test when release time is very tight?"
+      },
+      "tags": ["qa", "test_planning", "prioritization"]
+    },
+    {
+      "id": "q24",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["QA engineer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana cara Anda melaporkan bug kepada developer agar mudah direproduksi, dan bagaimana Anda memverifikasi perbaikannya?",
+        "en": "How do you write a bug report so developers can reproduce it easily, and how do you verify the fix?"
+      },
+      "tags": ["qa", "bug_reporting", "verification"]
+    },
+    {
+      "id": "q25",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Data / AI engineer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda membersihkan dan memvalidasi data mentah sebelum digunakan untuk analisis atau melatih model AI?",
+        "en": "How do you clean and validate raw data before using it for analysis or training an AI model?"
+      },
+      "tags": ["data", "ai", "data_quality"]
+    },
+    {
+      "id": "q26",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Data / AI engineer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda mengevaluasi apakah sebuah model machine learning atau AI sudah cukup baik untuk dipakai pengguna nyata, bukan hanya bagus saat pelatihan?",
+        "en": "How do you evaluate whether a machine learning or AI model generalizes well for real users rather than just performing well during training?"
+      },
+      "tags": ["ai", "evaluation", "generalization"]
+    },
+    {
+      "id": "q27",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["UI/UX designer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Ceritakan proses Anda merancang sebuah fitur dari riset pengguna hingga menjadi wireframe dan prototipe siap uji.",
+        "en": "Walk me through your process for designing a feature from user research to wireframes and testable prototypes."
+      },
+      "tags": ["ui_ux", "user_research", "prototyping"]
+    },
+    {
+      "id": "q28",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["UI/UX designer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda melakukan usability testing dan mengubah masukan pengguna yang beragam menjadi perbaikan desain yang konkret?",
+        "en": "How do you run usability testing and turn mixed user feedback into concrete design improvements?"
+      },
+      "tags": ["ui_ux", "usability_testing", "iteration"]
+    },
+    {
+      "id": "q29",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["UI/UX designer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda menyeimbangkan kebutuhan bisnis, kemudahan penggunaan, dan keterbatasan teknis saat merancang antarmuka?",
+        "en": "How do you balance business goals, usability, and technical constraints when designing an interface?"
+      },
+      "tags": ["ui_ux", "product_thinking", "tradeoffs"]
+    },
+    {
+      "id": "q30",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": [
+        "Backend developer",
+        "Fullstack developer",
+        "Mobile developer",
+        "QA engineer",
+        "Data / AI engineer"
+      ],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda menggunakan Git dan code review dalam proyek tim agar perubahan kode tetap aman dan tidak saling menimpa?",
+        "en": "How do you use Git and code reviews in a team project to keep changes safe and avoid conflicts?"
+      },
+      "tags": ["git", "code_review", "engineering_workflow"]
+    }
+  ]
+}

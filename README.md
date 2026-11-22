@@ -85,6 +85,7 @@ Team decisions (architecture doc §5):
 | Browser and webcam test matrix | Done |
 | MVP test plan and acceptance tests | Done |
 | MVP acceptance criteria and sprint scope | Done |
+| Bilingual interview question bank starter dataset | Done |
 
 ## Progress so far
 
@@ -96,12 +97,13 @@ Team decisions (architecture doc §5):
 - Defined the browser and webcam test matrix covering Chrome, Edge, Safari and Firefox across team laptop profiles and mobile viewports for landing and report pages.
 - Added the MVP test plan and acceptance tests covering authentication, calibration, live practice, upload mode, and feedback reports.
 - Defined testable MVP acceptance criteria, business-rule checks, and sprint scope boundaries across live practice and upload modes.
+- Started the bilingual Indonesian and English interview question bank in `shared/questions/` covering general, behavioural, and IT role-specific sets.
 
 ## Contributors
 
 | Name | Work |
 |---|---|
-| Ivan | Defined the MVP acceptance criteria, business-rule verification checks, and scope boundaries across live practice and upload modes. |
+| Ivan | Defined the MVP acceptance criteria, business-rule verification checks, and scope boundaries across live practice and upload modes. Created the bilingual Indonesian and English interview question bank starter dataset across general, behavioural, and IT role-specific sets. |
 | Kenjo | Built the Playwright end-to-end test skeleton with page objects for setup, calibration, interview room, upload and reports. |
 | Life | Set up the Supabase database, row-level security and private storage so each user's practice data stays their own. |
 | Rei | Tuned the eye-contact, smile, looking-down and posture rules and trained behaviour detector v1 on the team's own webcam recordings, so feedback holds up on ordinary laptop cameras. Built the speech analysis that turns a recorded answer into fillers, pauses, pace, pitch, volume and language mixing. Packaged the face, pose, object and behaviour models to run in the browser, with a CPU fallback when WebGPU is missing. |

@@ -82,6 +82,8 @@ Team decisions (architecture doc §5):
 | Speech analysis of an answer: fillers, pauses, pace, pitch, volume and language mixing | Done |
 | In-browser vision models with a WebGPU path and a CPU fallback | Done |
 | End to end test skeleton | Done |
+| Browser and webcam test matrix | Done |
+| MVP test plan and acceptance tests | Done |
 
 ## Progress so far
 
@@ -90,6 +92,8 @@ Team decisions (architecture doc §5):
 - The speech service analyses a recorded answer in Indonesian or English: it finds vocal fillers such as "eee" and "hmm", filler words like "jadi" or "kayak" when they come with a hesitation, pauses and long pauses, words and syllables per second, pitch, pitch variation and volume, and marks each word as Indonesian or English so language mixing can be shown. A one-minute answer takes about half a minute on a laptop CPU.
 - The face, pose, object and behaviour models now load in the browser: on WebGPU where the browser has it, and on the CPU otherwise, with a clear message when neither works. The browser letterboxes and decodes frames exactly as during calibration, checked against the Python models on the team's recordings.
 - Built the Playwright end-to-end test skeleton with page objects for setup, calibration, interview room, upload and reports, verified with fake media streams.
+- Defined the browser and webcam test matrix covering Chrome, Edge, Safari and Firefox across team laptop profiles and mobile viewports for landing and report pages.
+- Added the MVP test plan and acceptance tests covering authentication, calibration, live practice, upload mode, and feedback reports.
 
 ## Contributors
 

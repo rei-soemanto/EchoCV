@@ -81,6 +81,7 @@ Team decisions (architecture doc §5):
 | Behaviour detector v1 and posture calibration on laptop-webcam recordings | Done |
 | Speech analysis of an answer: fillers, pauses, pace, pitch, volume and language mixing | Done |
 | In-browser vision models with a WebGPU path and a CPU fallback | Done |
+| Browser and webcam test matrix | Done |
 | MVP test plan and acceptance tests | Done |
 
 ## Progress so far
@@ -89,12 +90,13 @@ Team decisions (architecture doc §5):
 - Eye contact, smile, looking down at notes and the four behaviours (touching the face, arms crossed, slouching, reading notes) are now tuned on the team's own laptop-webcam recordings and measured on people the models never saw. With seven people, eye-contact accuracy rose from F1 0.70 to 0.89 and reading notes is detected at F1 0.77; a test on three people the first models never saw is included. The results are in `docs/model-report-v1.md`.
 - The speech service analyses a recorded answer in Indonesian or English: it finds vocal fillers such as "eee" and "hmm", filler words like "jadi" or "kayak" when they come with a hesitation, pauses and long pauses, words and syllables per second, pitch, pitch variation and volume, and marks each word as Indonesian or English so language mixing can be shown. A one-minute answer takes about half a minute on a laptop CPU.
 - The face, pose, object and behaviour models now load in the browser: on WebGPU where the browser has it, and on the CPU otherwise, with a clear message when neither works. The browser letterboxes and decodes frames exactly as during calibration, checked against the Python models on the team's recordings.
+- Defined the browser and webcam test matrix covering Chrome, Edge, Safari and Firefox across team laptop profiles and mobile viewports for landing and report pages.
 - Added the MVP test plan and acceptance tests covering authentication, calibration, live practice, upload mode, and feedback reports.
 
 ## Contributors
 
 | Name | Work |
 |---|---|
-| Kenjo | Wrote the MVP test plan and acceptance test cases covering all core use case flows and business rules. |
+| Kenjo | Defined the browser and webcam test matrix across desktop engines, team hardware and mobile viewports. Wrote the MVP test plan and acceptance test cases covering all core use case flows and business rules. |
 | Life | Set up the Supabase database, row-level security and private storage so each user's practice data stays their own. |
 | Rei | Tuned the eye-contact, smile, looking-down and posture rules and trained behaviour detector v1 on the team's own webcam recordings, so feedback holds up on ordinary laptop cameras. Built the speech analysis that turns a recorded answer into fillers, pauses, pace, pitch, volume and language mixing. Packaged the face, pose, object and behaviour models to run in the browser, with a CPU fallback when WebGPU is missing. |

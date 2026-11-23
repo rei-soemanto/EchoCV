@@ -89,9 +89,14 @@ uv run python -m inhouse.autolabel              # check derived/contact/*.jpg; b
 uv run python -m inhouse.evaluate_lopo --prefix v1_lopo7   # GPU: one fold per person + final -> artifacts/yolo/v1/
 uv run python -m yolo.export --version v1       # ONNX + parity check
 YOLO_AUTOINSTALL=false uv run python -m yolo.export_browser   # pose, objects, detector -> apps/web/public/models
+uv run python -m whisper.inhouse_pace           # needs services/speech running on :8000 -> calibration/results/inhouse_pace.json
 cd calibration && uv run python -m calib.export_thresholds && cd ..
 uv run python report_v1.py                      # -> docs/model-report-v1.md
 ```
+
+`whisper.inhouse_pace` sends every Part B answer through the speech service's `/analyze` and keeps
+only the numbers (no transcripts). Answers already measured are reused, so delete the file to
+measure again after a speech model change.
 
 Run GPU jobs one at a time: on the 4 GB card a second CUDA process spills into shared system
 memory and both slow to a crawl (or crash).

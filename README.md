@@ -90,6 +90,8 @@ Team decisions (architecture doc §5):
 | Backend connection to the speech service | Done |
 | Smile shown as feedback only, outside the overall score, and one shared setting for session length and timers | Done |
 | Speaking pace target ranges for Indonesian and English answers | Done |
+| Speech service ready for the backend: audio by signed link and a service key | Done |
+| Eye contact and smile in the browser with a 5-second calibration | In progress |
 
 ## Progress so far
 
@@ -106,6 +108,8 @@ Team decisions (architecture doc §5):
 - The backend can send a recorded answer to the speech service and get its speech metrics back, waiting a limited time and trying again when the service is busy or unreachable.
 - Smile is now shown as feedback only and no longer counts in the overall score, and the number of questions, the 15-second preparation time and the 3-minute answer limit come from one shared setting in `shared/session.json`.
 - Speaking pace now has its own target range for Indonesian and English, measured on the team's recorded answers: pace is judged in syllables per second so Indonesian answers are not rated slower, and shown in words per minute (about 120 to 145 in Indonesian and 140 to 175 in English for the team). These ranges are a first estimate until they are checked against HR ratings.
+- The speech service can now take an answer either as an uploaded file or as a signed storage link that it downloads itself, only from the project's storage host, and it accepts requests only from the backend once a service key is set.
+- The browser can now take a 5-second look-at-the-camera calibration and then measure eye contact and smile against it for every answer, using the constants tuned on the team's recordings and checked against the Python calibration code. It gives a live hint when the face leaves the frame or the gaze stays away, and counts time out of frame as no eye contact.
 - The sessions API, the QA test plan and the MVP acceptance criteria now all use the same session settings (3 questions, 15-second preparation, 3-minute answers), the smile rule and the pace ranges from `shared/`.
 
 ## Contributors
@@ -115,4 +119,4 @@ Team decisions (architecture doc §5):
 | Ivan | Defined the MVP acceptance criteria, business-rule verification checks, and scope boundaries across live practice and upload modes. Created the bilingual Indonesian and English interview question bank starter dataset across general, behavioural, and IT role-specific sets. |
 | Kenjo | Built the Playwright end-to-end test skeleton with page objects for setup, calibration, interview room, upload and reports. |
 | Life | Set up the Supabase database, row-level security and private storage so each user's practice data stays their own. Built the sessions API that starts a practice session with matching questions from the question bank and finishes or cancels it. Connected the backend to the speech service so an answer's recording comes back as speech metrics. |
-| Rei | Tuned the eye-contact, smile, looking-down and posture rules and trained behaviour detector v1 on the team's own webcam recordings, so feedback holds up on ordinary laptop cameras. Built the speech analysis that turns a recorded answer into fillers, pauses, pace, pitch, volume and language mixing. Packaged the face, pose, object and behaviour models to run in the browser, with a CPU fallback when WebGPU is missing. Kept smile out of the overall score and put the session length and timers in one shared setting. Measured the team's speaking pace in both languages to set fair pace ranges for Indonesian and English. Brought the sessions API, test plan and acceptance criteria in line with these shared settings. |
+| Rei | Tuned the eye-contact, smile, looking-down and posture rules and trained behaviour detector v1 on the team's own webcam recordings, so feedback holds up on ordinary laptop cameras. Built the speech analysis that turns a recorded answer into fillers, pauses, pace, pitch, volume and language mixing. Packaged the face, pose, object and behaviour models to run in the browser, with a CPU fallback when WebGPU is missing. Kept smile out of the overall score and put the session length and timers in one shared setting. Measured the team's speaking pace in both languages to set fair pace ranges for Indonesian and English. Brought the sessions API, test plan and acceptance criteria in line with these shared settings. Let the speech service fetch answers from a signed storage link and accept only the backend's requests. Built the in-browser eye-contact and smile measurement with its 5-second calibration and live hints. |

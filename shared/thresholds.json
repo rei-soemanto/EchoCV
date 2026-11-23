@@ -1,5 +1,5 @@
 {
-  "version": "0.4.0",
+  "version": "0.5.0",
   "eyeContact": {
     "kX": 83.55752340980222,
     "kY": 92.89301975723481,
@@ -72,6 +72,10 @@
   "posture": {
     "featureNotes": "Face features come from MediaPipe Face Landmarker (fx, fy, fw, fh as fractions of the frame, roll and pitch in degrees), relative to the calibration baseline; pose features come from YOLO26n-pose keypoints (confidence >= 0.5), with distances in face widths. probability = sigmoid(bias + sum(weights * (x - mean) / scale)), averaged over the last smoothingFrames frames, flagged when >= threshold.",
     "detector": "artifacts/yolo/v1/best.pt",
+    "sampleFps": 5.0,
+    "baselineSeconds": 2.0,
+    "keypointConf": 0.5,
+    "predictConf": 0.25,
     "behaviours": {
       "touching_face": {
         "source": "pose_rule",
@@ -437,6 +441,12 @@
           "detector_v0_lopo_f1": 0.442
         }
       }
+    },
+    "detectorRule": {
+      "conf": 0.25,
+      "smoothingFrames": 3,
+      "minFraction": 0.5,
+      "rule": "a frame votes for a class when the detector's best box of that class has conf >= conf; flagged when at least minFraction of the last smoothingFrames frames vote"
     }
   },
   "pace": {

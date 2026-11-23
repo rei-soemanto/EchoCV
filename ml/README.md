@@ -90,7 +90,7 @@ uv run python -m inhouse.evaluate_lopo --prefix v1_lopo7   # GPU: one fold per p
 uv run python -m yolo.export --version v1       # ONNX + parity check
 YOLO_AUTOINSTALL=false uv run python -m yolo.export_browser   # pose, objects, detector -> apps/web/public/models
 uv run python -m whisper.inhouse_pace           # needs services/speech running on :8000 -> calibration/results/inhouse_pace.json
-cd calibration && uv run python -m calib.export_thresholds && cd ..
+cd calibration && uv run python -m calib.export_thresholds && uv run python -m calib.export_face_fixture && cd ..   # face fixture: apps/web/tests/unit/vision
 uv run python report_v1.py                      # -> docs/model-report-v1.md
 ```
 

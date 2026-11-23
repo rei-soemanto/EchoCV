@@ -1,3 +1,4 @@
+import session from "@echocv/shared/session.json";
 import bank from "../../../../shared/questions/bank.json";
 
 export type Language = "id" | "en";
@@ -13,7 +14,8 @@ export type SessionRequest = {
 
 export type PickedQuestion = { question_id: string; question_text: string };
 
-export const QUESTIONS_PER_SESSION = 3;
+export const QUESTIONS_PER_SESSION = session.questionsPerSession;
+export const QUICK_START_QUESTIONS = session.quickStartQuestions;
 const MODES = ["live", "upload"];
 
 type Result<T> = { ok: true; value: T } | { ok: false; error: string };
@@ -80,7 +82,7 @@ export function pickQuestions(
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
   return shuffled
-    .slice(0, request.quick_start ? 1 : QUESTIONS_PER_SESSION)
+    .slice(0, request.quick_start ? QUICK_START_QUESTIONS : QUESTIONS_PER_SESSION)
     .map((question) => ({ question_id: question.id, question_text: question.text[request.language] }));
 }
 

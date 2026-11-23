@@ -7,7 +7,18 @@ import { Calibration } from "@/lib/vision/calibration";
 import { buildBaseline, faceRules, isEyeContact, isSmiling, median } from "@/lib/vision/eye-contact";
 import type { FaceFeatures } from "@/lib/vision/face-features";
 
-const looking: FaceFeatures = { yaw: 2, pitch: -3, roll: 0, irisX: 0.01, irisY: 0.02, smile: 0.05 };
+const looking: FaceFeatures = {
+  yaw: 2,
+  pitch: -3,
+  roll: 0,
+  irisX: 0.01,
+  irisY: 0.02,
+  smile: 0.05,
+  fx: 0.5,
+  fy: 0.4,
+  fw: 0.2,
+  fh: 0.3,
+};
 const away: FaceFeatures = { ...looking, yaw: looking.yaw + 30 };
 const smiling: FaceFeatures = { ...looking, smile: looking.smile + thresholds.smile.threshold + 0.05 };
 const baseline = buildBaseline([looking]);

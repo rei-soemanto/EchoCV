@@ -24,7 +24,7 @@ describe("face features match calib/rules.py", () => {
   });
 
   it.each(fixture.cases.map((c, i) => [i, c] as const))("case %i gaze error", (_, c) => {
-    const features = { ...c.expected, smile: 0 };
+    const features = { ...c.expected, smile: 0, fx: 0.5, fy: 0.4, fw: 0.2, fh: 0.3 };
     const baseline = { ...c.baseline, smile: 0 };
     const rules = { kX: fixture.kX, kY: fixture.kY, toleranceDeg: 9, smileThreshold: 0.2 };
     expect(gazeError(features, baseline, rules)).toBeCloseTo(c.expected.gazeError, 4);

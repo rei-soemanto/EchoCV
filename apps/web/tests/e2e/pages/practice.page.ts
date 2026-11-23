@@ -6,6 +6,9 @@ export class PracticePage {
   readonly calibrationLink: Locator;
   readonly cameraPreview: Locator;
   readonly continueToRoomLink: Locator;
+  readonly lockedStartButton: Locator;
+  readonly startCalibrationButton: Locator;
+  readonly faceNotFoundAlert: Locator;
   readonly roomHeading: Locator;
 
   constructor(page: Page) {
@@ -14,6 +17,10 @@ export class PracticePage {
     this.calibrationLink = page.getByRole("link", { name: "Lanjut ke kalibrasi" });
     this.cameraPreview = page.getByLabel("Pratinjau kamera");
     this.continueToRoomLink = page.getByRole("link", { name: "Mulai wawancara" });
+    // Until the 5-second calibration succeeds, "Mulai wawancara" is a disabled button, not a link.
+    this.lockedStartButton = page.getByRole("button", { name: "Mulai wawancara" });
+    this.startCalibrationButton = page.getByRole("button", { name: "Mulai kalibrasi" });
+    this.faceNotFoundAlert = page.getByRole("alert").filter({ hasText: "Wajah tidak terlihat cukup lama" });
     this.roomHeading = page.getByRole("heading", { name: "Ruang wawancara" });
   }
 
@@ -35,7 +42,8 @@ export class PracticePage {
 
   async expectCalibrationReady() {
     await expect(this.cameraPreview).toBeVisible();
-    await expect(this.continueToRoomLink).toBeVisible();
+    await expect(this.startCalibrationButton).toBeEnabled();
+    await expect(this.lockedStartButton).toBeDisabled();
   }
 
   async expectRoomLoaded() {

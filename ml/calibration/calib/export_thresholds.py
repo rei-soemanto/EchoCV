@@ -5,12 +5,16 @@ Run from ml/calibration/:  uv run python -m calib.export_thresholds
 
 import json
 
+from calib.inhouse_calibrate import BASELINE_S, FPS
+from calib.inhouse_posture import KP_CONF
 from calib.paths import CALIB_ROOT, RESULTS, SHARED
 
 INHOUSE = RESULTS / "inhouse.json"
 POSTURE = RESULTS / "inhouse_posture.json"
 DETECTOR_LOPO = CALIB_ROOT.parent / "artifacts" / "yolo" / "v1_lopo.json"
 PACE = RESULTS / "inhouse_pace.json"
+DETECTOR_MIN_FRACTION = 0.5
+PREDICT_CONF = 0.25
 
 
 def _read(path):
@@ -107,8 +111,21 @@ def posture(result: dict, detector: dict | None) -> dict:
         "distances in face widths. probability = sigmoid(bias + sum(weights * (x - mean) / "
         "scale)), averaged over the last smoothingFrames frames, flagged when >= threshold.",
         "detector": "artifacts/yolo/v1/best.pt" if detector else "artifacts/yolo/v0/best.pt",
+        "sampleFps": FPS,
+        "baselineSeconds": BASELINE_S,
+        "keypointConf": KP_CONF,
+        "predictConf": PREDICT_CONF,
         "behaviours": {},
     }
+    if detector:
+        out["detectorRule"] = {
+            "conf": detector["settings"]["conf"],
+            "smoothingFrames": detector["settings"]["smoothing_frames"],
+            "minFraction": DETECTOR_MIN_FRACTION,
+            "rule": "a frame votes for a class when the detector's best box of that class has "
+            "conf >= conf; flagged when at least minFraction of the last smoothingFrames frames "
+            "vote",
+        }
     for name, r in result["behaviours"].items():
         source = "pose_rule"
         evaluation = {"pose_rule_lopo_f1": round(r["lopo_f1"], 3)}
@@ -153,7 +170,7 @@ def main() -> None:
         out["posture"] = posture(posture_result, _read(DETECTOR_LOPO))
     pace_result = _read(PACE)
     if pace_result:
-        out["version"] = "0.4.0"
+        out["version"] = "0.5.0"
         out["pace"] = pace(pace_result)
     (SHARED / "thresholds.json").write_text(json.dumps(out, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({k: v for k, v in out.items() if k != "posture"}, indent=2))

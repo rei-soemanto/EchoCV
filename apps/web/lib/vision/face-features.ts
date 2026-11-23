@@ -2,7 +2,9 @@ export type Point = { x: number; y: number };
 
 export type Blendshape = { categoryName: string; score: number };
 
-export type FaceFeatures = {
+export type FaceBox = { fx: number; fy: number; fw: number; fh: number };
+
+export type FaceFeatures = FaceBox & {
   yaw: number;
   pitch: number;
   roll: number;
@@ -80,7 +82,7 @@ export function smileScore(blendshapes: Blendshape[]): number {
   return (score("mouthSmileLeft") + score("mouthSmileRight")) / 2;
 }
 
-function faceArea(points: Point[]): number {
+function bounds(points: Point[]): { minX: number; minY: number; maxX: number; maxY: number } {
   let minX = Infinity;
   let minY = Infinity;
   let maxX = -Infinity;
@@ -91,7 +93,22 @@ function faceArea(points: Point[]): number {
     maxX = Math.max(maxX, p.x);
     maxY = Math.max(maxY, p.y);
   }
-  return (maxX - minX) * (maxY - minY);
+  return { minX, minY, maxX, maxY };
+}
+
+function faceArea(points: Point[]): number {
+  const b = bounds(points);
+  return (b.maxX - b.minX) * (b.maxY - b.minY);
+}
+
+export function faceBox(points: Point[], width: number, height: number): FaceBox {
+  const b = bounds(points);
+  return {
+    fx: (b.minX + b.maxX) / 2 / width,
+    fy: (b.minY + b.maxY) / 2 / height,
+    fw: (b.maxX - b.minX) / width,
+    fh: (b.maxY - b.minY) / height,
+  };
 }
 
 export function largestFace(landmarks: Point[][]): number {
@@ -113,5 +130,10 @@ export function faceFeatures(frame: FaceFrame): FaceFeatures | null {
   const blendshapes = frame.blendshapes[index];
   if (index < 0 || !matrix || !blendshapes) return null;
   const points = frame.landmarks[index].map((p) => ({ x: p.x * frame.width, y: p.y * frame.height }));
-  return { ...headAngles(matrix), ...irisOffsets(points), smile: smileScore(blendshapes) };
+  return {
+    ...headAngles(matrix),
+    ...irisOffsets(points),
+    ...faceBox(points, frame.width, frame.height),
+    smile: smileScore(blendshapes),
+  };
 }

@@ -49,6 +49,28 @@ describe("analyzeAnswer", () => {
     expect(init?.signal).toBeInstanceOf(AbortSignal);
   });
 
+  it("sends a signed storage link instead of the file", async () => {
+    const fetchImpl = fakeFetch(json(metrics));
+    await analyzeAnswer({ audioUrl: "https://project.supabase.co/a.webm" }, "id", 1, { ...options, fetchImpl });
+    const form = fetchImpl.mock.calls[0][1]?.body as FormData;
+    expect(form.get("audioUrl")).toBe("https://project.supabase.co/a.webm");
+    expect(form.has("audio")).toBe(false);
+  });
+
+  it("sends the service key only when one is set", async () => {
+    const fetchImpl = fakeFetch(json(metrics), json(metrics));
+    await analyzeAnswer(audio, "id", 1, { ...options, serviceKey: "secret", fetchImpl });
+    await analyzeAnswer(audio, "id", 1, { ...options, serviceKey: undefined, fetchImpl });
+    expect(new Headers(fetchImpl.mock.calls[0][1]?.headers).get("X-Speech-Key")).toBe("secret");
+    expect(new Headers(fetchImpl.mock.calls[1][1]?.headers).has("X-Speech-Key")).toBe(false);
+  });
+
+  it("does not retry a wrong service key", async () => {
+    const fetchImpl = fakeFetch(json({ detail: "The service key is missing or wrong" }, 401));
+    await expect(analyzeAnswer(audio, "id", 1, { ...options, fetchImpl })).rejects.toMatchObject({ status: 401, retryable: false });
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+  });
+
   it("retries when the service is busy or unreachable, then succeeds", async () => {
     const fetchImpl = fakeFetch(new TypeError("fetch failed"), json({ detail: "busy" }, 503), json(metrics));
     await expect(analyzeAnswer(audio, "id", 1, { ...options, fetchImpl })).resolves.toEqual(metrics);

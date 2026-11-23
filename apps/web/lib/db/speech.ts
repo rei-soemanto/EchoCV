@@ -40,8 +40,11 @@ export class SpeechServiceError extends Error {
   }
 }
 
+export type AnswerAudio = Blob | { audioUrl: string };
+
 export type AnalyzeOptions = {
   baseUrl?: string;
+  serviceKey?: string;
   timeoutMs?: number;
   attempts?: number;
   backoffMs?: number;
@@ -65,15 +68,17 @@ function looksLikeMetrics(body: unknown, language: Language, answerIndex: number
 }
 
 async function analyzeOnce(
-  audio: Blob,
+  audio: AnswerAudio,
   language: Language,
   answerIndex: number,
   baseUrl: string,
+  serviceKey: string | undefined,
   timeoutMs: number,
   fetchImpl: typeof fetch,
 ): Promise<SpeechMetrics> {
   const form = new FormData();
-  form.append("audio", audio, "answer");
+  if (audio instanceof Blob) form.append("audio", audio, "answer");
+  else form.append("audioUrl", audio.audioUrl);
   form.append("language", language);
   form.append("answerIndex", String(answerIndex));
 
@@ -82,6 +87,7 @@ async function analyzeOnce(
     response = await fetchImpl(new URL("/analyze", baseUrl), {
       method: "POST",
       body: form,
+      headers: serviceKey ? { "X-Speech-Key": serviceKey } : undefined,
       signal: AbortSignal.timeout(timeoutMs),
     });
   } catch (error) {
@@ -108,11 +114,12 @@ async function analyzeOnce(
 }
 
 export async function analyzeAnswer(
-  audio: Blob,
+  audio: AnswerAudio,
   language: Language,
   answerIndex: number,
   {
     baseUrl = requireEnv("SPEECH_SERVICE_URL", process.env.SPEECH_SERVICE_URL),
+    serviceKey = process.env.SPEECH_SERVICE_KEY || undefined,
     timeoutMs = 120_000,
     attempts = 3,
     backoffMs = 1_000,
@@ -121,7 +128,7 @@ export async function analyzeAnswer(
 ): Promise<SpeechMetrics> {
   for (let attempt = 1; ; attempt++) {
     try {
-      return await analyzeOnce(audio, language, answerIndex, baseUrl, timeoutMs, fetchImpl);
+      return await analyzeOnce(audio, language, answerIndex, baseUrl, serviceKey, timeoutMs, fetchImpl);
     } catch (error) {
       if (!(error instanceof SpeechServiceError) || !error.retryable || attempt >= attempts) throw error;
       await new Promise((resolve) => setTimeout(resolve, backoffMs * 2 ** (attempt - 1)));

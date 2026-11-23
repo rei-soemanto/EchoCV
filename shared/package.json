@@ -9,6 +9,7 @@
     "./labels.json": "./labels.json",
     "./speech.json": "./speech.json",
     "./session.json": "./session.json",
+    "./thresholds.json": "./thresholds.json",
     "./schemas/*": "./schemas/*"
   }
 }

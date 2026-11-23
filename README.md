@@ -112,12 +112,14 @@ Team decisions (architecture doc §5):
 - Speaking pace now has its own target range for Indonesian and English, measured on the team's recorded answers: pace is judged in syllables per second so Indonesian answers are not rated slower, and shown in words per minute (about 120 to 145 in Indonesian and 140 to 175 in English for the team). These ranges are a first estimate until they are checked against HR ratings.
 - The speech service can now take an answer either as an uploaded file or as a signed storage link that it downloads itself, only from the project's storage host, and it accepts requests only from the backend once a service key is set.
 - The browser can now take a 5-second look-at-the-camera calibration and then measure eye contact and smile against it for every answer, using the constants tuned on the team's recordings and checked against the Python calibration code. It gives a live hint when the face leaves the frame or the gaze stays away, and counts time out of frame as no eye contact.
+- The device check page now has the 5-second calibration: the user looks at the lens while a countdown runs over the camera preview, the baseline is kept in the browser tab for the interview room, and the interview can only start once it succeeds. When no face is seen it says so and offers a retry, it notes when the face model runs on the CPU, and it points to Chrome, Edge or Upload mode when the browser cannot run it. Not yet tried on a real webcam.
 - The sessions API, the QA test plan and the MVP acceptance criteria now all use the same session settings (3 questions, 15-second preparation, 3-minute answers), the smile rule and the pace ranges from `shared/`.
 
 ## Contributors
 
 | Name | Work |
 |---|---|
+| Dave | Built the app shell and pages from the Paper and Ink design, with the landing page, dashboard and sidebar navigation. Added webcam and microphone capture with the device check page, which records only the audio so video stays on the device. Built the 5-second calibration screen that gates the interview room. |
 | Ivan | Defined the MVP acceptance criteria, business-rule verification checks, and scope boundaries across live practice and upload modes. Created the bilingual Indonesian and English interview question bank starter dataset across general, behavioural, and IT role-specific sets. |
 | Kenjo | Built the Playwright end-to-end test skeleton with page objects for setup, calibration, interview room, upload and reports. |
 | Life | Set up the Supabase database, row-level security and private storage so each user's practice data stays their own. Built the sessions API that starts a practice session with matching questions from the question bank and finishes or cancels it. Added sign-in with Google or an email link, first-time profile and consent saving, and protected app pages. Connected the backend to the speech service so an answer's recording comes back as speech metrics. |

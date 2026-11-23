@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("device check opens the fake camera and mic and enables the interview", async ({ page }) => {
+test("device check opens the fake camera and mic", async ({ page }) => {
   await page.goto("/practice/check");
   const checks = page.getByRole("listitem");
   await expect(checks.filter({ hasText: "Kamera" })).toContainText("Siap");
@@ -15,7 +15,7 @@ test("device check opens the fake camera and mic and enables the interview", asy
     })
     .toBeGreaterThan(0);
 
-  await page.getByRole("link", { name: "Mulai wawancara" }).click();
-  await expect(page).toHaveURL(/\/practice\/room$/);
+  // The room stays locked until the 5-second calibration succeeds (calibration.spec.ts).
+  await expect(page.getByRole("button", { name: "Mulai wawancara" })).toBeDisabled();
 });
 

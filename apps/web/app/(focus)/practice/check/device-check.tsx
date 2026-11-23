@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import { Badge, type BadgeTone } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
+import { useCalibration } from "@/hooks/use-calibration";
 import { useMediaCapture } from "@/hooks/use-media-capture";
 import { CAPTURE_ERROR_TEXT } from "@/lib/media";
 
@@ -32,7 +33,27 @@ function Check({
   );
 }
 
-// Figma 06 Kalibrasi: camera preview plus device checks, all on the device.
+function Notice({
+  role,
+  title,
+  children,
+}: {
+  role: "status" | "alert";
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div role={role} className="flex gap-3 border-y border-border-default py-4">
+      <Image src="/icons/alert-warning.svg" alt="" width={20} height={20} className="size-5 shrink-0" />
+      <div className="flex flex-col items-start text-[15px] leading-[23px]">
+        <span className="font-semibold">{title}</span>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+// Figma 06 Kalibrasi: camera preview, device checks and the 5-second baseline, all on the device.
 export function DeviceCheck() {
   const { videoRef, status, hasCamera, hasMic, level, lighting, online, retry, checkLighting } =
     useMediaCapture();
@@ -43,6 +64,9 @@ export function DeviceCheck() {
   const [camTone, camText] = device(hasCamera);
   const [micTone, micText] = device(hasMic);
   const lit = Math.round(level * BARS);
+  const calibration = useCalibration(videoRef);
+  const running = calibration.phase === "running";
+  const calibrated = calibration.phase === "done";
 
   return (
     <div className="flex flex-col gap-12 px-4 pt-8 pb-16 md:px-12 md:pt-12 lg:flex-row lg:gap-16">
@@ -57,9 +81,18 @@ export function DeviceCheck() {
         />
         <div className="relative flex flex-col items-center gap-4 px-6 text-center">
           <Image src="/face-guide.png" alt="" width={180} height={240} className="h-auto w-32 opacity-70 sm:w-[180px]" priority />
-          <p className="text-body-sm text-ink-inverse opacity-80">
-            {waiting ? "Izinkan akses kamera dan mikrofon di browser" : "Posisikan wajah dalam bingkai"}
-          </p>
+          {running ? (
+            <p className="text-ink-inverse" aria-hidden="true">
+              <span className="block font-display text-[56px] leading-[60px]">{calibration.secondsLeft}</span>
+              <span className="text-body-sm opacity-80">
+                {calibration.faceVisible ? "Tatap lensa kamera" : "Wajah belum terlihat"}
+              </span>
+            </p>
+          ) : (
+            <p className="text-body-sm text-ink-inverse opacity-80">
+              {waiting ? "Izinkan akses kamera dan mikrofon di browser" : "Posisikan wajah dalam bingkai"}
+            </p>
+          )}
         </div>
       </div>
 
@@ -117,13 +150,9 @@ export function DeviceCheck() {
         </div>
 
         {lighting === "dark" && (
-          <div role="status" className="flex gap-3 border-y border-border-default py-4">
-            <Image src="/icons/alert-warning.svg" alt="" width={20} height={20} className="size-5 shrink-0" />
-            <p className="text-[15px] leading-[23px]">
-              <span className="block font-semibold">Ruangan agak gelap</span>
-              Hadapkan wajah ke sumber cahaya agar analisis lebih akurat.
-            </p>
-          </div>
+          <Notice role="status" title="Ruangan agak gelap">
+            Hadapkan wajah ke sumber cahaya agar analisis lebih akurat.
+          </Notice>
         )}
         {hasCamera && (
           <button
@@ -135,11 +164,70 @@ export function DeviceCheck() {
           </button>
         )}
 
+        <section aria-labelledby="calibration-title" className="flex flex-col items-start gap-3">
+          <div className="flex w-full items-center justify-between gap-4">
+            <h2 id="calibration-title" className="text-label">
+              Kalibrasi: tatap lensa kamera selama 5 detik
+            </h2>
+            {calibrated && <Badge tone="success">Selesai</Badge>}
+          </div>
+          <p className="text-body-sm text-ink-secondary">
+            EchoCV mengukur posisi kepala dan arah pandang Anda saat menatap kamera, supaya kontak
+            mata dinilai sesuai cara duduk Anda sendiri.
+          </p>
+          {(running || calibration.phase === "loading") && (
+            <div className="flex w-full flex-col gap-2" aria-live="polite">
+              <div
+                role="progressbar"
+                aria-label="Kemajuan kalibrasi"
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={Math.round(calibration.progress * 100)}
+                className="h-2 w-full bg-surface-sunken"
+              >
+                <div className="h-full bg-surface-accent" style={{ width: `${calibration.progress * 100}%` }} />
+              </div>
+              <p className="text-caption text-ink-tertiary">
+                {running ? `Tetap tatap lensa, ${calibration.secondsLeft} detik lagi` : "Menyiapkan analisis wajah…"}
+              </p>
+            </div>
+          )}
+          {calibration.phase === "failed" && (
+            <Notice role="alert" title="Wajah tidak terlihat cukup lama">
+              Pastikan seluruh wajah ada di dalam bingkai dan cukup terang, lalu ulangi kalibrasi.
+            </Notice>
+          )}
+          {calibration.phase === "unsupported" && (
+            <Notice role="alert" title="Analisis wajah tidak bisa berjalan di browser ini">
+              Gunakan Chrome atau Edge versi terbaru, atau latihan dengan mengunggah rekaman.
+              <Link href="/upload" className={buttonVariants({ variant: "link", size: "text" })}>
+                Pakai mode Unggah
+              </Link>
+            </Notice>
+          )}
+          {calibration.delegate === "CPU" && (
+            <p role="status" className="text-caption text-ink-tertiary">
+              Analisis berjalan di CPU karena akselerasi grafis tidak tersedia. Hasilnya sama, hanya
+              sedikit lebih lambat.
+            </p>
+          )}
+          {!running && calibration.phase !== "loading" && (
+            <button
+              type="button"
+              disabled={!hasCamera}
+              onClick={calibration.start}
+              className={buttonVariants({ variant: "outline" })}
+            >
+              {calibration.phase === "idle" ? "Mulai kalibrasi" : "Ulangi kalibrasi"}
+            </button>
+          )}
+        </section>
+
         <p className="text-body-sm text-ink-secondary">
           Mode Live: video Anda dianalisis di perangkat dan tidak dikirim ke server.
         </p>
         <div className="flex flex-wrap items-center gap-4">
-          {hasCamera && hasMic ? (
+          {hasCamera && hasMic && calibrated ? (
             <Link href="/practice/room" className={buttonVariants()}>
               <Image src="/icons/arrow-right.svg" alt="" width={20} height={20} />
               Mulai wawancara

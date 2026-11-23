@@ -1,5 +1,5 @@
 {
-  "version": "0.3.0",
+  "version": "0.4.0",
   "eyeContact": {
     "kX": 83.55752340980222,
     "kY": 92.89301975723481,
@@ -436,6 +436,39 @@
           "detector_v1_lopo_f1": 0.766,
           "detector_v0_lopo_f1": 0.442
         }
+      }
+    }
+  },
+  "pace": {
+    "rule": "score pace on syllablesPerSecond against the band of the session language; show wordsPerMinute (speakingRateWps * 60) on the pace meter with the same language's wordsPerMinute band",
+    "provisional": true,
+    "provenance": "EchoCV team Part B answers through services/speech /analyze, 20th to 80th percentile per language, every person weighted equally. Typical pace of the team, not yet a rated good pace.",
+    "en": {
+      "people": 4,
+      "answers": 18,
+      "wordsPerMinute": {
+        "low": 137.89,
+        "median": 152.76,
+        "high": 173.37
+      },
+      "syllablesPerSecond": {
+        "low": 3.16,
+        "median": 3.67,
+        "high": 3.92
+      }
+    },
+    "id": {
+      "people": 5,
+      "answers": 26,
+      "wordsPerMinute": {
+        "low": 119.3,
+        "median": 126.7,
+        "high": 146.01
+      },
+      "syllablesPerSecond": {
+        "low": 4.32,
+        "median": 4.93,
+        "high": 5.63
       }
     }
   }

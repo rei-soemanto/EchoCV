@@ -87,6 +87,7 @@ Team decisions (architecture doc §5):
 | MVP acceptance criteria and sprint scope | Done |
 | Bilingual interview question bank starter dataset | Done |
 | Starting, finishing and cancelling a practice session with its questions | Done |
+| Speaking pace target ranges for Indonesian and English answers | Done |
 
 ## Progress so far
 
@@ -100,6 +101,7 @@ Team decisions (architecture doc §5):
 - Defined testable MVP acceptance criteria, business-rule checks, and sprint scope boundaries across live practice and upload modes.
 - Started the bilingual Indonesian and English interview question bank in `shared/questions/` covering general, behavioural, and IT role-specific sets.
 - A signed-in user can start a practice session for their role, level, language, question set and mode, and gets three matching questions in the session language (or one "tell me about yourself" question for a quick start). The mode and language stay fixed, and the session can be finished or cancelled.
+- Speaking pace now has its own target range for Indonesian and English, measured on the team's recorded answers: pace is judged in syllables per second so Indonesian answers are not rated slower, and shown in words per minute (about 120 to 145 in Indonesian and 140 to 175 in English for the team). These ranges are a first estimate until they are checked against HR ratings.
 
 ## Contributors
 
@@ -108,4 +110,4 @@ Team decisions (architecture doc §5):
 | Ivan | Defined the MVP acceptance criteria, business-rule verification checks, and scope boundaries across live practice and upload modes. Created the bilingual Indonesian and English interview question bank starter dataset across general, behavioural, and IT role-specific sets. |
 | Kenjo | Built the Playwright end-to-end test skeleton with page objects for setup, calibration, interview room, upload and reports. |
 | Life | Set up the Supabase database, row-level security and private storage so each user's practice data stays their own. Built the sessions API that starts a practice session with matching questions from the question bank and finishes or cancels it. |
-| Rei | Tuned the eye-contact, smile, looking-down and posture rules and trained behaviour detector v1 on the team's own webcam recordings, so feedback holds up on ordinary laptop cameras. Built the speech analysis that turns a recorded answer into fillers, pauses, pace, pitch, volume and language mixing. Packaged the face, pose, object and behaviour models to run in the browser, with a CPU fallback when WebGPU is missing. |
+| Rei | Tuned the eye-contact, smile, looking-down and posture rules and trained behaviour detector v1 on the team's own webcam recordings, so feedback holds up on ordinary laptop cameras. Built the speech analysis that turns a recorded answer into fillers, pauses, pace, pitch, volume and language mixing. Packaged the face, pose, object and behaviour models to run in the browser, with a CPU fallback when WebGPU is missing. Measured the team's speaking pace in both languages to set fair pace ranges for Indonesian and English. |

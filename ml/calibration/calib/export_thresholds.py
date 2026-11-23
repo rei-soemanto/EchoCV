@@ -10,6 +10,7 @@ from calib.paths import CALIB_ROOT, RESULTS, SHARED
 INHOUSE = RESULTS / "inhouse.json"
 POSTURE = RESULTS / "inhouse_posture.json"
 DETECTOR_LOPO = CALIB_ROOT.parent / "artifacts" / "yolo" / "v1_lopo.json"
+PACE = RESULTS / "inhouse_pace.json"
 
 
 def _read(path):
@@ -120,6 +121,22 @@ def posture(result: dict, detector: dict | None) -> dict:
     return out
 
 
+def pace(result: dict) -> dict:
+    low, high = result["band"]
+    out = {
+        "rule": "score pace on syllablesPerSecond against the band of the session language; "
+        "show wordsPerMinute (speakingRateWps * 60) on the pace meter with the same "
+        "language's wordsPerMinute band",
+        "provisional": True,
+        "provenance": f"EchoCV team Part B answers through services/speech /analyze, "
+        f"{round(low * 100)}th to {round(high * 100)}th percentile per language, every person "
+        "weighted equally. Typical pace of the team, not yet a rated good pace.",
+    }
+    for language, summary in sorted(result["languages"].items()):
+        out[language] = summary
+    return out
+
+
 def main() -> None:
     smile = json.loads((RESULTS / "smile.json").read_text(encoding="utf-8"))
     eye = json.loads((RESULTS / "eye_contact.json").read_text(encoding="utf-8"))
@@ -134,6 +151,10 @@ def main() -> None:
     posture_result = _read(POSTURE)
     if posture_result:
         out["posture"] = posture(posture_result, _read(DETECTOR_LOPO))
+    pace_result = _read(PACE)
+    if pace_result:
+        out["version"] = "0.4.0"
+        out["pace"] = pace(pace_result)
     (SHARED / "thresholds.json").write_text(json.dumps(out, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({k: v for k, v in out.items() if k != "posture"}, indent=2))
 

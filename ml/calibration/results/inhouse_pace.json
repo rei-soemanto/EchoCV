@@ -1,0 +1,390 @@
+{
+  "band": [
+    0.2,
+    0.8
+  ],
+  "languages": {
+    "en": {
+      "people": 4,
+      "answers": 18,
+      "wordsPerMinute": {
+        "low": 137.89,
+        "median": 152.76,
+        "high": 173.37
+      },
+      "syllablesPerSecond": {
+        "low": 3.16,
+        "median": 3.67,
+        "high": 3.92
+      }
+    },
+    "id": {
+      "people": 5,
+      "answers": 26,
+      "wordsPerMinute": {
+        "low": 119.3,
+        "median": 126.7,
+        "high": 146.01
+      },
+      "syllablesPerSecond": {
+        "low": 4.32,
+        "median": 4.93,
+        "high": 5.63
+      }
+    }
+  },
+  "answers": [
+    {
+      "answer": "p01_s1_answer01_q01_en",
+      "person": "p01",
+      "language": "en",
+      "speechMs": 55984,
+      "speakingRateWps": 2.465,
+      "syllablesPerSecond": 3.948
+    },
+    {
+      "answer": "p01_s1_answer01_q01_id",
+      "person": "p01",
+      "language": "id",
+      "speechMs": 53864,
+      "speakingRateWps": 2.451,
+      "syllablesPerSecond": 5.755
+    },
+    {
+      "answer": "p01_s1_answer02_q02_en",
+      "person": "p01",
+      "language": "en",
+      "speechMs": 52744,
+      "speakingRateWps": 2.616,
+      "syllablesPerSecond": 3.792
+    },
+    {
+      "answer": "p01_s1_answer02_q02_id",
+      "person": "p01",
+      "language": "id",
+      "speechMs": 55148,
+      "speakingRateWps": 2.248,
+      "syllablesPerSecond": 5.023
+    },
+    {
+      "answer": "p01_s1_answer03_q03_en",
+      "person": "p01",
+      "language": "en",
+      "speechMs": 52520,
+      "speakingRateWps": 2.894,
+      "syllablesPerSecond": 3.922
+    },
+    {
+      "answer": "p01_s1_answer03_q03_id",
+      "person": "p01",
+      "language": "id",
+      "speechMs": 52208,
+      "speakingRateWps": 2.145,
+      "syllablesPerSecond": 4.846
+    },
+    {
+      "answer": "p01_s1_answer04_q04_en",
+      "person": "p01",
+      "language": "en",
+      "speechMs": 55480,
+      "speakingRateWps": 3.028,
+      "syllablesPerSecond": 4.128
+    },
+    {
+      "answer": "p01_s1_answer04_q04_id",
+      "person": "p01",
+      "language": "id",
+      "speechMs": 55560,
+      "speakingRateWps": 2.322,
+      "syllablesPerSecond": 5.598
+    },
+    {
+      "answer": "p01_s2_answer01_q05_en",
+      "person": "p01",
+      "language": "en",
+      "speechMs": 53656,
+      "speakingRateWps": 2.423,
+      "syllablesPerSecond": 3.429
+    },
+    {
+      "answer": "p01_s2_answer01_q05_id",
+      "person": "p01",
+      "language": "id",
+      "speechMs": 63664,
+      "speakingRateWps": 2.058,
+      "syllablesPerSecond": 4.697
+    },
+    {
+      "answer": "p01_s2_answer02_q06_en",
+      "person": "p01",
+      "language": "en",
+      "speechMs": 44560,
+      "speakingRateWps": 2.244,
+      "syllablesPerSecond": 2.805
+    },
+    {
+      "answer": "p01_s2_answer02_q06_id",
+      "person": "p01",
+      "language": "id",
+      "speechMs": 55352,
+      "speakingRateWps": 2.493,
+      "syllablesPerSecond": 5.655
+    },
+    {
+      "answer": "p01_s2_answer03_q07_en",
+      "person": "p01",
+      "language": "en",
+      "speechMs": 50624,
+      "speakingRateWps": 2.41,
+      "syllablesPerSecond": 3.082
+    },
+    {
+      "answer": "p01_s2_answer03_q07_id",
+      "person": "p01",
+      "language": "id",
+      "speechMs": 54456,
+      "speakingRateWps": 2.406,
+      "syllablesPerSecond": 5.582
+    },
+    {
+      "answer": "p01_s2_answer04_q08_en",
+      "person": "p01",
+      "language": "en",
+      "speechMs": 54928,
+      "speakingRateWps": 2.476,
+      "syllablesPerSecond": 3.641
+    },
+    {
+      "answer": "p01_s2_answer04_q08_id",
+      "person": "p01",
+      "language": "id",
+      "speechMs": 57856,
+      "speakingRateWps": 2.264,
+      "syllablesPerSecond": 5.237
+    },
+    {
+      "answer": "p02_s1_answer01_q01_en",
+      "person": "p02",
+      "language": "en",
+      "speechMs": 52400,
+      "speakingRateWps": 2.004,
+      "syllablesPerSecond": 3.13
+    },
+    {
+      "answer": "p02_s1_answer01_q01_id",
+      "person": "p02",
+      "language": "id",
+      "speechMs": 44840,
+      "speakingRateWps": 1.583,
+      "syllablesPerSecond": 3.591
+    },
+    {
+      "answer": "p02_s1_answer01_q02_en",
+      "person": "p02",
+      "language": "en",
+      "speechMs": 51320,
+      "speakingRateWps": 2.436,
+      "syllablesPerSecond": 2.923
+    },
+    {
+      "answer": "p02_s1_answer01_q02_id",
+      "person": "p02",
+      "language": "id",
+      "speechMs": 48336,
+      "speakingRateWps": 1.945,
+      "syllablesPerSecond": 3.889
+    },
+    {
+      "answer": "p02_s1_answer01_q03_en",
+      "person": "p02",
+      "language": "en",
+      "speechMs": 50984,
+      "speakingRateWps": 2.393,
+      "syllablesPerSecond": 3.001
+    },
+    {
+      "answer": "p02_s1_answer01_q03_id",
+      "person": "p02",
+      "language": "id",
+      "speechMs": 51792,
+      "speakingRateWps": 1.699,
+      "syllablesPerSecond": 3.553
+    },
+    {
+      "answer": "p02_s1_answer01_q04_en",
+      "person": "p02",
+      "language": "en",
+      "speechMs": 58064,
+      "speakingRateWps": 2.945,
+      "syllablesPerSecond": 3.823
+    },
+    {
+      "answer": "p02_s1_answer01_q04_id",
+      "person": "p02",
+      "language": "id",
+      "speechMs": 47760,
+      "speakingRateWps": 1.654,
+      "syllablesPerSecond": 3.497
+    },
+    {
+      "answer": "p02_s2_answer01_q05_en",
+      "person": "p02",
+      "language": "en",
+      "speechMs": 53992,
+      "speakingRateWps": 2.889,
+      "syllablesPerSecond": 4.149
+    },
+    {
+      "answer": "p02_s2_answer01_q05_id",
+      "person": "p02",
+      "language": "id",
+      "speechMs": 52240,
+      "speakingRateWps": 1.972,
+      "syllablesPerSecond": 4.345
+    },
+    {
+      "answer": "p02_s2_answer01_q06_en",
+      "person": "p02",
+      "language": "en",
+      "speechMs": 55783,
+      "speakingRateWps": 3.191,
+      "syllablesPerSecond": 3.926
+    },
+    {
+      "answer": "p02_s2_answer01_q06_id",
+      "person": "p02",
+      "language": "id",
+      "speechMs": 57483,
+      "speakingRateWps": 2.105,
+      "syllablesPerSecond": 3.984
+    },
+    {
+      "answer": "p02_s2_answer01_q07_en",
+      "person": "p02",
+      "language": "en",
+      "speechMs": 60865,
+      "speakingRateWps": 3.532,
+      "syllablesPerSecond": 4.272
+    },
+    {
+      "answer": "p02_s2_answer01_q07_id",
+      "person": "p02",
+      "language": "id",
+      "speechMs": 51328,
+      "speakingRateWps": 2.416,
+      "syllablesPerSecond": 4.949
+    },
+    {
+      "answer": "p02_s2_answer01_q08_en",
+      "person": "p02",
+      "language": "en",
+      "speechMs": 59744,
+      "speakingRateWps": 3.097,
+      "syllablesPerSecond": 4.034
+    },
+    {
+      "answer": "p02_s2_answer01_q08_id",
+      "person": "p02",
+      "language": "id",
+      "speechMs": 57712,
+      "speakingRateWps": 2.166,
+      "syllablesPerSecond": 4.47
+    },
+    {
+      "answer": "p03_s1_answer01_q01_id",
+      "person": "p03",
+      "language": "id",
+      "speechMs": 46288,
+      "speakingRateWps": 2.376,
+      "syllablesPerSecond": 4.947
+    },
+    {
+      "answer": "p03_s1_answer02_q02_en",
+      "person": "p03",
+      "language": "en",
+      "speechMs": 52872,
+      "speakingRateWps": 2.289,
+      "syllablesPerSecond": 3.196
+    },
+    {
+      "answer": "p03_s1_answer03_q03_id",
+      "person": "p03",
+      "language": "id",
+      "speechMs": 57632,
+      "speakingRateWps": 1.735,
+      "syllablesPerSecond": 4.026
+    },
+    {
+      "answer": "p03_s1_answer04_q04_id",
+      "person": "p03",
+      "language": "id",
+      "speechMs": 50792,
+      "speakingRateWps": 2.008,
+      "syllablesPerSecond": 4.843
+    },
+    {
+      "answer": "p04_s1_answer01_q01_id",
+      "person": "p04",
+      "language": "id",
+      "speechMs": 28704,
+      "speakingRateWps": 2.299,
+      "syllablesPerSecond": 5.539
+    },
+    {
+      "answer": "p04_s1_answer01_q02_id",
+      "person": "p04",
+      "language": "id",
+      "speechMs": 27240,
+      "speakingRateWps": 2.863,
+      "syllablesPerSecond": 6.167
+    },
+    {
+      "answer": "p04_s1_answer01_q03_id",
+      "person": "p04",
+      "language": "id",
+      "speechMs": 34568,
+      "speakingRateWps": 2.748,
+      "syllablesPerSecond": 6.538
+    },
+    {
+      "answer": "p04_s1_answer01_q04_id",
+      "person": "p04",
+      "language": "id",
+      "speechMs": 30760,
+      "speakingRateWps": 2.471,
+      "syllablesPerSecond": 5.949
+    },
+    {
+      "answer": "p05_s1_answer01_q01_id",
+      "person": "p05",
+      "language": "id",
+      "speechMs": 90216,
+      "speakingRateWps": 2.084,
+      "syllablesPerSecond": 4.91
+    },
+    {
+      "answer": "p05_s1_answer02_q02_id",
+      "person": "p05",
+      "language": "id",
+      "speechMs": 104120,
+      "speakingRateWps": 2.046,
+      "syllablesPerSecond": 4.831
+    },
+    {
+      "answer": "p05_s1_answer03_q03_en",
+      "person": "p05",
+      "language": "en",
+      "speechMs": 79344,
+      "speakingRateWps": 2.685,
+      "syllablesPerSecond": 3.731
+    },
+    {
+      "answer": "p05_s1_answer04_q04_id",
+      "person": "p05",
+      "language": "id",
+      "speechMs": 73480,
+      "speakingRateWps": 2.055,
+      "syllablesPerSecond": 5.158
+    }
+  ]
+}

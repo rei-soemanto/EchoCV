@@ -8,6 +8,7 @@
     "./rubric.json": "./rubric.json",
     "./labels.json": "./labels.json",
     "./speech.json": "./speech.json",
+    "./session.json": "./session.json",
     "./schemas/*": "./schemas/*"
   }
 }

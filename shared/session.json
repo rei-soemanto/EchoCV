@@ -1,0 +1,7 @@
+{
+  "version": "0.1.0",
+  "questionsPerSession": 3,
+  "quickStartQuestions": 1,
+  "prepSeconds": 15,
+  "maxAnswerSeconds": 180
+}

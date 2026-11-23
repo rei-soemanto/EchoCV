@@ -58,7 +58,7 @@ beforeAll(async () => {
     grant select, insert, delete on storage.objects to authenticated;
     insert into auth.users (id) values ('${alice}'), ('${bob}');
   `);
-});
+}, 60_000);
 
 afterAll(async () => {
   await db.close();

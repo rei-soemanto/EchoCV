@@ -1,5 +1,6 @@
 import labels from "@echocv/shared/labels.json";
 import rubric from "@echocv/shared/rubric.json";
+import session from "@echocv/shared/session.json";
 import { describe, expect, it } from "vitest";
 
 describe("shared rubric", () => {
@@ -11,6 +12,29 @@ describe("shared rubric", () => {
   it("has unique dimension ids", () => {
     const ids = rubric.dimensions.map((d) => d.id);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it("keeps smile out of the overall score (BR-09)", () => {
+    const smile = rubric.dimensions.find((d) => d.id === "smile");
+    expect(smile?.weight).toBe(0);
+  });
+});
+
+describe("shared session config", () => {
+  it("has whole positive counts and limits", () => {
+    for (const value of [
+      session.questionsPerSession,
+      session.quickStartQuestions,
+      session.prepSeconds,
+      session.maxAnswerSeconds,
+    ]) {
+      expect(Number.isInteger(value)).toBe(true);
+      expect(value).toBeGreaterThan(0);
+    }
+  });
+
+  it("asks fewer quick start questions than a full session", () => {
+    expect(session.quickStartQuestions).toBeLessThan(session.questionsPerSession);
   });
 });
 

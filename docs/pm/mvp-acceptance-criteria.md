@@ -6,6 +6,8 @@ Acceptance criteria and scope boundary for the EchoCV Minimum Viable Product, al
 
 ## 1. MVP Definition of Done
 
+The MVP demo is on **Mon 30 Nov 2026**, at the end of the combined Sprint 2 and 3 (23–29 Nov 2026). Sprints 2 and 3 were merged into one sprint when the MVP deadline moved forward; Upload Mode stays in MVP scope.
+
 The EchoCV MVP is complete when a signed-in candidate can complete both **Live Mode** and **Upload Mode** end-to-end on real data in a deployed environment:
 
 1. **Both practice modes functional end-to-end:**
@@ -112,7 +114,7 @@ All High-priority findings and key Medium-priority findings from the prototype u
 
 ## 4. Scope Boundary
 
-### In-Scope for MVP (Sprints 1–3)
+### In-Scope for MVP (Sprint 1, Sprint 2 and 3)
 
 - `UC-01` Auth, profile, consent (`BR-01`, `BR-02`)
 - `UC-02` Session configuration and bilingual question bank (`BR-03`, `BR-25`, `BR-26`, `BR-30`)
@@ -148,7 +150,7 @@ The following exist in the full use case specification and prototype but are **o
 | Dataset Collection | All | Each team member completes 3 consented recording sessions per `docs/data-collection-protocol.md` and uploads to restricted storage (never committed). |
 | Acceptance Criteria | PM | `docs/pm/mvp-acceptance-criteria.md` published and reviewed by all leads; Sprint 1 scope and MVP boundaries agreed. |
 | Database & Auth | Backend, PM, AI / Tech Lead | Supabase selected and confirmed for Postgres, Auth, and Storage. |
-| LLM Provider | PM, Backend | LLM provider for content scoring selected, API key/billing configured, and privacy/consent impact documented before Sprint 2 report wiring. |
+| LLM Provider | PM, Backend | LLM provider for content scoring selected, API key/billing configured, and privacy/consent impact documented before Sprint 2 and 3 report wiring. |
 | Sprint Ceremonies | PM | Recurring Sprint ceremonies (planning, daily check-in, review/retrospective) scheduled on team calendar. |
 | Question Bank | PM | `shared/questions/bank.json` starter dataset (`q01`–`q30`) and contract README ready for `api/sessions` consumption. |
 | Speech Service | AI / Tech Lead | `services/speech` FastAPI service running `/health` and `/analyze` returning `speech-metrics.schema.json`-compliant payloads. |

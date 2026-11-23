@@ -60,3 +60,34 @@ def test_answer_over_the_time_limit_is_rejected():
 def test_missing_model_gives_503(monkeypatch, tmp_path):
     monkeypatch.setenv("WHISPER_MODEL_DIR", str(tmp_path))
     assert post().status_code == 503
+
+
+def test_audio_and_audio_url_together_are_rejected(engine):
+    assert post(audioUrl="https://example.supabase.co/a.webm").status_code == 422
+
+
+def test_neither_audio_nor_audio_url_is_rejected(engine):
+    res = client.post("/analyze", data={"language": "id", "answerIndex": "0"})
+    assert res.status_code == 422
+
+
+def test_service_key_is_required_when_set(engine, monkeypatch):
+    monkeypatch.setenv("SPEECH_SERVICE_KEY", "secret")
+    assert post().status_code == 401
+    fields = {"language": "id", "answerIndex": "1"}
+    files = {"audio": ("answer.webm", b"audio")}
+    wrong = client.post("/analyze", files=files, data=fields, headers={"X-Speech-Key": "nope"})
+    assert wrong.status_code == 401
+    right = client.post("/analyze", files=files, data=fields, headers={"X-Speech-Key": "secret"})
+    assert right.status_code == 200
+
+
+def test_service_key_is_checked_before_the_model(monkeypatch, tmp_path):
+    monkeypatch.setenv("SPEECH_SERVICE_KEY", "secret")
+    monkeypatch.setenv("WHISPER_MODEL_DIR", str(tmp_path))
+    assert post().status_code == 401
+
+
+def test_health_needs_no_key(monkeypatch):
+    monkeypatch.setenv("SPEECH_SERVICE_KEY", "secret")
+    assert client.get("/health").status_code == 200

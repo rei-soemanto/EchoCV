@@ -14,6 +14,7 @@ class SpeechSettings:
     sample_rate: int
     max_audio_seconds: float
     max_upload_bytes: int
+    audio_url_timeout_s: float
     vad_threshold: float
     vad_min_speech_ms: int
     vad_min_silence_ms: int
@@ -57,6 +58,7 @@ def settings() -> SpeechSettings:
         sample_rate=speech["sampleRate"],
         max_audio_seconds=speech["maxAudioSeconds"],
         max_upload_bytes=speech["maxUploadMb"] * 1024 * 1024,
+        audio_url_timeout_s=speech["audioUrlTimeoutS"],
         vad_threshold=vad["threshold"],
         vad_min_speech_ms=vad["minSpeechMs"],
         vad_min_silence_ms=vad["minSilenceMs"],

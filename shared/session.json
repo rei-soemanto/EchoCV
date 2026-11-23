@@ -1,7 +1,15 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "questionsPerSession": 3,
   "quickStartQuestions": 1,
   "prepSeconds": 15,
-  "maxAnswerSeconds": 180
+  "maxAnswerSeconds": 180,
+  "calibrationSeconds": 5,
+  "calibrationMinFaceFraction": 0.6,
+  "faceFps": 10,
+  "liveHints": {
+    "windowSeconds": 3,
+    "minFaceFraction": 0.5,
+    "minEyeContactFraction": 0.4
+  }
 }

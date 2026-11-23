@@ -3,6 +3,7 @@
   "sampleRate": 16000,
   "maxAudioSeconds": 300,
   "maxUploadMb": 50,
+  "audioUrlTimeoutS": 30,
   "vad": {
     "threshold": 0.5,
     "minSpeechMs": 250,

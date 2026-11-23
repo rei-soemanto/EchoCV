@@ -87,6 +87,7 @@ Team decisions (architecture doc §5):
 | MVP acceptance criteria and sprint scope | Done |
 | Bilingual interview question bank starter dataset | Done |
 | Starting, finishing and cancelling a practice session with its questions | Done |
+| Sign in with Google or an email link, with first-time profile and consent | Done |
 | Smile shown as feedback only, outside the overall score, and one shared setting for session length and timers | Done |
 | Speaking pace target ranges for Indonesian and English answers | Done |
 
@@ -102,6 +103,7 @@ Team decisions (architecture doc §5):
 - Defined testable MVP acceptance criteria, business-rule checks, and sprint scope boundaries across live practice and upload modes.
 - Started the bilingual Indonesian and English interview question bank in `shared/questions/` covering general, behavioural, and IT role-specific sets.
 - A signed-in user can start a practice session for their role, level, language, question set and mode, and gets three matching questions in the session language (or one "tell me about yourself" question for a quick start). The mode and language stay fixed, and the session can be finished or cancelled.
+- Users can sign in with Google or a sign-in link sent by email. On first sign-in the app saves their profile and consent choices: analysis consent is required, training and sharing stay off unless they turn them on, and users under 18 cannot register on their own. Practice, report and dashboard pages now need a signed-in user.
 - Smile is now shown as feedback only and no longer counts in the overall score, and the number of questions, the 15-second preparation time and the 3-minute answer limit come from one shared setting in `shared/session.json`.
 - Speaking pace now has its own target range for Indonesian and English, measured on the team's recorded answers: pace is judged in syllables per second so Indonesian answers are not rated slower, and shown in words per minute (about 120 to 145 in Indonesian and 140 to 175 in English for the team). These ranges are a first estimate until they are checked against HR ratings.
 - The sessions API, the QA test plan and the MVP acceptance criteria now all use the same session settings (3 questions, 15-second preparation, 3-minute answers), the smile rule and the pace ranges from `shared/`.
@@ -112,5 +114,5 @@ Team decisions (architecture doc §5):
 |---|---|
 | Ivan | Defined the MVP acceptance criteria, business-rule verification checks, and scope boundaries across live practice and upload modes. Created the bilingual Indonesian and English interview question bank starter dataset across general, behavioural, and IT role-specific sets. |
 | Kenjo | Built the Playwright end-to-end test skeleton with page objects for setup, calibration, interview room, upload and reports. |
-| Life | Set up the Supabase database, row-level security and private storage so each user's practice data stays their own. Built the sessions API that starts a practice session with matching questions from the question bank and finishes or cancels it. |
+| Life | Set up the Supabase database, row-level security and private storage so each user's practice data stays their own. Built the sessions API that starts a practice session with matching questions from the question bank and finishes or cancels it. Added sign-in with Google or an email link, first-time profile and consent saving, and protected app pages. |
 | Rei | Tuned the eye-contact, smile, looking-down and posture rules and trained behaviour detector v1 on the team's own webcam recordings, so feedback holds up on ordinary laptop cameras. Built the speech analysis that turns a recorded answer into fillers, pauses, pace, pitch, volume and language mixing. Packaged the face, pose, object and behaviour models to run in the browser, with a CPU fallback when WebGPU is missing. Kept smile out of the overall score and put the session length and timers in one shared setting. Measured the team's speaking pace in both languages to set fair pace ranges for Indonesian and English. Brought the sessions API, test plan and acceptance criteria in line with these shared settings. |

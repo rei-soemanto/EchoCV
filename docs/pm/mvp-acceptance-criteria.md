@@ -162,8 +162,8 @@ The following exist in the full use case specification and prototype but are **o
 | QA Test Matrix | QA | `docs/qa/test-matrix.md` browser, hardware, and mobile viewport matrix finalized. |
 | E2E Skeleton | QA | Playwright E2E skeleton (`apps/web/tests/e2e/`) passing in CI with simulated media streams. |
 
-### Open Cross-Doc Alignments
+### Resolved Cross-Doc Alignments
 
-1. **Preparation timer & question count (`UC-02` / `UC-04` vs `docs/qa/test-plan.md`):** Acceptance criteria specify a `15s` default preparation countdown and `3` questions per default session, whereas `docs/qa/test-plan.md` currently references a `30s` preparation countdown and `5` questions (`Question 1 of 5`). Align both before Sprint 2 room and E2E implementation.
-2. **Smile weight in overall score (`BR-09` vs `shared/rubric.json`):** `BR-09` excludes `smile` from the overall score (`0` weight; qualitative feedback only), whereas `shared/rubric.json` (`v0.1.0`) currently assigns a `0.125` placeholder weight across all 8 dimensions pending calibration. Exclude `smile` from the numeric sum when finalizing `shared/rubric.json` weights.
-3. **Speaking pace display unit (UI vs `shared/schemas/speech-metrics.schema.json`):** Align UI pace display units (WPM vs `syllablesPerSecond`) with `syllablesPerSecond` and `speakingRateWps` returned by `shared/schemas/speech-metrics.schema.json`.
+1. **Preparation timer & question count (`UC-02` / `UC-04`):** Resolved. A default session has `3` questions, a quick start `1`, with a `15s` preparation countdown and a `180s` answer limit, read from `shared/session.json`. `docs/qa/test-plan.md` now uses the same values.
+2. **Smile weight in overall score (`BR-09`):** Resolved. `shared/rubric.json` (`v0.2.0`) gives `smile` weight `0`, so it is shown as feedback only; its share moved to `content` (`0.25`) pending calibration.
+3. **Speaking pace display unit:** Resolved. Pace is scored on `syllablesPerSecond` against the band of the session language, and the Pace Meter shows words per minute (`speakingRateWps * 60`) against that language's band. Both bands are in the `pace` section of `shared/thresholds.json` (`v0.4.0`), measured on the team's recorded answers and provisional until HR calibration.

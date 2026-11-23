@@ -58,8 +58,8 @@ Validates hardware check and baseline calibration prior to live practice.
 Validates the real-time webcam practice room, timer, hints, and answer recording.
 
 - **Acceptance Criteria**:
-  - Displays question text, question counter (e.g. Question 1 of 5), and 30-second prep countdown.
-  - Answer recording supports up to 3 minutes with visible recording indicator and timer.
+  - Displays question text, question counter (e.g. Question 1 of 3), and 15-second prep countdown (`questionsPerSession` and `prepSeconds` in `shared/session.json`).
+  - Answer recording supports up to 3 minutes (`maxAnswerSeconds` in `shared/session.json`) with visible recording indicator and timer.
   - Non-intrusive live visual hints appear as badges (e.g. eye contact reminder, posture correction).
   - User can restart answer once per question, or skip to next question.
   - Finishing answer stops recording, collects local visual metrics JSON, and stores audio file.

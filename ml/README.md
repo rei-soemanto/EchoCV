@@ -92,12 +92,17 @@ YOLO_AUTOINSTALL=false uv run python -m yolo.export_browser   # pose, objects, d
 uv run python -m hub.push_models                # private HF repo; rewrites shared/model-hub.json (HF_TOKEN with write access in ml/.env)
 uv run python -m whisper.inhouse_pace           # needs services/speech running on :8000 -> calibration/results/inhouse_pace.json
 cd calibration && uv run python -m calib.export_thresholds && uv run python -m calib.export_face_fixture && uv run python -m calib.export_posture_fixture && cd ..   # browser parity fixtures: apps/web/tests/unit/vision
+cd calibration && uv run python -m calib.inhouse_scoring && uv run python -m calib.export_scoring && cd ..   # score bands -> a supabase/migrations file for scoring_bands
 uv run python report_v1.py                      # -> docs/model-report-v1.md
 ```
 
 `whisper.inhouse_pace` sends every Part B answer through the speech service's `/analyze` and keeps
-only the numbers (no transcripts). Answers already measured are reused, so delete the file to
-measure again after a speech model change.
+only the numbers (no transcripts): pace, filler and long-pause counts, pitch, volume and the number of
+mixed-language words. `calib.export_scoring` turns these and the per-answer eye contact and behaviour
+time from `calib.inhouse_scoring` into the 0 to 100 score bands, written as a migration that updates
+the `scoring_bands` table read by the reports API. Bump `VERSION` and `MIGRATION` before exporting
+new bands so the old migration is never rewritten.
+Answers already measured are reused, so delete the file to measure again after a speech model change.
 
 Run `hub.push_models` again after every browser export or Whisper conversion, and commit the new
 `shared/model-hub.json` with the new `shared/vision-models.json`: teammates pull exactly the revision

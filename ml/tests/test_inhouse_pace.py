@@ -35,3 +35,31 @@ def test_languages_are_summarized_apart():
     assert set(out) == {"en", "id"}
     assert out["en"]["wordsPerMinute"]["median"] == pytest.approx(150.0)
     assert out["id"]["wordsPerMinute"]["low"] <= out["id"]["wordsPerMinute"]["high"]
+
+
+def test_delivery_numbers_keep_counts_only():
+    from whisper.inhouse_pace import delivery_numbers
+
+    metrics = {
+        "language": "en",
+        "durationMs": 60000,
+        "speechMs": 50000,
+        "speakingRateWps": 2.5,
+        "syllablesPerSecond": 3.5,
+        "transcript": "secret words",
+        "words": [
+            {"text": "a", "startMs": 0, "endMs": 1, "language": "en"},
+            {"text": "b", "startMs": 1, "endMs": 2, "language": "id"},
+        ],
+        "fillers": [{"token": "[EEE]", "startMs": 0, "endMs": 1, "kind": "vocal"}],
+        "pauses": [
+            {"startMs": 0, "endMs": 600, "long": False},
+            {"startMs": 1000, "endMs": 3500, "long": True},
+        ],
+        "prosody": {"pitchMeanHz": 200.0, "pitchStdHz": 40.0, "volumeMeanDb": -20.0},
+    }
+    out = delivery_numbers(metrics)
+    assert out["mixedWords"] == 1
+    assert out["longPauses"] == 1
+    assert out["pauseMs"] == 3100
+    assert not any(isinstance(v, str) for v in out.values())

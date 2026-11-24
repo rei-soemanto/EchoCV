@@ -82,6 +82,30 @@ def post_analyze(url: str, audio: bytes, language: str) -> dict:
         return json.loads(response.read())
 
 
+def delivery_numbers(metrics: dict) -> dict:
+    language = metrics["language"]
+    prosody = metrics["prosody"]
+    return {
+        "durationMs": metrics["durationMs"],
+        "speechMs": metrics["speechMs"],
+        "speakingRateWps": metrics["speakingRateWps"],
+        "syllablesPerSecond": metrics["syllablesPerSecond"],
+        "words": len(metrics["words"]),
+        "mixedWords": sum(w["language"] != language for w in metrics["words"]),
+        "fillers": len(metrics["fillers"]),
+        "vocalFillers": sum(f["kind"] == "vocal" for f in metrics["fillers"]),
+        "pauses": len(metrics["pauses"]),
+        "longPauses": sum(p["long"] for p in metrics["pauses"]),
+        "pauseMs": sum(p["endMs"] - p["startMs"] for p in metrics["pauses"]),
+        "pitchMeanHz": prosody["pitchMeanHz"],
+        "pitchStdHz": prosody["pitchStdHz"],
+        "volumeMeanDb": prosody["volumeMeanDb"],
+    }
+
+
+MEASURED = ("durationMs", "words", "mixedWords", "fillers", "longPauses", "pitchStdHz")
+
+
 def measure(entry: dict, url: str) -> dict:
     from faster_whisper.audio import decode_audio
 
@@ -91,9 +115,7 @@ def measure(entry: dict, url: str) -> dict:
         "answer": entry["file"].split("/")[-1].rsplit(".", 1)[0],
         "person": entry["person"],
         "language": entry["language"],
-        "speechMs": metrics["speechMs"],
-        "speakingRateWps": metrics["speakingRateWps"],
-        "syllablesPerSecond": metrics["syllablesPerSecond"],
+        **delivery_numbers(metrics),
     }
 
 
@@ -111,9 +133,14 @@ def main() -> None:
         if entry["part"] != "B":
             continue
         answer = entry["file"].split("/")[-1].rsplit(".", 1)[0]
-        row = done.get(answer) or measure(entry, args.url)
+        row = done.get(answer)
+        if not row or not all(k in row for k in MEASURED):
+            row = measure(entry, args.url)
         wpm = row["speakingRateWps"] * 60
-        print(f"  {answer}: {wpm:.0f} wpm, {row['syllablesPerSecond']:.2f} syl/s")
+        print(
+            f"  {answer}: {wpm:.0f} wpm, {row['fillers']} fillers, {row['longPauses']} long pauses",
+            flush=True,
+        )
         rows.append(row)
         result = {"band": list(BAND), "languages": summarize(rows), "answers": rows}
         OUT.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")

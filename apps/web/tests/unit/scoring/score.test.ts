@@ -32,7 +32,7 @@ const bands: Band[] = [
   band("fillers", "fillers_per_minute", 0, 3, 0, 12),
   band("pace", "pace_deviation", 0, 0, 0, 0.35),
   band("pauses", "long_pauses_per_minute", 0, 1, 0, 6),
-  band("voice", "pitch_std_hz", 15, 60, 5, 120),
+  band("voice", "pitch_variation", 0.15, 10, 0.05, 10),
   band("clarity_mixing", "mixed_word_pct", 0, 5, 0, 40, "en"),
 ];
 
@@ -88,11 +88,21 @@ describe("bandScore", () => {
   });
 
   it("falls on both sides of a two-sided band", () => {
+    const twoSided = band("voice", "pitch_variation", 15, 60, 5, 120);
+    expect(bandScore(10, twoSided)).toBe(50);
+    expect(bandScore(30, twoSided)).toBe(100);
+    expect(bandScore(90, twoSided)).toBe(50);
+    expect(bandScore(2, twoSided)).toBe(0);
+  });
+
+  it("scores pitch variation relative to the voice and never penalises more of it", () => {
     const voice = bands[6];
-    expect(bandScore(10, voice)).toBe(50);
-    expect(bandScore(30, voice)).toBe(100);
-    expect(bandScore(90, voice)).toBe(50);
-    expect(bandScore(2, voice)).toBe(0);
+    expect(bandScore(0.1, voice)).toBe(50);
+    expect(bandScore(0.6, voice)).toBe(100);
+    expect(bandScore(0.02, voice)).toBe(0);
+    const low = answerMetrics(speech({ prosody: { pitchMeanHz: 100, pitchStdHz: 20, volumeMeanDb: -20 } }), null, "en");
+    const high = answerMetrics(speech({ prosody: { pitchMeanHz: 220, pitchStdHz: 44, volumeMeanDb: -20 } }), null, "en");
+    expect(low.pitch_variation).toBeCloseTo(high.pitch_variation!);
   });
 });
 
@@ -123,7 +133,7 @@ describe("answerMetrics", () => {
   });
 
   it("does not score pitch when no voiced speech was found", () => {
-    expect(answerMetrics(speech({ prosody: { pitchMeanHz: 0, pitchStdHz: 0, volumeMeanDb: -60 } }), null, "en").pitch_std_hz).toBeNull();
+    expect(answerMetrics(speech({ prosody: { pitchMeanHz: 0, pitchStdHz: 0, volumeMeanDb: -60 } }), null, "en").pitch_variation).toBeNull();
   });
 });
 

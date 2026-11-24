@@ -101,7 +101,7 @@ beforeEach(() => {
       band("smile", "smile_pct", 10, 100, 0, 100),
       band("fillers", "fillers_per_minute", 0, 3, 0, 12),
       band("pace", "pace_deviation", 0, 0, 0, 0.35),
-      band("voice", "pitch_std_hz", 15, 60, 5, 120),
+      band("voice", "pitch_variation", 0.15, 10, 0.05, 10),
     ],
     reports: [],
   };

@@ -92,10 +92,10 @@ describe("data model migrations", () => {
 describe("scoring bands", () => {
   it("lets signed-in users read the seeded bands but not change them", async () => {
     const seen = await asUser(alice, () =>
-      db.query<{ dimension: string; provisional: boolean }>("select dimension, provisional from public.scoring_bands order by dimension"),
+      db.query<{ dimension: string; provisional: boolean }>("select dimension, provisional from public.scoring_bands order by dimension, language"),
     );
     expect(seen.rows.map((row) => row.dimension)).toEqual([
-      "clarity_mixing", "eye_contact", "fillers", "pace", "pauses", "posture", "smile", "voice",
+      "clarity_mixing", "eye_contact", "fillers", "pace", "pace", "pauses", "posture", "smile", "voice",
     ]);
     expect(seen.rows.every((row) => row.provisional)).toBe(true);
     const changed = await asUser(alice, () => db.query("update public.scoring_bands set ideal_low = 0 returning dimension"));

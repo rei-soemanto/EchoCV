@@ -21,7 +21,7 @@ export type AnswerMetrics = {
   fillers_per_minute: number | null;
   long_pauses_per_minute: number | null;
   pace_deviation: number | null;
-  pitch_std_hz: number | null;
+  pitch_variation: number | null;
   mixed_word_pct: number | null;
   eye_contact_pct: number | null;
   smile_pct: number | null;
@@ -87,7 +87,8 @@ export function answerMetrics(
           : sps > pace.high
             ? (sps - pace.high) / pace.median
             : 0,
-    pitch_std_hz: speech && speech.prosody.pitchMeanHz > 0 ? speech.prosody.pitchStdHz : null,
+    pitch_variation:
+      speech && speech.prosody.pitchMeanHz > 0 ? speech.prosody.pitchStdHz / speech.prosody.pitchMeanHz : null,
     mixed_word_pct: speech ? (words.length ? (100 * words.filter((w) => w.language !== language).length) / words.length : 0) : null,
     eye_contact_pct: visual?.eyeContactPct ?? null,
     smile_pct: visual?.smilePct ?? null,

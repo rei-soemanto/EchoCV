@@ -1,5 +1,11 @@
+import speech from "@echocv/shared/speech.json";
+
 export const AUDIO_BUCKET = "answer-audio";
+export const VIDEO_BUCKET = "answer-videos";
 export const SIGNED_AUDIO_LINK_SECONDS = 600;
+export const SIGNED_VIDEO_LINK_SECONDS = 1800;
+export const MAX_VIDEO_BYTES = speech.video.maxMb * 1024 * 1024;
+export const MAX_VIDEO_SECONDS = speech.video.maxSeconds;
 
 const AUDIO_EXTENSIONS: Record<string, string> = {
   "audio/webm": "webm",
@@ -7,6 +13,12 @@ const AUDIO_EXTENSIONS: Record<string, string> = {
   "audio/wav": "wav",
   "audio/mpeg": "mp3",
   "audio/mp4": "m4a",
+};
+
+const VIDEO_EXTENSIONS: Record<string, string> = {
+  "video/mp4": "mp4",
+  "video/quicktime": "mov",
+  "video/webm": "webm",
 };
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -26,15 +38,46 @@ export function isUuid(value: unknown): value is string {
   return typeof value === "string" && UUID.test(value);
 }
 
-export function parseUploadRequest(body: unknown): Result<{ sessionQuestionId: string; contentType: string; extension: string }> {
+export type UploadRequest = {
+  sessionQuestionId: string;
+  contentType: string;
+  extension: string;
+  kind: "audio" | "video";
+};
+
+export function parseUploadRequest(body: unknown): Result<UploadRequest> {
   const input = (typeof body === "object" && body !== null ? body : {}) as Record<string, unknown>;
   if (!isUuid(input.session_question_id)) return { ok: false, error: "session_question_id must be a uuid." };
   const contentType = typeof input.content_type === "string" ? input.content_type.split(";")[0].trim().toLowerCase() : "";
-  const extension = AUDIO_EXTENSIONS[contentType];
-  if (!extension) {
-    return { ok: false, error: `content_type must be one of: ${Object.keys(AUDIO_EXTENSIONS).join(", ")}.` };
+  const audioExtension = AUDIO_EXTENSIONS[contentType];
+  const videoExtension = VIDEO_EXTENSIONS[contentType];
+  if (!audioExtension && !videoExtension) {
+    const allowed = [...Object.keys(AUDIO_EXTENSIONS), ...Object.keys(VIDEO_EXTENSIONS)];
+    return { ok: false, error: `content_type must be one of: ${allowed.join(", ")}.` };
   }
-  return { ok: true, value: { sessionQuestionId: input.session_question_id, contentType, extension } };
+  if (videoExtension) {
+    const size = input.size_bytes;
+    const seconds = input.duration_seconds;
+    if (!Number.isInteger(size) || (size as number) <= 0) return { ok: false, error: "size_bytes must be a positive whole number." };
+    if ((size as number) > MAX_VIDEO_BYTES) {
+      return { ok: false, error: `The video is larger than ${speech.video.maxMb} MB.` };
+    }
+    if (typeof seconds !== "number" || !Number.isFinite(seconds) || seconds <= 0) {
+      return { ok: false, error: "duration_seconds must be a positive number." };
+    }
+    if (seconds > MAX_VIDEO_SECONDS) {
+      return { ok: false, error: `The video is longer than ${MAX_VIDEO_SECONDS / 60} minutes.` };
+    }
+  }
+  return {
+    ok: true,
+    value: {
+      sessionQuestionId: input.session_question_id,
+      contentType,
+      extension: audioExtension ?? videoExtension,
+      kind: audioExtension ? "audio" : "video",
+    },
+  };
 }
 
 const isCount = (value: unknown) => Number.isInteger(value) && (value as number) >= 0;

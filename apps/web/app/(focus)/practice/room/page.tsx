@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { PlaceholderPage } from "@/components/placeholder-page";
 import { TopBar } from "@/components/top-bar";
 import { buttonVariants } from "@/components/ui/button";
+import { openSession } from "@/lib/db/open-session";
 import { isUuid } from "@/lib/db/uploads";
 import { createClient } from "@/lib/supabase/server";
 
@@ -30,39 +31,16 @@ export default async function InterviewRoomPage(props: PageProps<"/practice/room
   const { session: id } = await props.searchParams;
   if (!isUuid(id)) redirect("/practice");
 
-  // Row-level security limits every read to the signed-in user's own rows.
-  const supabase = await createClient();
-  const { data: session } = await supabase
-    .from("practice_sessions")
-    .select("id, language, mode, status")
-    .eq("id", id)
-    .maybeSingle();
-  if (!session) return <Unavailable description="Sesi ini tidak ditemukan." />;
-  if (session.mode !== "live") return <Unavailable description="Sesi ini memakai mode Unggah, bukan Live." />;
-  if (session.status !== "in_progress") {
-    return <Unavailable description="Sesi ini sudah selesai atau dibatalkan." />;
-  }
-
-  const { data: questions } = await supabase
-    .from("session_questions")
-    .select("id, position, question_text")
-    .eq("session_id", id)
-    .order("position");
-  if (!questions?.length) return <Unavailable description="Sesi ini belum punya pertanyaan." />;
+  const opened = await openSession(await createClient(), id, "live");
+  if ("problem" in opened) return <Unavailable description={opened.problem!} />;
+  const { questions, answers } = opened;
 
   // After a reload, carry on from the first question that is not analysed or skipped yet.
-  const { data: answers } = await supabase
-    .from("answers")
-    .select("session_question_id, status")
-    .in(
-      "session_question_id",
-      questions.map((q) => q.id),
-    );
   const done = new Set(
-    (answers ?? []).filter((a) => a.status === "analyzed" || a.status === "skipped").map((a) => a.session_question_id),
+    answers.filter((a) => a.status === "analyzed" || a.status === "skipped").map((a) => a.session_question_id),
   );
   const next = questions.findIndex((q) => !done.has(q.id));
   const startAt = next === -1 ? questions.length : next; // all done: the room just finishes
 
-  return <InterviewRoom sessionId={session.id} questions={questions} startAt={startAt} />;
+  return <InterviewRoom sessionId={opened.sessionId} questions={questions} startAt={startAt} />;
 }

@@ -95,6 +95,7 @@ Team decisions (architecture doc §5):
 | Speech service ready for the backend: audio by signed link and a service key | Done |
 | Eye contact and smile in the browser with a 5-second calibration | Done |
 | Posture and behaviour events in the browser: touching the face, arms crossed, slouching, reading notes | Done |
+| Live practice from session setup through calibration and the interview room to analysed answers | In progress |
 
 ## Progress so far
 
@@ -118,12 +119,13 @@ Team decisions (architecture doc §5):
 - The device check page now has the 5-second calibration: the user looks at the lens while a countdown runs over the camera preview, the baseline is kept in the browser tab for the interview room, and the interview can only start once it succeeds. When no face is seen it says so and offers a retry, it notes when the face model runs on the CPU, and it points to Chrome, Edge or Upload mode when the browser cannot run it. Not yet tried on a real webcam.
 - During a live answer the browser now notices touching the face, crossed arms and slouching from body keypoints, and reading notes held up or on the desk, using the rules and detector tuned on the team's recordings and checked number for number against the Python calibration code. Each behaviour becomes a time-stamped event for the report, and the current ones are available for live hints.
 - The sessions API, the QA test plan and the MVP acceptance criteria now all use the same session settings (3 questions, 15-second preparation, 3-minute answers), the smile rule and the pace ranges from `shared/`.
+- A signed-in user can now set up a live session (role, level, question set, language, mode), calibrate, and answer the questions in the interview room: 15 seconds to prepare, up to 3 minutes per answer, calm live hints for eye contact and posture, one restart per question, and skip. Each answer's audio and its eye-contact, smile and behaviour numbers are sent for analysis, a busy speech service can be retried, and the session finishes when the last question is done. Not yet tried end to end with real Supabase and a real webcam.
 
 ## Contributors
 
 | Name | Work |
 |---|---|
-| Dave | Built the app shell and pages from the Paper and Ink design, with the landing page, dashboard and sidebar navigation. Added webcam and microphone capture with the device check page, which records only the audio so video stays on the device. Built the 5-second calibration screen that gates the interview room. |
+| Dave | Built the app shell and pages from the Paper and Ink design, with the landing page, dashboard and sidebar navigation. Added webcam and microphone capture with the device check page, which records only the audio so video stays on the device. Built the 5-second calibration screen that gates the interview room. Built the live practice flow: session setup, the interview room with timers, live hints, restart and skip, and sending each answer for analysis. |
 | Ivan | Defined the MVP acceptance criteria, business-rule verification checks, and scope boundaries across live practice and upload modes. Created the bilingual Indonesian and English interview question bank starter dataset across general, behavioural, and IT role-specific sets. |
 | Kenjo | Built the Playwright end-to-end test skeleton with page objects for setup, calibration, interview room, upload and reports. |
 | Life | Set up the Supabase database, row-level security and private storage so each user's practice data stays their own. Built the sessions API that starts a practice session with matching questions from the question bank and finishes or cancels it. Added sign-in with Google or an email link, first-time profile and consent saving, and protected app pages. Connected the backend to the speech service so an answer's recording comes back as speech metrics. Built the uploads API that stores each answer's audio in private storage and saves its speech and eye-contact metrics. |

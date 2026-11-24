@@ -74,7 +74,7 @@ describe("data model migrations", () => {
       `select relname, relrowsecurity from pg_class
        where relnamespace = 'public'::regnamespace and relkind = 'r'`,
     );
-    expect(rows.length).toBe(7);
+    expect(rows.length).toBe(8);
     expect(rows.every((row) => row.relrowsecurity)).toBe(true);
   });
 
@@ -86,6 +86,29 @@ describe("data model migrations", () => {
       { id: "answer-audio", public: false, file_size_limit: 52428800 },
       { id: "answer-videos", public: false, file_size_limit: 524288000 },
     ]);
+  });
+});
+
+describe("scoring bands", () => {
+  it("lets signed-in users read the seeded bands but not change them", async () => {
+    const seen = await asUser(alice, () =>
+      db.query<{ dimension: string; provisional: boolean }>("select dimension, provisional from public.scoring_bands order by dimension"),
+    );
+    expect(seen.rows.map((row) => row.dimension)).toEqual([
+      "clarity_mixing", "eye_contact", "fillers", "pace", "pauses", "posture", "smile", "voice",
+    ]);
+    expect(seen.rows.every((row) => row.provisional)).toBe(true);
+    const changed = await asUser(alice, () => db.query("update public.scoring_bands set ideal_low = 0 returning dimension"));
+    expect(changed.rows).toEqual([]);
+  });
+
+  it("rejects a band whose ideal range sits outside its zero range", async () => {
+    await expect(
+      db.query(
+        `insert into public.scoring_bands (dimension, metric, ideal_low, ideal_high, zero_low, zero_high, version)
+         values ('test', 'x', 10, 5, 0, 20, '0')`,
+      ),
+    ).rejects.toThrow(/check constraint/);
   });
 });
 

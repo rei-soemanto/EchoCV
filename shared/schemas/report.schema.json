@@ -4,12 +4,13 @@
   "title": "Report",
   "description": "Session report built by apps/web from visual metrics, speech metrics and LLM content scores.",
   "type": "object",
-  "required": ["sessionId", "createdAt", "overallScore", "dimensionScores", "feedback"],
+  "required": ["sessionId", "createdAt", "overallScore", "dimensionScores", "feedback", "contentStatus"],
   "additionalProperties": false,
   "properties": {
     "sessionId": { "type": "string" },
     "createdAt": { "type": "string", "format": "date-time" },
     "overallScore": { "type": "number", "minimum": 0, "maximum": 100 },
+    "contentStatus": { "enum": ["scored", "pending"], "description": "pending when the LLM could not score every answer yet; the overall score then uses the delivery dimensions only (UC-06 E1)." },
     "dimensionScores": {
       "type": "array",
       "description": "One entry per shared/rubric.json dimension.",

@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { SIGN_IN_PATH, SIGN_UP_PATH } from "@/lib/auth";
 import { supabasePublishableKey, supabaseUrl } from "./env";
 
 export const PROTECTED_PATHS = [
@@ -11,9 +12,8 @@ export const PROTECTED_PATHS = [
   "/report",
   "/plans",
   "/privacy",
+  SIGN_UP_PATH,
 ];
-
-export const SIGN_IN_PATH = "/";
 
 export function isProtected(pathname: string): boolean {
   return PROTECTED_PATHS.some((path) => pathname === path || pathname.startsWith(`${path}/`));

@@ -66,7 +66,7 @@ export default function Home() {
           <a href="#kampus" className="hover:text-ink-primary">Untuk kampus</a>
         </nav>
         <div className="flex items-center gap-4">
-          <Link href="/dashboard" className={buttonVariants({ variant: "link", size: "text" })}>
+          <Link href="/sign-in" className={buttonVariants({ variant: "link", size: "text" })}>
             Masuk
           </Link>
           <Link href="/practice" className={buttonVariants()}>

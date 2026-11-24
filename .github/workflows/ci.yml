@@ -22,16 +22,36 @@ jobs:
 
   speech:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     defaults:
       run:
         working-directory: services/speech
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
-      # Default groups only (no heavy `ml` group).
       - run: uv sync --frozen
       - run: uv run ruff check
       - run: uv run ruff format --check
       - run: uv run pytest
-      # Deployment image; Docker isn't installed on the dev laptops, so CI is where it gets built.
-      - run: docker build -t echocv-speech .
+      - run: docker build -f Dockerfile -t echocv-speech ../..
+      - name: Image imports the speech and vision stack
+        run: >-
+          docker run --rm echocv-speech uv run --no-sync python -c
+          "import cv2, mediapipe, onnxruntime, faster_whisper, librosa, wordfreq, app.main"
+      - name: Image starts and answers /health
+        run: |
+          docker run -d --name speech -p 8000:8000 echocv-speech uv run --no-sync uvicorn app.main:app --host 0.0.0.0 --port 8000
+          for i in $(seq 1 30); do curl -fs http://127.0.0.1:8000/health && exit 0; sleep 2; done
+          docker logs speech
+          exit 1
+      - name: Publish the image
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          image="ghcr.io/${{ github.repository_owner }}/echocv-speech"
+          docker tag echocv-speech "$image:latest"
+          docker tag echocv-speech "$image:${{ github.sha }}"
+          docker push "$image:latest"
+          docker push "$image:${{ github.sha }}"

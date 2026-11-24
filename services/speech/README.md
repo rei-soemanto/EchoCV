@@ -71,6 +71,29 @@ repo). `uv run python -m app.pull_model` downloads them there together with the 
 Tunable numbers (pause lengths, VAD settings, filler forms, language margin, limits) are in
 `shared/speech.json`; the filler lists are in `shared/labels.json`.
 
+## Deploy
+
+CI builds the image from the repo root (`docker build -f services/speech/Dockerfile .`), checks
+that the speech and vision libraries import and that `/health` answers, and on every merge to
+`main` publishes it as `ghcr.io/rei-soemanto/echocv-speech:latest` and `:<commit sha>`. The image
+holds the code and `shared/`, never models or secrets. If the package is private, log the host in
+first with `docker login ghcr.io` and a token that can read packages.
+
+```bash
+docker run -d --name echocv-speech --restart unless-stopped -p 8000:8000   -v echocv-models:/models   -e HF_TOKEN=<read token>   -e SPEECH_SERVICE_KEY=<shared secret>   -e SPEECH_AUDIO_URL_HOSTS=<project-ref>.supabase.co   ghcr.io/rei-soemanto/echocv-speech:latest
+```
+
+- On start the container runs `app.pull_model`: the first start downloads the Whisper and vision
+  models (about 850 MB) into the `echocv-models` volume, and later starts only check their
+  checksums. `HF_TOKEN` is needed only while a model is missing.
+- The service must be reachable over https by the web app's server. On a VM, put it behind an https
+  reverse proxy. On a laptop, use a tunnel such as `cloudflared tunnel --url http://localhost:8000`.
+- The web app's server then gets `SPEECH_SERVICE_URL` (the https address) and the same
+  `SPEECH_SERVICE_KEY`.
+- The image runs on CPU (`WHISPER_DEVICE=cpu`, int8). Give it at least 4 GB of RAM. Answers are
+  analysed one at a time; an answer video takes about as long as it plays.
+- Check it with `curl https://<address>/health`.
+
 ## Model and settings
 
 The Whisper weights are not in git. They are in the team's private Hugging Face repo named in

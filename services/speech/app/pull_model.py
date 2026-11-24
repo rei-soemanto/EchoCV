@@ -64,15 +64,22 @@ def pull(
     return fetched
 
 
+def missing(folder: Path, files: dict[str, str]) -> list[str]:
+    return [name for name, expected in files.items() if not is_current(folder / name, expected)]
+
+
 def main() -> None:
-    token = os.environ.get("HF_TOKEN")
-    if not token:
-        sys.exit("HF_TOKEN is missing: set the read token shared by the maintainer")
     hub = json.loads((SHARED_DIR / "model-hub.json").read_text(encoding="utf-8"))
     targets = [
         (model_settings().model_dir, "whisper", hub["whisper"]["files"]),
         (vision_settings().model_dir, "web", vision_files()),
     ]
+    if not any(missing(folder, files) for folder, _, files in targets):
+        print("models up to date")
+        return
+    token = os.environ.get("HF_TOKEN")
+    if not token:
+        sys.exit("HF_TOKEN is missing: set the read token shared by the maintainer")
     for folder, part, files in targets:
         fetched = pull(hub, token, folder, part=part, files=files)
         print(f"{folder}: {len(fetched)} downloaded, {len(files) - len(fetched)} up to date")

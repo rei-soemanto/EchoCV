@@ -40,29 +40,42 @@ const word = (text: string, startMs: number) => ({ text, startMs, endMs: startMs
 describe("loadReport", () => {
   it("returns the saved report", async () => {
     const f = fakeFetch(reply(200, { overallScore: 70, answers: [] }));
-    const result = await loadReport(ID, f.fetch);
+    const result = await loadReport(ID, false, f.fetch);
     expect(result).toMatchObject({ ok: true, report: { overallScore: 70 } });
     expect(f.calls).toEqual([{ url: `/api/reports?session_id=${ID}`, method: "GET" }]);
   });
 
   it("builds the report first when none is saved yet", async () => {
     const f = fakeFetch(reply(404), reply(201), reply(200, { overallScore: 70, answers: [] }));
-    const result = await loadReport(ID, f.fetch);
+    const result = await loadReport(ID, false, f.fetch);
     expect(result.ok).toBe(true);
     expect(f.calls.map((c) => c.method)).toEqual(["GET", "POST", "GET"]);
   });
 
-  it("passes on the API's reason when the report cannot be built", async () => {
+  it("scores again without reading first when asked to rebuild", async () => {
+    const f = fakeFetch(reply(201), reply(200, { overallScore: 70, answers: [] }));
+    expect((await loadReport(ID, true, f.fetch)).ok).toBe(true);
+    expect(f.calls.map((c) => c.method)).toEqual(["POST", "GET"]);
+  });
+
+  it("shares one request between simultaneous calls", async () => {
+    const f = fakeFetch(reply(404), reply(201), reply(200, { overallScore: 70, answers: [] }));
+    const [a, b] = await Promise.all([loadReport(ID, false, f.fetch), loadReport(ID, false, f.fetch)]);
+    expect(a).toBe(b);
+    expect(f.calls).toHaveLength(3);
+  });
+
+  it("explains in Indonesian why the report cannot be built", async () => {
     const f = fakeFetch(reply(404), reply(409, { error: "No analysed answers in this session yet." }));
-    expect(await loadReport(ID, f.fetch)).toEqual({
+    expect(await loadReport(ID, false, f.fetch)).toEqual({
       ok: false,
       status: 409,
-      message: "No analysed answers in this session yet.",
+      message: "Belum ada jawaban yang selesai dianalisis di sesi ini.",
     });
   });
 
   it("reports a network failure without a status", async () => {
-    expect(await loadReport(ID, fakeFetch(new TypeError("offline")).fetch)).toMatchObject({ ok: false, status: null });
+    expect(await loadReport(ID, false, fakeFetch(new TypeError("offline")).fetch)).toMatchObject({ ok: false, status: null });
   });
 });
 
@@ -75,17 +88,25 @@ describe("report helpers", () => {
     expect(decimal(3)).toBe("3");
   });
 
-  it("splits sentences and marks fillers", () => {
+  it("puts vocal fillers back and marks only the fillers", () => {
     const lines = transcriptLines(
       speech({
-        words: [word("Saya", 0), word("eee", 400), word("senang.", 800), word("Terima", 2000), word("kasih", 2400)],
-        fillers: [{ token: "eee", startMs: 450, endMs: 600, kind: "vocal" }],
+        // As the speech service sends it: no vocal filler in words, the lexical "anu" kept.
+        words: [word("Saya", 0), word("anu", 800), word("senang.", 1200), word("Terima", 2000), word("kasih", 2400)],
+        fillers: [
+          { token: "[EEE]", startMs: 250, endMs: 900, kind: "vocal" },
+          { token: "anu", startMs: 800, endMs: 1100, kind: "lexical" },
+        ],
       }),
     );
-    expect(lines).toHaveLength(2);
-    expect(lines[0].atMs).toBe(0);
-    expect(lines[0].parts.map((p) => p.filler)).toEqual([false, true, false]);
-    expect(lines[1]).toMatchObject({ atMs: 2000, parts: [{ text: "Terima" }, { text: "kasih" }] });
+    expect(lines.map((l) => l.atMs)).toEqual([0, 2000]);
+    expect(lines[0].parts).toEqual([
+      { text: "Saya", filler: false },
+      { text: "eee", filler: true },
+      { text: "anu", filler: true },
+      { text: "senang.", filler: false },
+    ]);
+    expect(lines[1].parts.some((p) => p.filler)).toBe(false);
   });
 
   it("totals the session stats over answers with speech", () => {
@@ -100,10 +121,10 @@ describe("report helpers", () => {
           ],
         }),
       },
-      { speechMetrics: speech({ fillers: [{ token: "um", startMs: 0, endMs: 1, kind: "vocal" }] }) },
+      { speechMetrics: speech({ speakingRateWps: 1, fillers: [{ token: "um", startMs: 0, endMs: 1, kind: "vocal" }] }) },
       { speechMetrics: null },
     ] as unknown as ReportView["answers"];
-    expect(sessionStats(answers)).toEqual({ fillersPerMinute: 1, longPauses: 1, wordsPerMinute: 60 });
+    expect(sessionStats(answers)).toEqual({ fillersPerMinute: 1, longPauses: 1, wordsPerMinute: 90 });
     expect(sessionStats([])).toEqual({ fillersPerMinute: null, longPauses: 0, wordsPerMinute: null });
   });
 });

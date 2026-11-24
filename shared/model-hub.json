@@ -1,0 +1,23 @@
+{
+  "repo": "reresoemanto/echocv-models",
+  "revision": "69599a38dd82ff92f9a860d30e684ecb88996df4",
+  "private": true,
+  "web": {
+    "path": "web",
+    "target": "apps/web/public/models",
+    "files": "shared/vision-models.json models[].file and sha256"
+  },
+  "whisper": {
+    "path": "whisper/v0/ct2",
+    "target": "ml/artifacts/whisper/v0/ct2",
+    "files": {
+      "config.json": "27ec8ecb8ba05f3ac81522a7a035bd5ab19a5b567640bf68ccec90ded4fc1726",
+      "datasets.json": "47a227e09b6188990bd2041ba8bc39be3d457e0182dcb543e97004e0346c7541",
+      "model.bin": "ca3433a740491789538b2e29ee9f1cf47c47e036df10b3549a83889159941361",
+      "preprocessor_config.json": "902ea83da8365e6dab586b37f0e8deb8b925d323f726c2e8972c176f5dbfa201",
+      "suppress_tokens.json": "1c84c6f2871179985aff28b76fa1fbec5ac33ad7b9c0ecf7d6c6f044de311d32",
+      "tokenizer.json": "15bdfeb184d1abb5ff6cf94c41f82b546df7daf866f425b55e9e83ed31a3f3bf",
+      "vocabulary.json": "697ee5a65726e46b4d294d1a243d98e1878f5d81caba17891b1c5ebab7a912a9"
+    }
+  }
+}

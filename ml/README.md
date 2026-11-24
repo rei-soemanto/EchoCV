@@ -89,6 +89,7 @@ uv run python -m inhouse.autolabel              # check derived/contact/*.jpg; b
 uv run python -m inhouse.evaluate_lopo --prefix v1_lopo7   # GPU: one fold per person + final -> artifacts/yolo/v1/
 uv run python -m yolo.export --version v1       # ONNX + parity check
 YOLO_AUTOINSTALL=false uv run python -m yolo.export_browser   # pose, objects, detector -> apps/web/public/models
+uv run python -m hub.push_models                # private HF repo; rewrites shared/model-hub.json (HF_TOKEN with write access in ml/.env)
 uv run python -m whisper.inhouse_pace           # needs services/speech running on :8000 -> calibration/results/inhouse_pace.json
 cd calibration && uv run python -m calib.export_thresholds && uv run python -m calib.export_face_fixture && uv run python -m calib.export_posture_fixture && cd ..   # browser parity fixtures: apps/web/tests/unit/vision
 cd calibration && uv run python -m calib.inhouse_scoring && uv run python -m calib.export_scoring && cd ..   # score bands -> a supabase/migrations file for scoring_bands
@@ -102,6 +103,10 @@ time from `calib.inhouse_scoring` into the 0 to 100 score bands, written as a mi
 the `scoring_bands` table read by the reports API. Bump `VERSION` and `MIGRATION` before exporting
 new bands so the old migration is never rewritten.
 Answers already measured are reused, so delete the file to measure again after a speech model change.
+
+Run `hub.push_models` again after every browser export or Whisper conversion, and commit the new
+`shared/model-hub.json` with the new `shared/vision-models.json`: teammates pull exactly the revision
+and checksums listed there.
 
 Run GPU jobs one at a time: on the 4 GB card a second CUDA process spills into shared system
 memory and both slow to a crawl (or crash).

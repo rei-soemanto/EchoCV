@@ -82,3 +82,22 @@ def model_settings() -> ModelSettings:
         compute_type=os.environ.get("WHISPER_COMPUTE_TYPE", "int8"),
         cpu_threads=int(os.environ.get("WHISPER_CPU_THREADS", max(1, (os.cpu_count() or 2) // 2))),
     )
+
+
+@dataclass(frozen=True)
+class VideoSettings:
+    max_bytes: int
+    max_seconds: float
+    url_timeout_s: float
+    max_frame_width: int
+
+
+@cache
+def video_settings() -> VideoSettings:
+    video = _read("speech.json")["video"]
+    return VideoSettings(
+        max_bytes=video["maxMb"] * 1024 * 1024,
+        max_seconds=video["maxSeconds"],
+        url_timeout_s=video["urlTimeoutS"],
+        max_frame_width=video["maxFrameWidth"],
+    )

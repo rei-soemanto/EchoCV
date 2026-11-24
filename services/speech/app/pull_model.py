@@ -6,6 +6,7 @@ import urllib.request
 from pathlib import Path
 
 from app.config import SHARED_DIR, model_settings
+from app.vision.settings import vision_settings
 
 HUB_URL = "https://huggingface.co"
 CHUNK = 1 << 20
@@ -23,8 +24,8 @@ def is_current(path: Path, expected: str) -> bool:
     return path.exists() and sha256(path) == expected
 
 
-def file_url(hub: dict, name: str) -> str:
-    return f"{HUB_URL}/{hub['repo']}/resolve/{hub['revision']}/{hub['whisper']['path']}/{name}"
+def file_url(hub: dict, name: str, part: str = "whisper") -> str:
+    return f"{HUB_URL}/{hub['repo']}/resolve/{hub['revision']}/{hub[part]['path']}/{name}"
 
 
 def download(url: str, token: str, target: Path) -> None:
@@ -34,19 +35,31 @@ def download(url: str, token: str, target: Path) -> None:
             out.write(block)
 
 
-def pull(hub: dict, token: str, folder: Path, fetch=download) -> list[str]:
+def vision_files() -> dict[str, str]:
+    manifest = json.loads((SHARED_DIR / "vision-models.json").read_text(encoding="utf-8"))
+    return {m["file"]: m["sha256"] for m in manifest["models"].values()}
+
+
+def pull(
+    hub: dict,
+    token: str,
+    folder: Path,
+    fetch=download,
+    part: str = "whisper",
+    files: dict[str, str] | None = None,
+) -> list[str]:
     folder.mkdir(parents=True, exist_ok=True)
     fetched = []
-    for name, expected in hub["whisper"]["files"].items():
+    for name, expected in (files if files is not None else hub[part]["files"]).items():
         target = folder / name
         if is_current(target, expected):
             continue
-        part = folder / f"{name}.part"
-        fetch(file_url(hub, name), token, part)
-        if sha256(part) != expected:
-            part.unlink()
-            raise RuntimeError(f"{name} does not match shared/model-hub.json")
-        part.replace(target)
+        partial = folder / f"{name}.part"
+        fetch(file_url(hub, name, part), token, partial)
+        if sha256(partial) != expected:
+            partial.unlink()
+            raise RuntimeError(f"{name} does not match its checksum in shared/")
+        partial.replace(target)
         fetched.append(name)
     return fetched
 
@@ -56,10 +69,13 @@ def main() -> None:
     if not token:
         sys.exit("HF_TOKEN is missing: set the read token shared by the maintainer")
     hub = json.loads((SHARED_DIR / "model-hub.json").read_text(encoding="utf-8"))
-    folder = model_settings().model_dir
-    fetched = pull(hub, token, folder)
-    current = len(hub["whisper"]["files"]) - len(fetched)
-    print(f"{folder}: {len(fetched)} downloaded, {current} up to date")
+    targets = [
+        (model_settings().model_dir, "whisper", hub["whisper"]["files"]),
+        (vision_settings().model_dir, "web", vision_files()),
+    ]
+    for folder, part, files in targets:
+        fetched = pull(hub, token, folder, part=part, files=files)
+        print(f"{folder}: {len(fetched)} downloaded, {len(files) - len(fetched)} up to date")
 
 
 if __name__ == "__main__":

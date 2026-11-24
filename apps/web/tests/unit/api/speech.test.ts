@@ -1,6 +1,6 @@
 import schema from "../../../../../shared/schemas/speech-metrics.schema.json";
 import { describe, expect, it, vi } from "vitest";
-import { analyzeAnswer, SPEECH_METRICS_KEYS, SpeechServiceError, type SpeechMetrics } from "@/lib/db/speech";
+import { analyzeAnswer, analyzeVideo, SPEECH_METRICS_KEYS, SpeechServiceError, type SpeechMetrics } from "@/lib/db/speech";
 
 const metrics: SpeechMetrics = {
   answerIndex: 1,
@@ -131,5 +131,35 @@ describe("analyzeAnswer", () => {
     vi.stubEnv("SPEECH_SERVICE_URL", "");
     await expect(analyzeAnswer(audio, "id", 1, { fetchImpl: fakeFetch() })).rejects.toThrow(/SPEECH_SERVICE_URL/);
     vi.unstubAllEnvs();
+  });
+});
+
+describe("analyzeVideo", () => {
+  const visual = { answerIndex: 1, durationMs: 4000, eyeContactPct: 50, smilePct: 0, events: [] };
+
+  it("posts the signed video link to /analyze-video and returns speech and visual metrics", async () => {
+    const fetchImpl = fakeFetch(json({ speech: metrics, visual, baseline: "answer_start" }));
+    const result = await analyzeVideo({ videoUrl: "https://project.supabase.co/v.mp4" }, "id", 1, { ...options, fetchImpl });
+    expect(result).toEqual({ speech: metrics, visual, baseline: "answer_start" });
+    const [url, init] = fetchImpl.mock.calls[0];
+    expect(String(url)).toBe("http://speech.test/analyze-video");
+    const form = init?.body as FormData;
+    expect(form.get("videoUrl")).toBe("https://project.supabase.co/v.mp4");
+    expect(form.has("audioUrl")).toBe(false);
+  });
+
+  it.each([
+    ["visual metrics for another answer", { speech: metrics, visual: { ...visual, answerIndex: 0 }, baseline: "answer_start" }],
+    ["no visual metrics", { speech: metrics, baseline: "answer_start" }],
+    ["another baseline", { speech: metrics, visual, baseline: "calibration" }],
+  ])("rejects %s", async (_name, body) => {
+    const fetchImpl = fakeFetch(json(body));
+    await expect(analyzeVideo({ videoUrl: "https://x/v.mp4" }, "id", 1, { ...options, fetchImpl })).rejects.toMatchObject({ retryable: false });
+  });
+
+  it("tries at most twice by default because a video can take as long as it plays", async () => {
+    const fetchImpl = fakeFetch(json({}, 503), json({}, 503), json({}, 503));
+    await expect(analyzeVideo({ videoUrl: "https://x/v.mp4" }, "id", 1, { ...options, fetchImpl })).rejects.toMatchObject({ status: 503 });
+    expect(fetchImpl).toHaveBeenCalledTimes(2);
   });
 });

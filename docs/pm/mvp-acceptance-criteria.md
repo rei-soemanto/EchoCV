@@ -124,7 +124,10 @@ All High-priority findings and key Medium-priority findings from the prototype u
 - `UC-06` Multimodal analysis (browser/server vision + speech service + LLM STAR scoring)
 - `UC-07` Feedback report (overall & aspect scores, `BR-08` disclaimer, Pace Meter, Timecode Tape, highlighted transcript, STAR breakdown)
 
-### Post-MVP Planned (Sprints 4–8)
+### Post-MVP Planned (Sprint 4-8, 1–7 Dec 2026)
+
+Sprints 4 to 8 are combined into one sprint, 1–7 Dec 2026, after a one-day MVP review on Mon 30 Nov. Code freeze is Sat 5 Dec 2026 and the final submission is Mon 7 Dec 2026, with the full post-MVP scope kept.
+
 
 - `UC-08`: Single-question retry and side-by-side attempt comparison
 - `UC-09`: Practice history and progress trend dashboard
@@ -133,7 +136,7 @@ All High-priority findings and key Medium-priority findings from the prototype u
 
 ### Unscheduled Use Cases (Require Explicit PM Approval Before Work Begins)
 
-The following exist in the full use case specification and prototype but are **out of MVP scope** and not scheduled in Sprints 1–8 unless approved by the PM:
+The following exist in the full use case specification and prototype but are **out of MVP scope** and not scheduled in Sprint 1, Sprint 2 and 3, or Sprint 4-8 unless approved by the PM:
 
 - `UC-11`, `UC-12`, `UC-18`: Usage quota enforcement, Sprint Pass / Premium / Yearly pricing tiers, and payment gateway checkout
 - `UC-13`, `UC-14`, `UC-19`: Institution / campus career centre (CDC) seats and cohort analytics

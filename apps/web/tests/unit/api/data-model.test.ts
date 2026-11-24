@@ -74,7 +74,7 @@ describe("data model migrations", () => {
       `select relname, relrowsecurity from pg_class
        where relnamespace = 'public'::regnamespace and relkind = 'r'`,
     );
-    expect(rows.length).toBe(8);
+    expect(rows.length).toBe(9);
     expect(rows.every((row) => row.relrowsecurity)).toBe(true);
   });
 
@@ -86,6 +86,21 @@ describe("data model migrations", () => {
       { id: "answer-audio", public: false, file_size_limit: 52428800 },
       { id: "answer-videos", public: false, file_size_limit: 524288000 },
     ]);
+  });
+});
+
+describe("retention settings", () => {
+  it("lets signed-in users read the leftover media limit but not change it", async () => {
+    const seen = await asUser(alice, () =>
+      db.query<{ key: string; value: string }>("select key, value from public.retention_settings"),
+    );
+    expect(seen.rows).toEqual([{ key: "leftover_media_hours", value: "24" }]);
+    const changed = await asUser(alice, () => db.query("update public.retention_settings set value = 1 returning key"));
+    expect(changed.rows).toEqual([]);
+  });
+
+  it("rejects a limit of zero or less", async () => {
+    await expect(db.query("insert into public.retention_settings (key, value) values ('x', 0)")).rejects.toThrow(/check constraint/);
   });
 });
 

@@ -1,6 +1,8 @@
+import type { Language } from "@/lib/db/sessions";
 import type { SpeechMetrics } from "@/lib/db/speech";
 import type { VisualMetrics } from "@/lib/db/uploads";
 import type { FeedbackItem, Report } from "@/lib/scoring/report";
+import { findBand, type Band } from "@/lib/scoring/score";
 
 /** GET /api/reports: the saved report plus each question of the session. */
 export type ReportView = Report & {
@@ -73,6 +75,12 @@ export function timecode(ms: number) {
 /** Indonesian decimal comma, one place. */
 export function decimal(value: number) {
   return (Math.round(value * 10) / 10).toString().replace(".", ",");
+}
+
+/** The most fillers per minute that still score full marks; null when the band is not set up. */
+export function fillerTarget(bands: Band[], language: Language): number | null {
+  const band = findBand(bands, "fillers", language);
+  return band ? Number(band.ideal_high) : null; // Postgres numeric can arrive as a string
 }
 
 export type TranscriptLine = { atMs: number; parts: { text: string; filler: boolean }[] };

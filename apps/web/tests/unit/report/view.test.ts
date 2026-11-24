@@ -1,7 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
 
 import type { SpeechMetrics } from "@/lib/db/speech";
-import { decimal, loadReport, sessionStats, timecode, transcriptLines, type ReportView } from "@/lib/report/view";
+import type { Band } from "@/lib/scoring/score";
+import { decimal, fillerTarget, loadReport, sessionStats, timecode, transcriptLines, type ReportView } from "@/lib/report/view";
 
 const ID = "11111111-1111-4111-8111-111111111111";
 
@@ -80,6 +81,15 @@ describe("loadReport", () => {
 });
 
 describe("report helpers", () => {
+  it("takes the filler target from the session language's band, else the shared one", () => {
+    const band = (language: "any" | "id" | "en", ideal_high: unknown) =>
+      ({ dimension: "fillers", language, metric: "fillers_per_minute", ideal_low: 0, ideal_high, zero_low: 0, zero_high: 20, version: "1" }) as Band;
+    expect(fillerTarget([band("any", "1.3272")], "id")).toBe(1.3272);
+    expect(fillerTarget([band("any", 1.3), band("en", 2)], "en")).toBe(2);
+    expect(fillerTarget([band("any", 1.3), band("en", 2)], "id")).toBe(1.3);
+    expect(fillerTarget([], "id")).toBeNull();
+  });
+
   it("formats timecodes and decimals", () => {
     expect(timecode(0)).toBe("00:00");
     expect(timecode(72_900)).toBe("01:12");

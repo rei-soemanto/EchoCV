@@ -1,0 +1,188 @@
+"use client";
+
+import session from "@echocv/shared/session.json";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
+import { buttonVariants } from "@/components/ui/button";
+
+// Figma 05 Atur sesi. Options come from the question bank enums, the values POST /api/sessions
+// accepts; the labels are the Indonesian wording shown to the user.
+const LEVELS: Record<string, string> = {
+  internship: "Magang",
+  fresh_graduate: "Fresh graduate",
+  junior: "Junior (1 sampai 3 tahun)",
+  mid_level: "Menengah (3 tahun atau lebih)",
+};
+const SETS: Record<string, string> = {
+  general: "Umum dan perkenalan diri",
+  behavioral: "Perilaku (STAR)",
+  role_specific: "Teknis sesuai peran",
+};
+const LANGUAGES: Record<string, string> = { id: "Bahasa Indonesia", en: "English" };
+const MODES: Record<string, string> = { live: "Live: rekam sekarang", upload: "Unggah: video atau audio" };
+
+type Field = "role" | "level" | "question_set" | "language" | "mode";
+type Choices = Partial<Record<Field, string>>;
+
+function Group({
+  name,
+  label,
+  hint,
+  options,
+  value,
+  onChange,
+}: {
+  name: Field;
+  label: string;
+  hint?: string;
+  options: [string, string][];
+  value?: string;
+  onChange: (value: string) => void;
+}) {
+  return (
+    <fieldset className="flex flex-col gap-3">
+      <legend className="text-label mb-3">{label}</legend>
+      {hint && <p className="text-body-sm -mt-2 text-ink-secondary">{hint}</p>}
+      <div className="grid gap-3 sm:grid-cols-2">
+        {options.map(([key, text]) => {
+          const checked = value === key;
+          return (
+            // Figma "Choice": selected has a tint, a heavier edge and a filled radio.
+            <label
+              key={key}
+              className={`text-body-sm flex min-h-12 cursor-pointer items-center gap-3 rounded-md px-4 py-3 focus-within:ring-3 focus-within:ring-ring/50 ${
+                checked
+                  ? "border-[1.5px] border-surface-accent bg-surface-accent-subtle"
+                  : "border border-border-strong"
+              }`}
+            >
+              <input
+                type="radio"
+                name={name}
+                value={key}
+                checked={checked}
+                onChange={() => onChange(key)}
+                className="sr-only"
+              />
+              <Image src={checked ? "/icons/radio-checked.svg" : "/icons/radio.svg"} alt="" width={18} height={18} />
+              {text}
+            </label>
+          );
+        })}
+      </div>
+    </fieldset>
+  );
+}
+
+function SummaryItem({ label, value }: { label: string; value?: string }) {
+  return (
+    <div className="text-body-sm flex justify-between gap-4 border-b border-border-default pb-3">
+      <dt className="text-ink-secondary">{label}</dt>
+      <dd className="text-right">{value ?? "Belum dipilih"}</dd>
+    </div>
+  );
+}
+
+export type SetupEnums = { roles: string[]; levels: string[]; question_sets: string[] };
+
+export function SetupForm({ enums }: { enums: SetupEnums }) {
+  const router = useRouter();
+  const [choices, setChoices] = useState<Choices>({ language: "id", mode: "live" });
+  const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const set = (field: Field) => (value: string) => setChoices((c) => ({ ...c, [field]: value }));
+  const missing = (["role", "level", "question_set"] as const).filter((f) => !choices[f]);
+  const minutes = Math.ceil((session.questionsPerSession * (session.prepSeconds + session.maxAnswerSeconds)) / 60);
+
+  async function start(event: React.FormEvent) {
+    event.preventDefault();
+    if (missing.length) {
+      setError("Pilih peran, tingkat pengalaman dan set pertanyaan dulu.");
+      return;
+    }
+    setBusy(true);
+    setError(null);
+    const res = await fetch("/api/sessions", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ job_field: "IT", ...choices }),
+    }).catch(() => null);
+    const body = (await res?.json().catch(() => null)) as { id?: string; error?: string } | null;
+    if (!res?.ok || !body?.id) {
+      setBusy(false);
+      setError(body?.error ?? "Sesi belum bisa dibuat. Periksa koneksi internet, lalu coba lagi.");
+      return;
+    }
+    router.push(choices.mode === "live" ? `/practice/check?session=${body.id}` : `/upload?session=${body.id}`);
+  }
+
+  return (
+    <form onSubmit={start} className="flex flex-col gap-16 lg:flex-row">
+      <div className="flex min-w-0 flex-1 flex-col gap-8">
+        <Group
+          name="role"
+          label="Peran yang dilamar"
+          options={enums.roles.map((r) => [r, r])}
+          value={choices.role}
+          onChange={set("role")}
+        />
+        <Group
+          name="level"
+          label="Tingkat pengalaman"
+          options={enums.levels.map((l) => [l, LEVELS[l] ?? l])}
+          value={choices.level}
+          onChange={set("level")}
+        />
+        <Group
+          name="question_set"
+          label="Set pertanyaan"
+          hint="Pertanyaan disusun sesuai peran dan tingkat Anda."
+          options={enums.question_sets.map((q) => [q, SETS[q] ?? q])}
+          value={choices.question_set}
+          onChange={set("question_set")}
+        />
+        <Group
+          name="language"
+          label="Bahasa"
+          options={Object.entries(LANGUAGES)}
+          value={choices.language}
+          onChange={set("language")}
+        />
+        <Group
+          name="mode"
+          label="Mode latihan"
+          hint="Mode Live memakai kamera dan mikrofon. Mode Unggah memakai rekaman yang sudah Anda punya."
+          options={Object.entries(MODES)}
+          value={choices.mode}
+          onChange={set("mode")}
+        />
+      </div>
+
+      <aside className="flex flex-col gap-4 self-start border-t border-ink-primary pt-4 lg:sticky lg:top-12 lg:w-[340px]">
+        <h2 className="text-h2">Ringkasan sesi</h2>
+        <dl className="flex flex-col gap-3">
+          <SummaryItem label="Peran" value={choices.role} />
+          <SummaryItem label="Tingkat" value={choices.level && LEVELS[choices.level]} />
+          <SummaryItem label="Set" value={choices.question_set && SETS[choices.question_set]} />
+          <SummaryItem label="Bahasa" value={choices.language && LANGUAGES[choices.language]} />
+          <SummaryItem label="Mode" value={choices.mode === "live" ? "Live" : "Unggah"} />
+          <SummaryItem label="Perkiraan durasi" value={`${session.questionsPerSession} pertanyaan, maks. ${minutes} menit`} />
+        </dl>
+        {error && (
+          <p role="alert" className="text-body-sm text-ink-danger">
+            {error}
+          </p>
+        )}
+        <button type="submit" disabled={busy} className={buttonVariants({ className: "w-full" })}>
+          <Image src="/icons/arrow-right.svg" alt="" width={20} height={20} />
+          {busy ? "Menyiapkan sesi…" : choices.mode === "upload" ? "Lanjut ke unggah" : "Lanjut ke kalibrasi"}
+        </button>
+        <p className="text-caption text-ink-tertiary">
+          Sesi baru dihitung setelah analisis selesai. Analisis yang gagal tidak mengurangi kuota.
+        </p>
+      </aside>
+    </form>
+  );
+}

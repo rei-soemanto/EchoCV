@@ -54,7 +54,7 @@ function Notice({
 }
 
 // Figma 06 Kalibrasi: camera preview, device checks and the 5-second baseline, all on the device.
-export function DeviceCheck() {
+export function DeviceCheck({ sessionId }: { sessionId?: string }) {
   const { videoRef, status, hasCamera, hasMic, level, lighting, online, retry, checkLighting } =
     useMediaCapture();
   const waiting = status === "requesting";
@@ -228,7 +228,10 @@ export function DeviceCheck() {
         </p>
         <div className="flex flex-wrap items-center gap-4">
           {hasCamera && hasMic && calibrated ? (
-            <Link href="/practice/room" className={buttonVariants()}>
+            <Link
+              href={sessionId ? `/practice/room?session=${sessionId}` : "/practice"}
+              className={buttonVariants()}
+            >
               <Image src="/icons/arrow-right.svg" alt="" width={20} height={20} />
               Mulai wawancara
             </Link>

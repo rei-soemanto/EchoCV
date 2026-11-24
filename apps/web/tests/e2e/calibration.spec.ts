@@ -8,8 +8,9 @@ test("device calibration detects fake media devices and keeps the room locked", 
   await practice.gotoSetup();
   await practice.expectSetupLoaded();
 
+  await practice.chooseSetup();
   await practice.calibrationLink.click();
-  await expect(page).toHaveURL(/\/practice\/check$/);
+  await expect(page).toHaveURL(/\/practice\/check\?session=[0-9a-f-]{36}$/);
 
   await practice.expectCalibrationReady();
 });

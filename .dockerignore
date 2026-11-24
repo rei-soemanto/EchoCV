@@ -1,0 +1,6 @@
+*
+!services/speech/pyproject.toml
+!services/speech/uv.lock
+!services/speech/app/
+!shared/
+services/speech/app/**/__pycache__

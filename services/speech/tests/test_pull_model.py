@@ -47,3 +47,12 @@ def test_rejects_a_file_with_the_wrong_checksum(tmp_path):
         pull(HUB, "tok", tmp_path, fake_fetch(bad, []))
     assert not (tmp_path / "model.bin").exists()
     assert not (tmp_path / "model.bin.part").exists()
+
+
+def test_nothing_is_missing_once_every_file_matches(tmp_path):
+    from app.pull_model import missing
+
+    files = HUB["whisper"]["files"]
+    assert sorted(missing(tmp_path, files)) == ["config.json", "model.bin"]
+    pull(HUB, "tok", tmp_path, fake_fetch(FILES, []))
+    assert missing(tmp_path, files) == []

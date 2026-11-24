@@ -4,7 +4,13 @@ from dataclasses import dataclass
 from functools import cache
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parents[3]
+
+def repo_root(here: Path) -> Path:
+    parents = here.parents
+    return parents[3] if len(parents) > 3 else parents[1]
+
+
+REPO = repo_root(Path(__file__).resolve())
 SHARED_DIR = Path(os.environ.get("ECHOCV_SHARED_DIR", REPO / "shared"))
 DEFAULT_MODEL_DIR = REPO / "ml" / "artifacts" / "whisper" / "v0" / "ct2"
 

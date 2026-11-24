@@ -246,6 +246,8 @@ ml = [
     { name = "faster-whisper" },
     { name = "librosa" },
     { name = "mediapipe" },
+    { name = "onnxruntime" },
+    { name = "opencv-contrib-python" },
     { name = "wordfreq" },
 ]
 
@@ -270,6 +272,8 @@ ml = [
     { name = "faster-whisper", specifier = ">=1.2.1" },
     { name = "librosa", specifier = ">=1.0.0" },
     { name = "mediapipe", specifier = ">=1.0.1" },
+    { name = "onnxruntime", specifier = ">=1.30" },
+    { name = "opencv-contrib-python", specifier = ">=4.10" },
     { name = "wordfreq", specifier = ">=3.1.1" },
 ]
 

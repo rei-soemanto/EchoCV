@@ -1,5 +1,6 @@
 import io
 import json
+from pathlib import Path
 
 import numpy as np
 
@@ -24,10 +25,11 @@ class LocalEngine:
             (model.model_dir / "suppress_tokens.json").read_text(encoding="utf-8")
         )
 
-    def decode(self, data: bytes) -> np.ndarray:
+    def decode(self, data: bytes | Path) -> np.ndarray:
         from faster_whisper.audio import decode_audio
 
-        return decode_audio(io.BytesIO(data), sampling_rate=self.cfg.sample_rate)
+        source = str(data) if isinstance(data, Path) else io.BytesIO(data)
+        return decode_audio(source, sampling_rate=self.cfg.sample_rate)
 
     def vad_options(self):
         from faster_whisper.vad import VadOptions

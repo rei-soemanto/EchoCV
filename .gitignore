@@ -12,6 +12,7 @@ coverage/
 playwright-report/
 test-results/
 .pnpm-debug.log*
+*.log
 
 # Python
 .venv/
@@ -22,6 +23,7 @@ __pycache__/
 .ipynb_checkpoints/
 
 # Model weights (versioned on Hugging Face Hub instead)
+*.pt
 *.pth
 *.onnx
 *.tflite

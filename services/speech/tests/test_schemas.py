@@ -56,3 +56,53 @@ def test_pydantic_fields_match_shared_schema():
         mine = _resolve(ours["properties"][name], defs)
         assert set(mine["properties"]) == set(theirs["properties"]), name
         assert set(mine["required"]) == set(theirs["required"]), name
+
+
+SCHEMAS = SHARED_SCHEMA.parent
+
+
+def _visual():
+    from app.schemas import VisualMetrics
+
+    return VisualMetrics(
+        answer_index=1,
+        duration_ms=60000,
+        eye_contact_pct=72.5,
+        smile_pct=4.0,
+        events=[{"type": "slouching", "start_ms": 1000, "end_ms": 5000}],
+    )
+
+
+def test_visual_metrics_match_the_shared_schema():
+    from app.schemas import VisualMetrics
+
+    shared = json.loads((SCHEMAS / "visual-metrics.schema.json").read_text(encoding="utf-8"))
+    jsonschema.validate(_visual().model_dump(by_alias=True), shared)
+    ours = VisualMetrics.model_json_schema(by_alias=True)
+    assert set(ours["properties"]) == set(shared["properties"])
+    assert set(ours["required"]) == set(shared["required"])
+    event = ours["$defs"]["BehaviourEvent"]
+    assert set(event["properties"]["type"]["enum"]) == set(
+        shared["properties"]["events"]["items"]["properties"]["type"]["enum"]
+    )
+
+
+def test_video_analysis_matches_the_shared_schema():
+    from referencing import Registry, Resource
+
+    from app.schemas import VideoAnalysis
+
+    names = ("speech-metrics", "visual-metrics", "video-analysis")
+    loaded = {
+        n: json.loads((SCHEMAS / f"{n}.schema.json").read_text(encoding="utf-8")) for n in names
+    }
+    registry = (
+        Registry()
+        .with_resources((f"{n}.schema.json", Resource.from_contents(s)) for n, s in loaded.items())
+        .with_resources((s["$id"], Resource.from_contents(s)) for s in loaded.values())
+    )
+    payload = VideoAnalysis(speech=_sample(), visual=_visual(), baseline="answer_start")
+    validator = jsonschema.Draft202012Validator(loaded["video-analysis"], registry=registry)
+    validator.validate(payload.model_dump(by_alias=True))
+    ours = VideoAnalysis.model_json_schema(by_alias=True)
+    assert set(ours["properties"]) == set(loaded["video-analysis"]["properties"])

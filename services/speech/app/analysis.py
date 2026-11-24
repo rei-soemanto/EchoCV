@@ -1,5 +1,6 @@
 import re
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Protocol
 
 import numpy as np
@@ -21,7 +22,7 @@ class RawWord:
 
 
 class Engine(Protocol):
-    def decode(self, data: bytes) -> np.ndarray: ...
+    def decode(self, data: bytes | Path) -> np.ndarray: ...
 
     def speech_segments(self, audio: np.ndarray) -> list[Segment]: ...
 

@@ -129,7 +129,19 @@ function Answer({ report, answer }: { report: ReportView; answer: ReportView["an
   );
 }
 
-export function SessionReport({ sessionId, title, subtitle }: { sessionId: string; title: string; subtitle: string }) {
+export function SessionReport({
+  sessionId,
+  title,
+  subtitle,
+  fillerTarget,
+  lessPrecise,
+}: {
+  sessionId: string;
+  title: string;
+  subtitle: string;
+  fillerTarget: number | null;
+  lessPrecise: boolean;
+}) {
   const [result, setResult] = useState<LoadResult | null>(null);
   const [attempt, setAttempt] = useState({ rebuild: false });
   useEffect(() => {
@@ -201,7 +213,7 @@ export function SessionReport({ sessionId, title, subtitle }: { sessionId: strin
           <Stat
             label="Kata pengisi per menit"
             value={stats.fillersPerMinute === null ? "–" : decimal(stats.fillersPerMinute)}
-            unit="target di bawah 3"
+            unit={fillerTarget === null ? "" : `target di bawah ${decimal(fillerTarget)}`}
           />
           <Stat label="Jeda panjang" value={String(stats.longPauses)} unit="lebih dari 2 detik" />
           <Stat label="Isi jawaban" value={content ? String(content.score) : "–"} unit="dari 100" />
@@ -214,6 +226,15 @@ export function SessionReport({ sessionId, title, subtitle }: { sessionId: strin
             <button type="button" onClick={() => load(true)} className={buttonVariants({ variant: "outline" })}>
               Nilai ulang isi jawaban
             </button>
+          </div>
+        )}
+        {lessPrecise && (
+          <div className="flex flex-col items-start gap-2">
+            <Badge tone="warning">Mode Unggah: kurang presisi</Badge>
+            <p className="text-body-sm text-ink-secondary">
+              Skor kontak mata, senyum dan postur di sini kurang presisi dibanding mode Live, karena video unggahan tidak
+              melalui kalibrasi.
+            </p>
           </div>
         )}
         <p className="text-body-sm text-ink-secondary">

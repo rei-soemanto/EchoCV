@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://echocv/schemas/video-analysis.schema.json",
+  "title": "VideoAnalysis",
+  "description": "Upload mode result of services/speech /analyze-video for one answer video. Mirrored by services/speech/app/schemas.py.",
+  "type": "object",
+  "required": ["speech", "visual", "baseline"],
+  "additionalProperties": false,
+  "properties": {
+    "speech": { "$ref": "speech-metrics.schema.json" },
+    "visual": { "$ref": "visual-metrics.schema.json" },
+    "baseline": {
+      "const": "answer_start",
+      "description": "Upload mode has no 5-second calibration: eye contact, smile and posture are measured against the median of the first seconds of the answer, with the default thresholds. Less precise than Live mode; the report should say so."
+    }
+  }
+}

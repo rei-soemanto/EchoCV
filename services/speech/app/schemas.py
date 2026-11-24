@@ -48,3 +48,26 @@ class SpeechMetrics(_Wire):
     speaking_rate_wps: float = Field(ge=0)
     syllables_per_second: float = Field(ge=0)
     prosody: Prosody
+
+
+BehaviourType = Literal["touching_face", "arms_crossed", "reading_notes", "slouching"]
+
+
+class BehaviourEvent(_Wire):
+    type: BehaviourType
+    start_ms: int = Field(ge=0)
+    end_ms: int = Field(ge=0)
+
+
+class VisualMetrics(_Wire):
+    answer_index: int = Field(ge=0)
+    duration_ms: int = Field(ge=0)
+    eye_contact_pct: float = Field(ge=0, le=100)
+    smile_pct: float = Field(ge=0, le=100)
+    events: list[BehaviourEvent]
+
+
+class VideoAnalysis(_Wire):
+    speech: SpeechMetrics
+    visual: VisualMetrics
+    baseline: Literal["answer_start"]

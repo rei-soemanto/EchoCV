@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import numpy as np
 
 from app.analysis import RawWord
@@ -27,7 +29,9 @@ class FakeEngine:
         self.speech = speech
         self.audio = np.zeros(int(seconds * sample_rate), dtype=np.float32)
 
-    def decode(self, data: bytes) -> np.ndarray:
+    def decode(self, data: bytes | Path) -> np.ndarray:
+        if isinstance(data, Path):
+            data = data.read_bytes()
         if data == b"not audio":
             raise ValueError("cannot decode")
         return self.audio

@@ -131,17 +131,17 @@ function Answer({ report, answer }: { report: ReportView; answer: ReportView["an
 
 export function SessionReport({ sessionId, title, subtitle }: { sessionId: string; title: string; subtitle: string }) {
   const [result, setResult] = useState<LoadResult | null>(null);
-  const [attempt, setAttempt] = useState(0);
+  const [attempt, setAttempt] = useState({ rebuild: false });
   useEffect(() => {
     let live = true;
-    loadReport(sessionId).then((r) => live && setResult(r));
+    loadReport(sessionId, attempt.rebuild).then((r) => live && setResult(r));
     return () => {
       live = false;
     };
   }, [sessionId, attempt]);
-  const load = () => {
+  const load = (rebuild: boolean) => {
     setResult(null);
-    setAttempt((a) => a + 1);
+    setAttempt({ rebuild });
   };
 
   const header = (
@@ -174,7 +174,7 @@ export function SessionReport({ sessionId, title, subtitle }: { sessionId: strin
         <div role="alert" className="flex flex-col gap-4">
           <p className="text-body">{result.message}</p>
           {(result.status === null || result.status >= 500) && (
-            <button type="button" onClick={load} className={buttonVariants({ variant: "outline", className: "w-fit" })}>
+            <button type="button" onClick={() => load(attempt.rebuild)} className={buttonVariants({ variant: "outline", className: "w-fit" })}>
               Coba lagi
             </button>
           )}
@@ -207,9 +207,14 @@ export function SessionReport({ sessionId, title, subtitle }: { sessionId: strin
           <Stat label="Isi jawaban" value={content ? String(content.score) : "–"} unit="dari 100" />
         </div>
         {report.contentStatus === "pending" && (
-          <Badge tone="warning" className="w-fit">
-            Isi jawaban belum dinilai, skor memakai penyampaian saja
-          </Badge>
+          <div className="flex flex-wrap items-center gap-4">
+            <Badge tone="warning" className="shrink whitespace-normal">
+              Ada isi jawaban yang belum dinilai
+            </Badge>
+            <button type="button" onClick={() => load(true)} className={buttonVariants({ variant: "outline" })}>
+              Nilai ulang isi jawaban
+            </button>
+          </div>
         )}
         <p className="text-body-sm text-ink-secondary">
           Skor ini adalah latihan berbasis AI, bukan prediksi hasil wawancara kerja.

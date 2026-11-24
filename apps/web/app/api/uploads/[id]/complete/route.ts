@@ -1,6 +1,53 @@
-import { analyzeAnswer, SpeechServiceError } from "@/lib/db/speech";
-import { AUDIO_BUCKET, isUuid, parseVisualMetrics, SIGNED_AUDIO_LINK_SECONDS } from "@/lib/db/uploads";
+import { after } from "next/server";
+import type { Language } from "@/lib/db/sessions";
+import { analyzeAnswer, analyzeVideo, SpeechServiceError } from "@/lib/db/speech";
+import {
+  AUDIO_BUCKET,
+  isUuid,
+  parseVisualMetrics,
+  SIGNED_AUDIO_LINK_SECONDS,
+  SIGNED_VIDEO_LINK_SECONDS,
+  VIDEO_BUCKET,
+} from "@/lib/db/uploads";
 import { createClient } from "@/lib/supabase/server";
+
+type Supabase = Awaited<ReturnType<typeof createClient>>;
+type Upload = { id: string; answer_id: string; storage_path: string; status: string; kind: "audio" | "video" };
+
+const CLAIMABLE = ["pending", "uploaded", "failed"];
+
+async function analyseVideoInBackground(
+  supabase: Supabase,
+  upload: Upload,
+  answerId: string,
+  videoUrl: string,
+  language: Language,
+  answerIndex: number,
+) {
+  const markUpload = (status: string) => supabase.from("uploads").update({ status }).eq("id", upload.id);
+  try {
+    const result = await analyzeVideo({ videoUrl }, language, answerIndex);
+    const visual = parseVisualMetrics(result.visual, answerIndex);
+    if (!visual.ok) throw new SpeechServiceError(visual.error, null, false);
+    const { error } = await supabase
+      .from("answers")
+      .update({
+        status: "analyzed",
+        speech_metrics: result.speech,
+        transcript: result.speech.transcript,
+        visual_metrics: visual.value,
+      })
+      .eq("id", answerId);
+    await markUpload(error ? "failed" : "processed");
+    if (error) await supabase.from("answers").update({ status: "failed" }).eq("id", answerId);
+  } catch {
+    await markUpload("failed");
+    await supabase.from("answers").update({ status: "failed" }).eq("id", answerId);
+  } finally {
+    const { error } = await supabase.storage.from(VIDEO_BUCKET).remove([upload.storage_path]);
+    if (!error) await supabase.from("uploads").update({ deleted_at: new Date().toISOString() }).eq("id", upload.id);
+  }
+}
 
 export async function POST(request: Request, ctx: RouteContext<"/api/uploads/[id]/complete">) {
   const { id } = await ctx.params;
@@ -11,13 +58,13 @@ export async function POST(request: Request, ctx: RouteContext<"/api/uploads/[id
   const { data: auth } = await supabase.auth.getUser();
   if (!auth.user) return Response.json({ error: "Sign in first." }, { status: 401 });
 
-  const { data: upload } = await supabase
+  const { data: upload } = (await supabase
     .from("uploads")
-    .select("id, answer_id, storage_path, status")
+    .select("id, answer_id, storage_path, status, kind")
     .eq("id", id)
-    .maybeSingle();
+    .maybeSingle()) as { data: Upload | null };
   if (!upload) return Response.json({ error: "Upload not found." }, { status: 404 });
-  if (!["pending", "uploaded", "failed"].includes(upload.status)) {
+  if (!CLAIMABLE.includes(upload.status)) {
     return Response.json({ error: "This upload is already being analysed or done." }, { status: 409 });
   }
 
@@ -37,24 +84,34 @@ export async function POST(request: Request, ctx: RouteContext<"/api/uploads/[id
     return Response.json({ error: "The session is not in progress." }, { status: 409 });
   }
 
-  const visual = parseVisualMetrics(body?.visual_metrics, question.position);
+  const isVideo = upload.kind === "video";
+  const visual = isVideo ? { ok: true as const, value: null } : parseVisualMetrics(body?.visual_metrics, question.position);
   if (!visual.ok) return Response.json({ error: visual.error }, { status: 400 });
 
   const { data: link } = await supabase.storage
-    .from(AUDIO_BUCKET)
-    .createSignedUrl(upload.storage_path, SIGNED_AUDIO_LINK_SECONDS);
-  if (!link) return Response.json({ error: "The audio has not been uploaded yet." }, { status: 409 });
+    .from(isVideo ? VIDEO_BUCKET : AUDIO_BUCKET)
+    .createSignedUrl(upload.storage_path, isVideo ? SIGNED_VIDEO_LINK_SECONDS : SIGNED_AUDIO_LINK_SECONDS);
+  if (!link) {
+    return Response.json({ error: `The ${isVideo ? "video" : "audio"} has not been uploaded yet.` }, { status: 409 });
+  }
 
   const { data: claimed } = await supabase
     .from("uploads")
     .update({ status: "processing" })
     .eq("id", upload.id)
-    .in("status", ["pending", "uploaded", "failed"])
+    .in("status", CLAIMABLE)
     .select("id")
     .maybeSingle();
   if (!claimed) return Response.json({ error: "This upload is already being analysed or done." }, { status: 409 });
-  const markUpload = (status: string) => supabase.from("uploads").update({ status }).eq("id", upload.id);
 
+  if (isVideo) {
+    after(() =>
+      analyseVideoInBackground(supabase, upload, answer.id, link.signedUrl, session.language, question.position),
+    );
+    return Response.json({ upload_id: upload.id, answer_id: answer.id, status: "processing" }, { status: 202 });
+  }
+
+  const markUpload = (status: string) => supabase.from("uploads").update({ status }).eq("id", upload.id);
   try {
     const metrics = await analyzeAnswer({ audioUrl: link.signedUrl }, session.language, question.position);
     const { error } = await supabase

@@ -10,7 +10,7 @@ export function TimecodeTape({
   scale,
 }: {
   issues: number[];
-  playhead: number;
+  playhead?: number;
   scale: string[];
 }) {
   return (
@@ -23,10 +23,12 @@ export function TimecodeTape({
             style={{ left: `${i * 2.5}%` }}
           />
         ))}
-        {issues.map((x) => (
-          <span key={x} className="absolute inset-y-0 w-0.5 bg-warning-fill" style={{ left: `${x * 100}%` }} />
+        {issues.map((x, i) => (
+          <span key={i} className="absolute inset-y-0 w-0.5 bg-warning-fill" style={{ left: `${x * 100}%` }} />
         ))}
-        <span className="absolute -top-1.5 h-[68px] w-0.5 bg-surface-inverse" style={{ left: `${playhead * 100}%` }} />
+        {playhead !== undefined && (
+          <span className="absolute -top-1.5 h-[68px] w-0.5 bg-surface-inverse" style={{ left: `${playhead * 100}%` }} />
+        )}
       </div>
       <Scale values={scale} />
     </div>

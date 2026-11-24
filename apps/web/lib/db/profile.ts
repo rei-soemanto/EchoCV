@@ -1,7 +1,7 @@
 import bank from "../../../../shared/questions/bank.json";
+import { ageOn, MINIMUM_AGE } from "@/lib/age";
 import type { Language } from "@/lib/db/sessions";
 
-export const MINIMUM_AGE = 18;
 export const STATUSES = ["student", "fresh_graduate", "employed", "looking_for_work"] as const;
 
 export type ProfileRequest = {
@@ -16,14 +16,6 @@ export type ProfileRequest = {
 };
 
 export type ProfileError = { ok: false; error: string; code: "invalid" | "consent_required" | "under_age" };
-
-export function ageOn(dateOfBirth: string, today: Date): number {
-  const [year, month, day] = dateOfBirth.split("-").map(Number);
-  const age = today.getUTCFullYear() - year;
-  const beforeBirthday =
-    today.getUTCMonth() + 1 < month || (today.getUTCMonth() + 1 === month && today.getUTCDate() < day);
-  return beforeBirthday ? age - 1 : age;
-}
 
 function isRealDate(value: unknown): value is string {
   if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;

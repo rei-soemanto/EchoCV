@@ -1,10 +1,11 @@
 import { expect, test } from "@playwright/test";
 
-test("landing page links to practice", async ({ page }) => {
+test("landing page sends a signed-out visitor to sign-in, then practice", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Latihan wawancara kerja");
   await page.getByRole("link", { name: "Mulai latihan gratis" }).click();
-  await expect(page).toHaveURL(/\/practice$/);
+  await expect(page).toHaveURL(/\/sign-in\?next=%2Fpractice$/);
+  await expect(page.getByRole("heading", { name: "Masuk atau daftar" })).toBeVisible();
 });
 
 test("sidebar reaches every app page and marks the current one", async ({ page }) => {

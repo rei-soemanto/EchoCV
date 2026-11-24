@@ -2,8 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 import { cn } from "cn";
+
+import { signOut } from "@/lib/auth";
 
 const NAV = [
   { href: "/dashboard", label: "Beranda", icon: "nav-home" },
@@ -16,8 +19,20 @@ const NAV = [
 
 // Figma "Sidebar" (04 Beranda). Active item: 2px left rule and a heavier label.
 // Below md it becomes a top bar with a scrollable nav row.
-export function AppSidebar() {
+export function AppSidebar({ fullName, email }: { fullName: string; email: string }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const [signOutFailed, setSignOutFailed] = useState(false);
+
+  async function leave() {
+    if (!(await signOut())) {
+      setSignOutFailed(true);
+      return;
+    }
+    router.replace("/");
+    router.refresh(); // drops this user's pages from the router cache
+  }
+
   return (
     <aside className="flex shrink-0 flex-col gap-4 bg-surface-sidebar px-4 pt-6 pb-3 text-ink-inverse md:sticky md:top-0 md:h-screen md:w-60 md:gap-8 md:pt-8 md:pb-6">
       <Link href="/" className="text-h2 w-fit">
@@ -47,10 +62,19 @@ export function AppSidebar() {
           })}
         </ul>
       </nav>
-      {/* shortcut: placeholder account until Supabase Auth sign-in (KAN-38) supplies the user */}
-      <div className="mt-auto hidden flex-col gap-1 border-t border-ink-inverse px-3 pt-4 md:flex">
-        <p className="text-label">Akun tamu</p>
-        <p className="text-caption opacity-75">Masuk untuk menyimpan riwayat</p>
+      <div className="flex items-center justify-between gap-4 border-t border-ink-inverse px-3 pt-3 md:mt-auto md:flex-col md:items-start md:gap-1 md:pt-4">
+        <div className="flex min-w-0 flex-col gap-1 md:w-full">
+          <p className="text-label truncate">{fullName}</p>
+          <p className="text-caption truncate opacity-75">{email}</p>
+        </div>
+        <button type="button" onClick={leave} className="text-body-sm min-h-11 shrink-0 underline-offset-4 hover:underline">
+          Keluar
+        </button>
+        {signOutFailed && (
+          <p role="alert" className="text-caption">
+            Belum bisa keluar. Coba lagi.
+          </p>
+        )}
       </div>
     </aside>
   );

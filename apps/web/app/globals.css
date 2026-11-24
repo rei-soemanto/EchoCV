@@ -22,6 +22,7 @@
   --color-ink-warning: var(--ink-warning);
   --color-ink-danger: var(--ink-danger);
   --color-surface-page: var(--surface-page);
+  --color-surface-card: var(--surface-card);
   --color-surface-subtle: var(--surface-subtle);
   --color-surface-sunken: var(--surface-sunken);
   --color-surface-accent: var(--surface-accent);
@@ -84,6 +85,7 @@
   --ink-warning: #7a4f00;
   --ink-danger: #9a2f27;
   --surface-page: #f4f1ea;
+  --surface-card: #fbf9f4;
   --surface-subtle: #ebe6da;
   --surface-sunken: #ddd6c6;
   --surface-accent: #2f5a4c;

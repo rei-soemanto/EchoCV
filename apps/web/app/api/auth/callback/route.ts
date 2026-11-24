@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
+import { SIGN_IN_PATH } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { SIGN_IN_PATH, safeNextPath } from "@/lib/supabase/proxy";
+import { safeNextPath } from "@/lib/supabase/proxy";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);

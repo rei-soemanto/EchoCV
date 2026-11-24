@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { ageOn, parseProfileRequest } from "@/lib/db/profile";
+import { ageOn } from "@/lib/age";
+import { parseProfileRequest } from "@/lib/db/profile";
 
 const today = new Date("2026-11-23T10:00:00Z");
 const valid = {
@@ -158,7 +159,7 @@ describe("updateSession", () => {
     const response = await updateSession(new NextRequest("http://app.test/practice/room?mode=live"));
     expect(response.status).toBe(307);
     const location = new URL(response.headers.get("location")!);
-    expect(location.pathname).toBe("/");
+    expect(location.pathname).toBe("/sign-in");
     expect(location.searchParams.get("next")).toBe("/practice/room?mode=live");
   });
 
@@ -188,7 +189,7 @@ describe("GET /api/auth/callback", () => {
 
   it.each(["code=bad", "error=access_denied"])("goes back to sign in with an error when %s (UC-01 E1)", async (query) => {
     const response = await callback(new Request(`http://app.test/api/auth/callback?${query}`));
-    expect(response.headers.get("location")).toBe("http://app.test/?auth_error=1");
+    expect(response.headers.get("location")).toBe("http://app.test/sign-in?auth_error=1");
   });
 });
 

@@ -45,8 +45,15 @@ Tunable numbers (pause lengths, VAD settings, filler forms, language margin, lim
 
 ## Model and settings
 
-The Whisper weights are not in git. Until they are on Hugging Face Hub, point the service at the
-CTranslate2 folder made by `ml/whisper/merge_and_convert.py`:
+The Whisper weights are not in git. They are in the team's private Hugging Face repo named in
+`shared/model-hub.json`, pinned to one revision and checked against the SHA-256 listed there. Pull
+them with the read token the maintainer shares privately (files already up to date are skipped):
+
+```bash
+HF_TOKEN=<read token> uv run python -m app.pull_model
+```
+
+It saves into `WHISPER_MODEL_DIR`:
 
 | Variable | Default |
 |---|---|

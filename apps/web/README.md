@@ -21,8 +21,16 @@ book and laptop) and `behaviour` (detector v1). When nothing loads it throws
 source-frame pixels, with the same letterbox and NMS as Ultralytics, so the browser sees what the
 pose rules were calibrated on. Runs are queued one at a time, as ONNX Runtime's WebGPU backend needs.
 
-The model and runtime files are git-ignored. Until they are on Hugging Face Hub, make them from `ml/`
-(needs the weights in `ml/artifacts/` and `pnpm install` done):
+The model and runtime files are git-ignored. Pull them from the team's private Hugging Face repo
+(`shared/model-hub.json`) with the read token the maintainer shares privately, set as `HF_TOKEN` in
+`apps/web/.env.local`. Each file is checked against its SHA-256 in `shared/vision-models.json`, and
+the ONNX Runtime and MediaPipe runtime files are copied from `node_modules`:
+
+```bash
+pnpm models:pull
+```
+
+To rebuild them instead (needs the weights in `ml/artifacts/` and `pnpm install` done):
 
 ```bash
 cd ../../ml && YOLO_AUTOINSTALL=false uv run python -m yolo.export_browser

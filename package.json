@@ -5,7 +5,8 @@
     "dev:web": "pnpm --filter web dev",
     "build": "pnpm --filter web build",
     "lint": "pnpm --filter web lint",
-    "test": "pnpm --filter web test"
+    "test": "pnpm --filter web test",
+    "models:pull": "pnpm --filter web models:pull"
   },
   "packageManager": "pnpm@11.2.2"
 }

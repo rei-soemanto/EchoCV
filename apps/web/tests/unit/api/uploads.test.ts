@@ -12,6 +12,15 @@ let db: Record<string, Row[]>;
 let user: { id: string } | null;
 let storedObjects: Set<string>;
 let failSignUpload: boolean;
+let removed: string[];
+let pendingAfter: (() => Promise<unknown>)[];
+
+vi.mock("next/server", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("next/server")>()),
+  after: (callback: () => Promise<unknown>) => {
+    pendingAfter.push(callback);
+  },
+}));
 
 function table(name: string) {
   const filters: ((row: Row) => boolean)[] = [];
@@ -53,6 +62,7 @@ vi.mock("@/lib/supabase/server", () => ({
           failSignUpload
             ? { data: null, error: { message: "failed" } }
             : { data: { signedUrl: `https://storage.test/upload/${bucket}/${path}`, token: "upload-token", path }, error: null },
+        remove: async (paths: string[]) => (removed.push(...paths), { data: [], error: null }),
         createSignedUrl: async (path: string, seconds: number) =>
           storedObjects.has(path)
             ? { data: { signedUrl: `https://storage.test/sign/${bucket}/${path}?expires=${seconds}` }, error: null }
@@ -65,12 +75,15 @@ vi.mock("@/lib/supabase/server", () => ({
 vi.mock("@/lib/db/speech", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@/lib/db/speech")>()),
   analyzeAnswer: vi.fn(),
+  analyzeVideo: vi.fn(),
 }));
 
-const { analyzeAnswer, SpeechServiceError } = await import("@/lib/db/speech");
+const { analyzeAnswer, analyzeVideo, SpeechServiceError } = await import("@/lib/db/speech");
 const { POST: startUpload } = await import("@/app/api/uploads/route");
 const { POST: completeUpload } = await import("@/app/api/uploads/[id]/complete/route");
+const { GET: uploadStatus } = await import("@/app/api/uploads/[id]/route");
 const analyze = vi.mocked(analyzeAnswer);
+const analyzeVid = vi.mocked(analyzeVideo);
 
 const metrics = { answerIndex: 1, language: "en", transcript: "I built an API", words: [], fillers: [], pauses: [] };
 const visual = { answerIndex: 1, durationMs: 60000, eyeContactPct: 72.5, smilePct: 10, events: [{ type: "touching_face", startMs: 1000, endMs: 2500 }] };
@@ -91,6 +104,8 @@ function seedUploaded(status = "pending") {
 beforeEach(() => {
   user = { id: USER };
   failSignUpload = false;
+  removed = [];
+  pendingAfter = [];
   storedObjects = new Set();
   db = {
     practice_sessions: [{ id: SESSION, status: "in_progress", mode: "live", language: "en" }],
@@ -99,6 +114,7 @@ beforeEach(() => {
     uploads: [],
   };
   analyze.mockReset();
+  analyzeVid.mockReset();
 });
 
 describe("parseUploadRequest", () => {
@@ -268,5 +284,111 @@ describe("POST /api/uploads/[id]/complete", () => {
     expect((await complete(UPLOAD)).status).toBe(404);
     user = null;
     expect((await complete(UPLOAD)).status).toBe(401);
+  });
+});
+
+const status = (id: string) =>
+  uploadStatus(new Request(`http://app.test/api/uploads/${id}`), { params: Promise.resolve({ id }) });
+const video = { session_question_id: QUESTION, content_type: "video/mp4", size_bytes: 80_000_000, duration_seconds: 95 };
+const runAfter = async () => {
+  for (const callback of pendingAfter.splice(0)) await callback();
+};
+
+describe("video uploads (upload mode)", () => {
+  beforeEach(() => {
+    db.practice_sessions[0].mode = "upload";
+  });
+
+  function seedVideo() {
+    db.answers.push({ id: ANSWER, session_question_id: QUESTION, user_id: USER, status: "pending" });
+    db.uploads = [{ id: UPLOAD, answer_id: ANSWER, kind: "video", storage_path: `${USER}/${SESSION}/${ANSWER}/v.mp4`, status: "pending", deleted_at: null }];
+    storedObjects.add(`${USER}/${SESSION}/${ANSWER}/v.mp4`);
+  }
+
+  it.each([
+    ["video/mp4", "mp4"],
+    ["video/quicktime", "mov"],
+    ["video/webm", "webm"],
+  ])("accepts %s within the limits", (contentType, extension) => {
+    expect(parseUploadRequest({ ...video, content_type: contentType })).toMatchObject({ ok: true, value: { kind: "video", extension } });
+  });
+
+  it.each([
+    ["a missing size", { size_bytes: undefined }],
+    ["a size over 500 MB", { size_bytes: 500 * 1024 * 1024 + 1 }],
+    ["a missing duration", { duration_seconds: undefined }],
+    ["a video over 10 minutes", { duration_seconds: 601 }],
+    ["a negative duration", { duration_seconds: -3 }],
+  ])("rejects %s", (_name, change) => {
+    expect(parseUploadRequest({ ...video, ...change }).ok).toBe(false);
+  });
+
+  it("gives a signed upload URL into the private video bucket", async () => {
+    const response = await start(video);
+    expect(response.status).toBe(201);
+    const body = await response.json();
+    expect(body).toMatchObject({ bucket: "answer-videos", kind: "video" });
+    expect(body.path).toMatch(/\.mp4$/);
+    expect(db.uploads[0]).toMatchObject({ kind: "video", bucket: "answer-videos" });
+  });
+
+  it("refuses a video in a live session and audio in an upload session (BR-25)", async () => {
+    expect((await start({ session_question_id: QUESTION, content_type: "audio/webm" })).status).toBe(409);
+    db.practice_sessions[0].mode = "live";
+    expect((await start(video)).status).toBe(409);
+  });
+
+  it("answers 202 at once, analyses in the background, saves both metrics and deletes the video (BR-05)", async () => {
+    seedVideo();
+    const visual = { answerIndex: 1, durationMs: 90000, eyeContactPct: 55, smilePct: 5, events: [] };
+    analyzeVid.mockResolvedValue({ speech: { transcript: "hello there" }, visual, baseline: "answer_start" } as never);
+
+    const response = await complete(UPLOAD);
+    expect(response.status).toBe(202);
+    expect(await (await status(UPLOAD)).json()).toMatchObject({ status: "processing", counted: false, file_deleted: false });
+    expect(analyzeVid).not.toHaveBeenCalled();
+
+    await runAfter();
+    expect(analyzeVid).toHaveBeenCalledWith(
+      { videoUrl: `https://storage.test/sign/answer-videos/${USER}/${SESSION}/${ANSWER}/v.mp4?expires=1800` },
+      "en",
+      1,
+    );
+    expect(db.answers[0]).toMatchObject({ status: "analyzed", transcript: "hello there", visual_metrics: visual });
+    expect(removed).toEqual([`${USER}/${SESSION}/${ANSWER}/v.mp4`]);
+    expect(await (await status(UPLOAD)).json()).toMatchObject({ status: "processed", answer_status: "analyzed", counted: true, file_deleted: true });
+  });
+
+  it("marks a failed analysis as not counted and still deletes the video (UC-05)", async () => {
+    seedVideo();
+    analyzeVid.mockRejectedValue(new SpeechServiceError("too long", 413, false));
+    await complete(UPLOAD);
+    await runAfter();
+    expect(await (await status(UPLOAD)).json()).toMatchObject({ status: "failed", answer_status: "failed", counted: false, file_deleted: true });
+    expect(removed).toHaveLength(1);
+  });
+
+  it("rejects visual metrics from the service that belong to another answer", async () => {
+    seedVideo();
+    analyzeVid.mockResolvedValue({ speech: { transcript: "x" }, visual: { answerIndex: 0, durationMs: 1, eyeContactPct: 1, smilePct: 1, events: [] }, baseline: "answer_start" } as never);
+    await complete(UPLOAD);
+    await runAfter();
+    expect(db.answers[0].status).toBe("failed");
+  });
+
+  it("refuses to start a second analysis while one is running", async () => {
+    seedVideo();
+    analyzeVid.mockResolvedValue({ speech: { transcript: "x" }, visual: { answerIndex: 1, durationMs: 1, eyeContactPct: 1, smilePct: 1, events: [] }, baseline: "answer_start" } as never);
+    expect((await complete(UPLOAD)).status).toBe(202);
+    expect((await complete(UPLOAD)).status).toBe(409);
+  });
+});
+
+describe("GET /api/uploads/[id]", () => {
+  it("answers 404 for unknown ids and 401 when signed out", async () => {
+    expect((await status("bad")).status).toBe(404);
+    expect((await status(UPLOAD)).status).toBe(404);
+    user = null;
+    expect((await status(UPLOAD)).status).toBe(401);
   });
 });

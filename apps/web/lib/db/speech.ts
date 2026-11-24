@@ -1,5 +1,6 @@
 import { requireEnv } from "@/lib/supabase/env";
 import type { Language } from "@/lib/db/sessions";
+import type { VisualMetrics } from "@/lib/db/uploads";
 
 export type SpeechMetrics = {
   answerIndex: number;
@@ -42,6 +43,8 @@ export class SpeechServiceError extends Error {
 
 export type AnswerAudio = Blob | { audioUrl: string };
 
+export type VideoAnalysis = { speech: SpeechMetrics; visual: VisualMetrics; baseline: "answer_start" };
+
 export type AnalyzeOptions = {
   baseUrl?: string;
   serviceKey?: string;
@@ -67,24 +70,18 @@ function looksLikeMetrics(body: unknown, language: Language, answerIndex: number
   );
 }
 
-async function analyzeOnce(
-  audio: AnswerAudio,
-  language: Language,
-  answerIndex: number,
+async function postOnce<T>(
+  path: string,
+  form: FormData,
+  parse: (body: unknown) => T | null,
   baseUrl: string,
   serviceKey: string | undefined,
   timeoutMs: number,
   fetchImpl: typeof fetch,
-): Promise<SpeechMetrics> {
-  const form = new FormData();
-  if (audio instanceof Blob) form.append("audio", audio, "answer");
-  else form.append("audioUrl", audio.audioUrl);
-  form.append("language", language);
-  form.append("answerIndex", String(answerIndex));
-
+): Promise<T> {
   let response: Response;
   try {
-    response = await fetchImpl(new URL("/analyze", baseUrl), {
+    response = await fetchImpl(new URL(path, baseUrl), {
       method: "POST",
       body: form,
       headers: serviceKey ? { "X-Speech-Key": serviceKey } : undefined,
@@ -106,17 +103,17 @@ async function analyzeOnce(
       response.status >= 500 || RETRYABLE_STATUSES.has(response.status),
     );
   }
-  const body: unknown = await response.json().catch(() => null);
-  if (!looksLikeMetrics(body, language, answerIndex)) {
+  const parsed = parse(await response.json().catch(() => null));
+  if (parsed === null) {
     throw new SpeechServiceError("The speech service sent metrics in an unexpected shape.", response.status, false);
   }
-  return body;
+  return parsed;
 }
 
-export async function analyzeAnswer(
-  audio: AnswerAudio,
-  language: Language,
-  answerIndex: number,
+async function postWithRetry<T>(
+  path: string,
+  form: FormData,
+  parse: (body: unknown) => T | null,
   {
     baseUrl = requireEnv("SPEECH_SERVICE_URL", process.env.SPEECH_SERVICE_URL),
     serviceKey = process.env.SPEECH_SERVICE_KEY || undefined,
@@ -124,14 +121,64 @@ export async function analyzeAnswer(
     attempts = 3,
     backoffMs = 1_000,
     fetchImpl = fetch,
-  }: AnalyzeOptions = {},
-): Promise<SpeechMetrics> {
+  }: AnalyzeOptions,
+): Promise<T> {
   for (let attempt = 1; ; attempt++) {
     try {
-      return await analyzeOnce(audio, language, answerIndex, baseUrl, serviceKey, timeoutMs, fetchImpl);
+      return await postOnce(path, form, parse, baseUrl, serviceKey, timeoutMs, fetchImpl);
     } catch (error) {
       if (!(error instanceof SpeechServiceError) || !error.retryable || attempt >= attempts) throw error;
       await new Promise((resolve) => setTimeout(resolve, backoffMs * 2 ** (attempt - 1)));
     }
   }
+}
+
+function answerForm(language: Language, answerIndex: number): FormData {
+  const form = new FormData();
+  form.append("language", language);
+  form.append("answerIndex", String(answerIndex));
+  return form;
+}
+
+export async function analyzeAnswer(
+  audio: AnswerAudio,
+  language: Language,
+  answerIndex: number,
+  options: AnalyzeOptions = {},
+): Promise<SpeechMetrics> {
+  const form = answerForm(language, answerIndex);
+  if (audio instanceof Blob) form.append("audio", audio, "answer");
+  else form.append("audioUrl", audio.audioUrl);
+  return postWithRetry(
+    "/analyze",
+    form,
+    (body) => (looksLikeMetrics(body, language, answerIndex) ? body : null),
+    options,
+  );
+}
+
+export async function analyzeVideo(
+  video: { videoUrl: string },
+  language: Language,
+  answerIndex: number,
+  options: AnalyzeOptions = {},
+): Promise<VideoAnalysis> {
+  const form = answerForm(language, answerIndex);
+  form.append("videoUrl", video.videoUrl);
+  return postWithRetry(
+    "/analyze-video",
+    form,
+    (body) => {
+      const result = (typeof body === "object" && body !== null ? body : {}) as Record<string, unknown>;
+      const visual = result.visual as Record<string, unknown> | undefined;
+      return looksLikeMetrics(result.speech, language, answerIndex) &&
+        typeof visual === "object" &&
+        visual !== null &&
+        visual.answerIndex === answerIndex &&
+        result.baseline === "answer_start"
+        ? (result as VideoAnalysis)
+        : null;
+    },
+    { timeoutMs: 900_000, attempts: 2, ...options },
+  );
 }

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+export MSYS_NO_PATHCONV=1 MSYS2_ARG_CONV_EXCL="*"
 
 : "${SUPABASE_HOST:?Set SUPABASE_HOST to <project-ref>.supabase.co}"
 : "${SPEECH_SERVICE_KEY:?Set SPEECH_SERVICE_KEY to the shared secret the backend sends}"

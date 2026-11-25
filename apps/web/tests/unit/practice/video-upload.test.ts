@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
 
+import { finishSession } from "@/lib/practice/finish-session";
 import {
   durationProblem,
-  finishSession,
   sendVideo,
   uploadStatus,
   videoProblem,

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 import { completeUpload, submitAnswer, type UploadTicket } from "@/lib/practice/answer-upload";
-import { formatClock, hintText } from "@/lib/practice/room";
+import { formatClock, hintText, isGuideSeen, markGuideSeen } from "@/lib/practice/room";
 
 const ticketBody = { upload_id: "u1", answer_id: "a1", bucket: "answer-audio", path: "me/s/q.webm", token: "t" };
 const ticket: UploadTicket = { uploadId: "u1", bucket: "answer-audio", path: "me/s/q.webm", token: "t" };
@@ -90,6 +90,20 @@ describe("room helpers", () => {
     expect(formatClock(14_001)).toBe("00:15"); // counts down in whole seconds
     expect(formatClock(180_000)).toBe("03:00");
     expect(formatClock(-5)).toBe("00:00");
+  });
+
+  it("remembers that the guide was shown, and copes with blocked storage", () => {
+    const data = new Map<string, string>();
+    const storage = () =>
+      ({ getItem: (k: string) => data.get(k) ?? null, setItem: (k: string, v: string) => data.set(k, v) }) as unknown as Storage;
+    expect(isGuideSeen(storage)).toBe(false);
+    markGuideSeen(storage);
+    expect(isGuideSeen(storage)).toBe(true);
+    const blocked = () => {
+      throw new Error("SecurityError");
+    };
+    expect(() => markGuideSeen(blocked)).not.toThrow();
+    expect(isGuideSeen(blocked)).toBe(false);
   });
 
   it("puts the face hint before behaviour hints", () => {

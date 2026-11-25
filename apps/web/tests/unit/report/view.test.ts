@@ -1,8 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 
+import rubric from "@echocv/shared/rubric.json";
 import type { SpeechMetrics } from "@/lib/db/speech";
+import { fillerText } from "@/lib/scoring/report";
 import type { Band } from "@/lib/scoring/score";
-import { decimal, fillerTarget, loadReport, sessionStats, timecode, transcriptLines, type ReportView } from "@/lib/report/view";
+import { decimal, fillerTarget, focusAreas, loadReport, sessionStats, strongest, timecode, transcriptLines, type ReportView } from "@/lib/report/view";
 
 const ID = "11111111-1111-4111-8111-111111111111";
 
@@ -117,6 +119,47 @@ describe("report helpers", () => {
       { text: "senang.", filler: false },
     ]);
     expect(lines[1].parts.some((p) => p.filler)).toBe(false);
+  });
+
+  it("leads with the aspects that cost the most points, each with a next step", () => {
+    const answers = [
+      { scores: { content: 70, content_feedback: { strength: "", improvement: "Jawaban satu." } } },
+      { scores: { content: 40, content_feedback: { strength: "", improvement: "Sebutkan hasilnya." } } },
+      { scores: null },
+    ] as unknown as ReportView["answers"];
+    const report = {
+      answers,
+      dimensionScores: [
+        { id: "smile", score: 0 }, // never counts (BR-09)
+        { id: "pace", score: 100 },
+        { id: "fillers", score: 30 }, // 0.125 * 70 = 8.75
+        { id: "content", score: 55 }, // 0.25 * 45 = 11.25
+        { id: "pauses", score: 80 },
+        { id: "voice", score: 90 },
+      ],
+    };
+    expect(focusAreas(report).map((a) => a.id)).toEqual(["content", "fillers", "pauses"]);
+    expect(focusAreas(report)[0].nextStep).toBe("Sebutkan hasilnya."); // from the weakest answer
+    expect(focusAreas(report)[1].nextStep).toContain("jeda satu napas");
+    expect(strongest(report)).toEqual({ id: "pace", score: 100 });
+  });
+
+  it("has nothing to work on at full marks, and no strongest aspect among the weak ones", () => {
+    expect(focusAreas({ answers: [], dimensionScores: [{ id: "pace", score: 100 }] })).toEqual([]);
+    expect(strongest({ answers: [], dimensionScores: [{ id: "pace", score: 60 }] })).toBeNull();
+    expect(strongest({ answers: [], dimensionScores: [] })).toBeNull();
+    expect(focusAreas({ answers: [], dimensionScores: [{ id: "content", score: 50 }] })[0].nextStep).toContain("hasil yang bisa diukur");
+  });
+
+  it("every weighted aspect has a next step", () => {
+    for (const { id, weight } of rubric.dimensions) {
+      if (weight > 0) expect(focusAreas({ answers: [], dimensionScores: [{ id, score: 1 }] })[0].nextStep).not.toBe("");
+    }
+  });
+
+  it("shows vocal fillers in words people read", () => {
+    expect(fillerText("[EEE]")).toBe("eee");
+    expect(fillerText("anu")).toBe("anu");
   });
 
   it("totals the session stats over answers with speech", () => {

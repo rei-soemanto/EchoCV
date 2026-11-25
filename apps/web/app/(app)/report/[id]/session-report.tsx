@@ -12,8 +12,10 @@ import { buttonVariants } from "@/components/ui/button";
 import {
   decimal,
   feedbackFor,
+  focusAreas,
   loadReport,
   sessionStats,
+  strongest,
   timecode,
   transcriptLines,
   type LoadResult,
@@ -202,6 +204,8 @@ export function SessionReport({
   const wpmBand = thresholds.pace[language].wordsPerMinute;
   const low = Math.round(wpmBand.low);
   const high = Math.round(wpmBand.high);
+  const focus = focusAreas(report);
+  const best = strongest(report);
 
   return (
     <div className="flex flex-col gap-10">
@@ -241,6 +245,27 @@ export function SessionReport({
           Skor ini adalah latihan berbasis AI, bukan prediksi hasil wawancara kerja.
         </p>
       </div>
+
+      {focus.length > 0 && (
+        <section className="flex flex-col gap-4 border-t border-ink-primary pt-6">
+          <h2 className="text-h2">Fokus latihan berikutnya</h2>
+          <p className="text-body text-ink-secondary">
+            {best && `${LABELS[best.id] ?? best.id} adalah aspek terkuat Anda (${decimal(best.score)}). Pertahankan. `}
+            Mulai dari nomor satu; satu perubahan per latihan sudah cukup.
+          </p>
+          <ol className="grid gap-x-10 gap-y-6 md:grid-cols-3">
+            {focus.map((area, i) => (
+              <li key={area.id} className="flex flex-col gap-2 border-t border-border-default pt-4">
+                <h3 className="text-h3">
+                  {i + 1}. {LABELS[area.id] ?? area.id}
+                </h3>
+                <p className="text-body-sm text-ink-secondary">Skor {decimal(area.score)} dari 100</p>
+                <p className="text-body-sm">{area.nextStep}</p>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
 
       <section className="flex flex-col gap-4 border-t border-ink-primary pt-6">
         <h2 className="text-h2">Tempo bicara dan penanda waktu</h2>

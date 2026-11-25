@@ -94,6 +94,33 @@ docker run -d --name echocv-speech --restart unless-stopped -p 8000:8000   -v ec
   analysed one at a time; an answer video takes about as long as it plays.
 - Check it with `curl https://<address>/health`.
 
+### Google Cloud Run (Jakarta)
+
+The team runs the service on Cloud Run in `asia-southeast2` (Jakarta), so recordings are processed
+in Indonesia. `deploy/cloud-run.sh` sets everything up and can be run again to update it:
+
+```bash
+cd services/speech
+uv run python -m app.pull_model
+SUPABASE_HOST=<project-ref>.supabase.co SPEECH_SERVICE_KEY=<shared secret> bash deploy/cloud-run.sh
+```
+
+- It uses the active `gcloud` project (or `PROJECT=<id>`). It enables Cloud Run, Secret Manager,
+  Cloud Storage and IAM, and creates an `echocv-speech` service account with access only to the
+  model bucket and its own secret.
+- **Models:** they go into a private bucket in Jakarta, `<project>-echocv-models`, copied from the
+  local model folders (about 850 MB, a few US cents a month). The bucket is mounted at `/models`,
+  so a cold start downloads nothing. `app.pull_model` checks each file once and then trusts the
+  `.sha256` marker written next to it.
+- **The service key** goes into Secret Manager, never into the command line or the service
+  settings.
+- **Settings:** 2 vCPU, 4 GiB, a 60-minute request timeout, one request per instance, zero to two
+  instances. `SPEECH_AUDIO_URL_HOSTS` is set to the Supabase host.
+- **Output:** the https `SPEECH_SERVICE_URL` for the web app.
+- **Free tier:** with no traffic it scales to zero. The monthly free tier covers roughly 18 hours of
+  processing at this size in a Tier 2 region like Jakarta. Set a budget alert on the billing account
+  (for example US$1) in the console under Billing, then Budgets and alerts.
+
 ## Model and settings
 
 The Whisper weights are not in git. They are in the team's private Hugging Face repo named in

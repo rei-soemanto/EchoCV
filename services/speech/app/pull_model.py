@@ -20,8 +20,27 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def verified_marker(path: Path) -> Path:
+    return path.with_name(f"{path.name}.sha256")
+
+
 def is_current(path: Path, expected: str) -> bool:
-    return path.exists() and sha256(path) == expected
+    if not path.exists():
+        return False
+    marker = verified_marker(path)
+    stamp = f"{expected} {path.stat().st_size}"
+    try:
+        if marker.read_text(encoding="utf-8").strip() == stamp:
+            return True
+    except OSError:
+        pass
+    if sha256(path) != expected:
+        return False
+    try:
+        marker.write_text(stamp, encoding="utf-8")
+    except OSError:
+        pass
+    return True
 
 
 def file_url(hub: dict, name: str, part: str = "whisper") -> str:

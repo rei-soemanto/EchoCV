@@ -39,7 +39,9 @@ jobs:
       - name: Image imports the speech and vision stack
         run: >-
           docker run --rm echocv-speech uv run --no-sync python -c
-          "import cv2, mediapipe, onnxruntime, faster_whisper, librosa, wordfreq, app.main"
+          "import cv2, mediapipe, onnxruntime, faster_whisper, librosa, wordfreq, app.main;
+          from mediapipe.tasks.python.core import mediapipe_c_bindings;
+          mediapipe_c_bindings.load_raw_library()"
       - name: Image starts and answers /health
         run: |
           docker run -d --name speech -p 8000:8000 echocv-speech uv run --no-sync uvicorn app.main:app --host 0.0.0.0 --port 8000

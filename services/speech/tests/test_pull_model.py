@@ -56,3 +56,24 @@ def test_nothing_is_missing_once_every_file_matches(tmp_path):
     assert sorted(missing(tmp_path, files)) == ["config.json", "model.bin"]
     pull(HUB, "tok", tmp_path, fake_fetch(FILES, []))
     assert missing(tmp_path, files) == []
+
+
+def test_a_verified_file_is_not_hashed_again(tmp_path, monkeypatch):
+    import app.pull_model as pm
+
+    target = tmp_path / "model.bin"
+    target.write_bytes(FILES["model.bin"])
+    assert pm.is_current(target, digest(FILES["model.bin"]))
+    assert pm.verified_marker(target).exists()
+    monkeypatch.setattr(pm, "sha256", lambda path: pytest.fail("hashed again"))
+    assert pm.is_current(target, digest(FILES["model.bin"]))
+
+
+def test_a_changed_file_is_hashed_again_and_rejected(tmp_path):
+    from app.pull_model import is_current
+
+    target = tmp_path / "model.bin"
+    target.write_bytes(FILES["model.bin"])
+    assert is_current(target, digest(FILES["model.bin"]))
+    target.write_bytes(b"other weights of another size")
+    assert not is_current(target, digest(FILES["model.bin"]))

@@ -24,6 +24,11 @@ export type ScoredAnswer = {
 
 const MAX_FILLER_NOTES = 3;
 
+/** Vocal fillers arrive as labels such as "[EEE]"; people read "eee". */
+export function fillerText(token: string): string {
+  return token.replace(/[[\]]/g, "").toLowerCase();
+}
+
 const MESSAGES = {
   en: {
     longPause: (seconds: number) => `A ${seconds}-second pause here. A short breath is fine; try to keep pauses under two seconds.`,
@@ -55,7 +60,7 @@ export function answerFeedback(answer: ScoredAnswer, language: Language, eyeCont
     if (pause.long) at(pause.startMs, "pauses", text.longPause(Math.round((pause.endMs - pause.startMs) / 1000)));
   }
   for (const filler of (answer.speech?.fillers ?? []).slice(0, MAX_FILLER_NOTES)) {
-    at(filler.startMs, "fillers", text.filler(filler.token));
+    at(filler.startMs, "fillers", text.filler(fillerText(filler.token)));
   }
   for (const event of answer.visual?.events ?? []) {
     at(event.startMs, "posture", text[event.type as keyof typeof text] as string);

@@ -22,7 +22,7 @@ const SETS: Record<string, string> = {
   role_specific: "Teknis sesuai peran",
 };
 const LANGUAGES: Record<string, string> = { id: "Bahasa Indonesia", en: "English" };
-const MODES: Record<string, string> = { live: "Live: rekam sekarang", upload: "Unggah: video atau audio" };
+const MODES: Record<string, string> = { live: "Live: rekam sekarang", upload: "Unggah: rekaman video" };
 
 type Field = "role" | "level" | "question_set" | "language" | "mode";
 type Choices = Partial<Record<Field, string>>;
@@ -38,19 +38,21 @@ function SummaryItem({ label, value }: { label: string; value?: string }) {
 
 export type SetupEnums = { roles: string[]; levels: string[]; question_sets: string[] };
 
-export function SetupForm({ enums }: { enums: SetupEnums }) {
+// Quick start (UC-02 A1) is one fixed question, so it has no question set to choose.
+export function SetupForm({ enums, quick }: { enums: SetupEnums; quick: boolean }) {
   const router = useRouter();
   const [choices, setChoices] = useState<Choices>({ language: "id", mode: "live" });
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const set = (field: Field) => (value: string) => setChoices((c) => ({ ...c, [field]: value }));
-  const missing = (["role", "level", "question_set"] as const).filter((f) => !choices[f]);
-  const minutes = Math.ceil((session.questionsPerSession * (session.prepSeconds + session.maxAnswerSeconds)) / 60);
+  const missing = !choices.role || !choices.level || (!quick && !choices.question_set);
+  const questions = quick ? session.quickStartQuestions : session.questionsPerSession;
+  const minutes = Math.ceil((questions * (session.prepSeconds + session.maxAnswerSeconds)) / 60);
 
   async function start(event: React.FormEvent) {
     event.preventDefault();
-    if (missing.length) {
-      setError("Pilih peran, tingkat pengalaman dan set pertanyaan dulu.");
+    if (missing) {
+      setError(quick ? "Pilih peran dan tingkat pengalaman dulu." : "Pilih peran, tingkat pengalaman dan set pertanyaan dulu.");
       return;
     }
     setBusy(true);
@@ -58,12 +60,18 @@ export function SetupForm({ enums }: { enums: SetupEnums }) {
     const res = await fetch("/api/sessions", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ job_field: "IT", ...choices }),
+      body: JSON.stringify({ job_field: "IT", ...choices, quick_start: quick }),
     }).catch(() => null);
-    const body = (await res?.json().catch(() => null)) as { id?: string; error?: string } | null;
+    const body = (await res?.json().catch(() => null)) as { id?: string } | null;
     if (!res?.ok || !body?.id) {
       setBusy(false);
-      setError(body?.error ?? "Sesi belum bisa dibuat. Periksa koneksi internet, lalu coba lagi.");
+      setError(
+        res?.status === 401
+          ? "Sesi masuk Anda berakhir. Masuk lagi untuk melanjutkan."
+          : res?.status === 422
+            ? "Belum ada pertanyaan untuk pilihan ini. Coba set pertanyaan atau tingkat lain."
+            : "Sesi belum bisa dibuat. Periksa koneksi internet, lalu coba lagi.",
+      );
       return;
     }
     router.push(choices.mode === "live" ? `/practice/check?session=${body.id}` : `/upload?session=${body.id}`);
@@ -86,14 +94,16 @@ export function SetupForm({ enums }: { enums: SetupEnums }) {
           value={choices.level}
           onChange={set("level")}
         />
-        <ChoiceGroup
-          name="question_set"
-          label="Set pertanyaan"
-          hint="Pertanyaan disusun sesuai peran dan tingkat Anda."
-          options={enums.question_sets.map((q) => [q, SETS[q] ?? q])}
-          value={choices.question_set}
-          onChange={set("question_set")}
-        />
+        {!quick && (
+          <ChoiceGroup
+            name="question_set"
+            label="Set pertanyaan"
+            hint="Pertanyaan disusun sesuai peran dan tingkat Anda."
+            options={enums.question_sets.map((q) => [q, SETS[q] ?? q])}
+            value={choices.question_set}
+            onChange={set("question_set")}
+          />
+        )}
         <ChoiceGroup
           name="language"
           label="Bahasa"
@@ -116,10 +126,10 @@ export function SetupForm({ enums }: { enums: SetupEnums }) {
         <dl className="flex flex-col gap-3">
           <SummaryItem label="Peran" value={choices.role} />
           <SummaryItem label="Tingkat" value={choices.level && LEVELS[choices.level]} />
-          <SummaryItem label="Set" value={choices.question_set && SETS[choices.question_set]} />
+          <SummaryItem label="Set" value={quick ? "Perkenalan diri" : choices.question_set && SETS[choices.question_set]} />
           <SummaryItem label="Bahasa" value={choices.language && LANGUAGES[choices.language]} />
           <SummaryItem label="Mode" value={choices.mode === "live" ? "Live" : "Unggah"} />
-          <SummaryItem label="Perkiraan durasi" value={`${session.questionsPerSession} pertanyaan, maks. ${minutes} menit`} />
+          <SummaryItem label="Perkiraan durasi" value={`${questions} pertanyaan, maks. ${minutes} menit`} />
         </dl>
         {error && (
           <p role="alert" className="text-body-sm text-ink-danger">

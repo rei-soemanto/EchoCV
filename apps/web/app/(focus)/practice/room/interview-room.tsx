@@ -11,7 +11,8 @@ import { buttonVariants } from "@/components/ui/button";
 import { useMediaCapture } from "@/hooks/use-media-capture";
 import { startAudioRecorder } from "@/lib/media";
 import { completeUpload, type SubmitResult, submitAnswer, type UploadTicket } from "@/lib/practice/answer-upload";
-import { formatClock, hintText } from "@/lib/practice/room";
+import { finishSession } from "@/lib/practice/finish-session";
+import { formatClock, hintText, isGuideSeen, markGuideSeen } from "@/lib/practice/room";
 import { createClient } from "@/lib/supabase/client";
 import { AnswerTracker, type VisualMetrics } from "@/lib/vision/answer-tracker";
 import { BehaviourTracker } from "@/lib/vision/behaviour-tracker";
@@ -24,7 +25,17 @@ import { backendOrder, createYoloModel, hasWebGpu } from "@/lib/vision/onnx";
 import { type PostureModels, startPostureTracking } from "@/lib/vision/pose-loop";
 
 type Question = { id: string; position: number; question_text: string };
-type Phase = "loading" | "prep" | "recording" | "sending" | "retry" | "rerecord" | "finishing" | "finish_failed";
+type Phase =
+  | "loading"
+  | "guide"
+  | "prep"
+  | "recording"
+  | "sending"
+  | "skipping"
+  | "retry"
+  | "rerecord"
+  | "finishing"
+  | "finish_failed";
 
 const PREP_MS = sessionSettings.prepSeconds * 1000;
 const MAX_MS = sessionSettings.maxAnswerSeconds * 1000;
@@ -76,6 +87,7 @@ export function InterviewRoom({
     startedAt: number;
   } | null>(null);
   const pending = useRef<{ ticket?: UploadTicket; audio: Blob; metrics: VisualMetrics | null } | null>(null);
+  const skipping = useRef(false);
   const supabase = useRef<ReturnType<typeof createClient> | null>(null);
 
   const question = questions[index];
@@ -146,8 +158,17 @@ export function InterviewRoom({
         }),
       );
     }
+    let recorder: ReturnType<typeof startAudioRecorder>;
+    try {
+      recorder = startAudioRecorder(stream);
+    } catch {
+      stops.forEach((stop) => stop());
+      setMessage("Perekaman tidak bisa dimulai. Periksa mikrofon, lalu coba lagi.");
+      return go("rerecord");
+    }
+    setMessage(null);
     take.current = {
-      recorder: startAudioRecorder(stream),
+      recorder,
       answer,
       behaviour,
       stopLoops: () => stops.forEach((stop) => stop()),
@@ -157,12 +178,21 @@ export function InterviewRoom({
     go("recording");
   }, [baseline, go, stream, videoRef]);
 
+  const finish = useCallback(async () => {
+    go("finishing");
+    setMessage(null);
+    if (await finishSession(sessionId)) return router.push(`/report/${sessionId}`);
+    setMessage("Sesi belum bisa diselesaikan. Periksa koneksi internet, lalu coba lagi.");
+    go("finish_failed");
+  }, [go, router, sessionId]);
+
   const nextQuestion = useCallback(() => {
     pending.current = null;
     setMessage(null);
-    setIndex((i) => i + 1);
-    go("prep");
-  }, [go]);
+    setIndex(index + 1);
+    if (index + 1 < questions.length) go("prep");
+    else void finish();
+  }, [finish, go, index, questions.length]);
 
   const handle = useCallback((result: SubmitResult) => {
     if (result.ok) return nextQuestion();
@@ -201,17 +231,22 @@ export function InterviewRoom({
   }, [go, handle, question]);
 
   const skip = useCallback(async () => {
+    if (skipping.current) return; // a double click must not skip the next question too
+    skipping.current = true;
+    const from = take.current ? "rerecord" : phase; // a take in progress is discarded below
+    go("skipping"); // stops the preparation countdown from starting a take meanwhile
     await endTake(false);
     // UC-04: a skipped question is marked so the report can say so. Own rows only (RLS).
     const { error } = await sb()
       .from("answers")
       .upsert({ session_question_id: question.id, status: "skipped" }, { onConflict: "session_question_id" });
+    skipping.current = false;
     if (error) {
       setMessage("Pertanyaan belum bisa dilewati. Periksa koneksi internet, lalu coba lagi.");
-      return;
+      return go(from);
     }
     nextQuestion();
-  }, [endTake, nextQuestion, question]);
+  }, [endTake, go, nextQuestion, phase, question]);
 
   const restart = useCallback(async () => {
     await endTake(false);
@@ -219,27 +254,14 @@ export function InterviewRoom({
     startTake();
   }, [endTake, index, startTake]);
 
-  const finishSession = useCallback(async () => {
-    go("finishing");
-    const res = await fetch(`/api/sessions/${sessionId}`, {
-      method: "PATCH",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ status: "finished" }),
-    }).catch(() => null);
-    // 409: already finished (for example in another tab); the report is still the right place.
-    if (res && (res.ok || res.status === 409)) return router.push(`/report/${sessionId}`);
-    setMessage("Sesi belum bisa diselesaikan. Periksa koneksi internet, lalu coba lagi.");
-    go("finish_failed");
-  }, [go, router, sessionId]);
-
   // Start once the camera, mic and models are ready.
   const ready = status === "ready" && hasCamera && hasMic && notices !== null && baseline !== undefined;
   useEffect(() => {
     if (phase !== "loading" || !ready) return;
     // eslint-disable-next-line react-hooks/set-state-in-effect -- starts the timed flow once devices are ready
-    if (index >= questions.length) void finishSession();
-    else go("prep");
-  }, [finishSession, go, index, phase, questions.length, ready]);
+    if (index >= questions.length) void finish();
+    else go(isGuideSeen() ? "prep" : "guide");
+  }, [finish, go, index, phase, questions.length, ready]);
 
   // One clock drives the countdown, the recording limit and the live hints.
   useEffect(() => {
@@ -296,6 +318,7 @@ export function InterviewRoom({
   const total = questions.length;
   const shown = Math.min(index + 1, total);
   const busy = phase === "sending" || phase === "finishing";
+  const guide = phase === "guide";
 
   return (
     <div className="flex min-h-full flex-1 flex-col">
@@ -314,15 +337,34 @@ export function InterviewRoom({
 
       <div className="flex flex-1 flex-col-reverse gap-10 px-4 pt-10 pb-12 md:px-16 md:pt-16 lg:flex-row lg:gap-16">
         <section aria-labelledby="question" className="flex min-w-0 flex-1 flex-col gap-6">
-          <p className="text-label text-ink-secondary">Pertanyaan {shown}</p>
+          <p className="text-label text-ink-secondary">{guide ? "Sebelum mulai" : `Pertanyaan ${shown}`}</p>
           <h1 id="question" className="text-h1">
-            {question?.question_text ?? "Semua pertanyaan sudah dijawab."}
+            {guide ? "Cara kerja ruang wawancara" : (question?.question_text ?? "Semua pertanyaan sudah dijawab.")}
           </h1>
-          <p className="text-body text-ink-secondary">
-            {phase === "prep"
-              ? "Tarik napas, lalu jawab dengan urutan: Situasi, Tugas, Aksi, Hasil. Perekaman mulai otomatis saat hitungan selesai."
-              : `Jawab dengan tenang. Perekaman berhenti otomatis setelah ${sessionSettings.maxAnswerSeconds / 60} menit.`}
-          </p>
+          {guide ? (
+            // First visit only. The question stays hidden, so reading this does not use up preparation time.
+            <ol className="text-body flex list-decimal flex-col gap-3 pl-6 text-ink-secondary">
+              <li>
+                Anda punya {sessionSettings.prepSeconds} detik untuk bersiap, lalu perekaman mulai sendiri. Tekan{" "}
+                <strong>Mulai menjawab</strong> jika sudah siap lebih cepat.
+              </li>
+              <li>
+                Jawab sampai {sessionSettings.maxAnswerSeconds / 60} menit sambil melihat kamera, lalu tekan{" "}
+                <strong>Selesai dan analisis</strong>.
+              </li>
+              <li>
+                <strong>Ulangi jawaban</strong> bisa dipakai sekali per pertanyaan. <strong>Lewati pertanyaan</strong>{" "}
+                melanjutkan tanpa jawaban.
+              </li>
+              <li>Video dianalisis di perangkat ini. Hanya suara dan angka hasil analisis yang dikirim.</li>
+            </ol>
+          ) : (
+            <p className="text-body text-ink-secondary">
+              {phase === "prep"
+                ? "Tarik napas, lalu jawab dengan urutan: Situasi, Tugas, Aksi, Hasil. Perekaman mulai otomatis saat hitungan selesai."
+                : `Jawab dengan tenang. Perekaman berhenti otomatis setelah ${sessionSettings.maxAnswerSeconds / 60} menit.`}
+            </p>
+          )}
           <div aria-live="polite" className="flex flex-col gap-3 border-t border-border-default pt-4">
             {phase === "loading" && <p className="text-body-sm text-ink-secondary">Menyiapkan kamera dan analisis…</p>}
             {phase === "recording" &&
@@ -340,6 +382,7 @@ export function InterviewRoom({
                 </p>
               ))}
             {phase === "sending" && <p className="text-body-sm text-ink-secondary">Mengirim dan menganalisis jawaban…</p>}
+            {phase === "skipping" && <p className="text-body-sm text-ink-secondary">Melewati pertanyaan…</p>}
             {phase === "finishing" && <p className="text-body-sm text-ink-secondary">Menyelesaikan sesi…</p>}
             {message && (
               <p role="alert" className="text-body-sm text-ink-danger">
@@ -356,7 +399,7 @@ export function InterviewRoom({
           </div>
         </section>
 
-        <div className="relative flex aspect-[7/5] w-full shrink-0 items-center justify-center overflow-hidden rounded-xl bg-surface-sidebar lg:w-[420px]">
+        <div className="relative flex aspect-[7/5] w-full shrink-0 items-center justify-center overflow-hidden rounded-xl bg-surface-sidebar lg:w-[420px] lg:self-start">
           <video
             ref={videoRef}
             autoPlay
@@ -370,6 +413,19 @@ export function InterviewRoom({
       </div>
 
       <div className="flex flex-wrap items-center gap-4 border-t border-border-default px-4 py-6 md:px-12">
+        {guide && (
+          <button
+            type="button"
+            onClick={() => {
+              markGuideSeen();
+              go("prep");
+            }}
+            className={buttonVariants()}
+          >
+            <Image src="/icons/arrow-right.svg" alt="" width={20} height={20} />
+            Saya mengerti, mulai
+          </button>
+        )}
         {phase === "prep" && (
           <button type="button" onClick={startTake} className={buttonVariants()}>
             <Image src="/icons/arrow-right.svg" alt="" width={20} height={20} />
@@ -393,7 +449,7 @@ export function InterviewRoom({
           </button>
         )}
         {phase === "finish_failed" && (
-          <button type="button" onClick={finishSession} className={buttonVariants()}>
+          <button type="button" onClick={finish} className={buttonVariants()}>
             Selesaikan sesi
           </button>
         )}

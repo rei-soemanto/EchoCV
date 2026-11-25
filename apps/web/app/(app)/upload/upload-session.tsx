@@ -8,10 +8,10 @@ import { Badge, type BadgeTone } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { ConsentRow } from "@/components/ui/consent-row";
 import { MAX_VIDEO_BYTES, MAX_VIDEO_SECONDS } from "@/lib/db/uploads";
+import { finishSession } from "@/lib/practice/finish-session";
 import { timecode } from "@/lib/report/view";
 import {
   durationProblem,
-  finishSession,
   putFile,
   readDuration,
   sendVideo,

@@ -1,7 +1,9 @@
+import rubric from "@echocv/shared/rubric.json";
+
 import type { Language } from "@/lib/db/sessions";
 import type { SpeechMetrics } from "@/lib/db/speech";
 import type { VisualMetrics } from "@/lib/db/uploads";
-import type { FeedbackItem, Report } from "@/lib/scoring/report";
+import { fillerText, type FeedbackItem, type Report } from "@/lib/scoring/report";
 import { findBand, type Band } from "@/lib/scoring/score";
 
 /** GET /api/reports: the saved report plus each question of the session. */
@@ -12,7 +14,7 @@ export type ReportView = Report & {
     status: string;
     speechMetrics: SpeechMetrics | null;
     visualMetrics: VisualMetrics | null;
-    scores: { content_feedback?: { strength: string; improvement: string } | null } | null;
+    scores: { content?: number; content_feedback?: { strength: string; improvement: string } | null } | null;
   }[];
 };
 
@@ -95,7 +97,7 @@ export function transcriptLines(speech: SpeechMetrics): TranscriptLine[] {
     ...speech.words.map((w) => ({ startMs: w.startMs, text: w.text, filler: lexical.has(w.startMs) })),
     ...speech.fillers
       .filter((f) => f.kind === "vocal")
-      .map((f) => ({ startMs: f.startMs, text: f.token.replace(/[[\]]/g, "").toLowerCase(), filler: true })),
+      .map((f) => ({ startMs: f.startMs, text: fillerText(f.token), filler: true })),
   ].sort((a, b) => a.startMs - b.startMs);
 
   const lines: TranscriptLine[] = [];
@@ -125,4 +127,37 @@ export function sessionStats(answers: ReportView["answers"]) {
 
 export function feedbackFor(report: Report, answerIndex: number): FeedbackItem[] {
   return report.feedback.filter((f) => f.answerIndex === answerIndex);
+}
+
+// One concrete next step per aspect (UC-07). Content uses the AI's own advice when there is any.
+const NEXT_STEPS: Record<string, string> = {
+  eye_contact: "Tempelkan catatan kecil di dekat kamera dan lihat ke sana saat menyampaikan poin utama.",
+  posture: "Duduk tegak dengan kedua tangan di meja sebelum mulai, lalu pertahankan sampai jawaban selesai.",
+  fillers: "Ganti kata pengisi dengan jeda satu napas sebelum kalimat berikutnya.",
+  pace: "Ambil jeda singkat di akhir setiap kalimat agar tempo bicara stabil.",
+  pauses: "Siapkan poin berikutnya saat masih bicara, dan jaga jeda di bawah dua detik.",
+  voice: "Tekankan kata kunci di setiap kalimat agar suara tidak datar.",
+  content: "Tutup cerita dengan hasil yang bisa diukur, misalnya waktu yang dihemat.",
+};
+const WEIGHTS = new Map(rubric.dimensions.map((d) => [d.id, d.weight]));
+
+/** The aspects that cost the most points, each with a next step. Unweighted ones (smile, BR-09) never count. */
+export function focusAreas(report: Pick<ReportView, "dimensionScores" | "answers">, max = 3) {
+  const lost = (d: { id: string; score: number }) => (WEIGHTS.get(d.id) ?? 0) * (100 - d.score);
+  const advice = report.answers
+    .filter((a) => a.scores?.content !== undefined && a.scores.content_feedback?.improvement)
+    .sort((a, b) => a.scores!.content! - b.scores!.content!)[0]?.scores?.content_feedback?.improvement;
+  return report.dimensionScores
+    .filter((d) => lost(d) > 0)
+    .sort((a, b) => lost(b) - lost(a))
+    .slice(0, max)
+    .map((d) => ({ ...d, nextStep: (d.id === "content" && advice) || NEXT_STEPS[d.id] || "" }));
+}
+
+/** The best weighted aspect, for an encouraging line; null when it is also one to work on. */
+export function strongest(report: Pick<ReportView, "dimensionScores" | "answers">): { id: string; score: number } | null {
+  const best = report.dimensionScores
+    .filter((d) => (WEIGHTS.get(d.id) ?? 0) > 0)
+    .sort((a, b) => b.score - a.score)[0];
+  return best && !focusAreas(report).some((area) => area.id === best.id) ? best : null;
 }

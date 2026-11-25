@@ -22,3 +22,22 @@ const BEHAVIOURS: Record<BehaviourType, string> = {
 export function hintText(hint: LiveHint | null, active: BehaviourType[]): string[] {
   return [...(hint ? [HINTS[hint]] : []), ...active.map((b) => BEHAVIOURS[b])];
 }
+
+const GUIDE_KEY = "echocv.room.guide";
+
+/** The room explains itself once per browser; blocked storage only means it is shown again. */
+export function isGuideSeen(storage: () => Storage = () => localStorage): boolean {
+  try {
+    return storage().getItem(GUIDE_KEY) !== null;
+  } catch {
+    return false;
+  }
+}
+
+export function markGuideSeen(storage: () => Storage = () => localStorage): void {
+  try {
+    storage().setItem(GUIDE_KEY, "1");
+  } catch {
+    // shown again next time
+  }
+}

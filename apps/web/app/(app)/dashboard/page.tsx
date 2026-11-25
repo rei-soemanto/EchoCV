@@ -43,7 +43,7 @@ export default function DashboardPage() {
           <Image src="/icons/arrow-right.svg" alt="" width={20} height={20} />
           Mulai latihan baru
         </Link>
-        <Link href="/practice" className={buttonVariants({ variant: "link", size: "text" })}>
+        <Link href="/practice?quick=1" className={buttonVariants({ variant: "link", size: "text" })}>
           Latihan cepat: perkenalkan diri
         </Link>
       </div>

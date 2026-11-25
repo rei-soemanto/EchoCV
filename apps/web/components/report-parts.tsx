@@ -64,7 +64,17 @@ export function PaceMeter({
         />
         <span className="absolute -top-1.5 h-[68px] w-0.5 rounded-full bg-surface-inverse" style={{ left: at(wpm) }} />
       </div>
-      <Scale values={[min, targetLow, targetHigh, max].map(String)} />
+      {/* Each number sits under its own place on the tape. */}
+      <div className="relative h-4 font-mono text-xs leading-4 text-ink-tertiary" aria-hidden="true">
+        <span className="absolute left-0">{min}</span>
+        <span className="absolute -translate-x-1/2" style={{ left: at(targetLow) }}>
+          {targetLow}
+        </span>
+        <span className="absolute -translate-x-1/2" style={{ left: at(targetHigh) }}>
+          {targetHigh}
+        </span>
+        <span className="absolute right-0">{max}</span>
+      </div>
     </div>
   );
 }

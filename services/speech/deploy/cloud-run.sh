@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 set -euo pipefail
-export MSYS_NO_PATHCONV=1 MSYS2_ARG_CONV_EXCL="*"
 
 : "${SUPABASE_HOST:?Set SUPABASE_HOST to <project-ref>.supabase.co}"
 : "${SPEECH_SERVICE_KEY:?Set SPEECH_SERVICE_KEY to the shared secret the backend sends}"
@@ -42,7 +41,7 @@ fi
 gcloud secrets add-iam-policy-binding "$KEY_SECRET" --project "$PROJECT" \
   --member "serviceAccount:$ACCOUNT" --role roles/secretmanager.secretAccessor >/dev/null
 
-gcloud run deploy "$SERVICE" --project "$PROJECT" --region "$REGION" --image "$IMAGE" --port 8000 \
+MSYS2_ARG_CONV_EXCL="volume=" gcloud run deploy "$SERVICE" --project "$PROJECT" --region "$REGION" --image "$IMAGE" --port 8000 \
   --cpu 2 --memory 4Gi --timeout 3600 --concurrency 1 --min-instances 0 --max-instances 2 \
   --execution-environment gen2 --service-account "$ACCOUNT" \
   --add-volume name=models,type=cloud-storage,bucket="$BUCKET" \

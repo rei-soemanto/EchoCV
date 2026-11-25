@@ -8,11 +8,15 @@ PROJECT="${PROJECT:-$(gcloud config get-value project 2>/dev/null)}"
 REGION="${REGION:-asia-southeast2}"
 SERVICE="${SERVICE:-echocv-speech}"
 BUCKET="${BUCKET:-${PROJECT}-echocv-models}"
-IMAGE="${IMAGE:-ghcr.io/rei-soemanto/echocv-speech:latest}"
 ACCOUNT_NAME="${ACCOUNT_NAME:-echocv-speech}"
 KEY_SECRET="${KEY_SECRET:-echocv-speech-key}"
 REPO_ROOT="$(cd "$(dirname "$0")/../../.." && (pwd -W 2>/dev/null || pwd))"
 ACCOUNT="${ACCOUNT_NAME}@${PROJECT}.iam.gserviceaccount.com"
+if [ -z "${IMAGE:-}" ]; then
+  git -C "$REPO_ROOT" fetch -q origin main
+  IMAGE="ghcr.io/rei-soemanto/echocv-speech:$(git -C "$REPO_ROOT" rev-parse origin/main)"
+fi
+echo "Deploying $IMAGE"
 
 [ -n "$PROJECT" ] || { echo "Set PROJECT or run: gcloud config set project <id>" >&2; exit 1; }
 [ -f "$REPO_ROOT/ml/artifacts/whisper/v0/ct2/model.bin" ] || { echo "Pull the models first: uv run python -m app.pull_model" >&2; exit 1; }

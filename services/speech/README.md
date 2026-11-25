@@ -116,6 +116,9 @@ SUPABASE_HOST=<project-ref>.supabase.co SPEECH_SERVICE_KEY=<shared secret> bash 
   settings.
 - **Settings:** 2 vCPU, 4 GiB, a 60-minute request timeout, one request per instance, zero to two
   instances. `SPEECH_AUDIO_URL_HOSTS` is set to the Supabase host.
+- **Image:** it deploys the image CI published for the latest commit on `main`
+  (`ghcr.io/rei-soemanto/echocv-speech:<commit sha>`), not `:latest`, because Cloud Run can keep
+  an older image for an unchanged tag. Run it again after every speech-service merge.
 - **Output:** the https `SPEECH_SERVICE_URL` for the web app.
 - **Free tier:** with no traffic it scales to zero. The monthly free tier covers roughly 18 hours of
   processing at this size in a Tier 2 region like Jakarta. Set a budget alert on the billing account

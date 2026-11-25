@@ -11,7 +11,7 @@ BUCKET="${BUCKET:-${PROJECT}-echocv-models}"
 IMAGE="${IMAGE:-ghcr.io/rei-soemanto/echocv-speech:latest}"
 ACCOUNT_NAME="${ACCOUNT_NAME:-echocv-speech}"
 KEY_SECRET="${KEY_SECRET:-echocv-speech-key}"
-REPO_ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
+REPO_ROOT="$(cd "$(dirname "$0")/../../.." && (pwd -W 2>/dev/null || pwd))"
 ACCOUNT="${ACCOUNT_NAME}@${PROJECT}.iam.gserviceaccount.com"
 
 [ -n "$PROJECT" ] || { echo "Set PROJECT or run: gcloud config set project <id>" >&2; exit 1; }

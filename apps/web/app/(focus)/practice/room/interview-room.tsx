@@ -18,11 +18,11 @@ import { AnswerTracker, type VisualMetrics } from "@/lib/vision/answer-tracker";
 import { BehaviourTracker } from "@/lib/vision/behaviour-tracker";
 import { loadBaseline } from "@/lib/vision/calibration-store";
 import type { Baseline } from "@/lib/vision/eye-contact";
-import { createFaceModel, type FaceModel } from "@/lib/vision/face";
+import type { FaceModel } from "@/lib/vision/face";
 import type { FaceFeatures } from "@/lib/vision/face-features";
 import { startFaceTracking } from "@/lib/vision/face-loop";
-import { backendOrder, createYoloModel, hasWebGpu } from "@/lib/vision/onnx";
 import { type PostureModels, startPostureTracking } from "@/lib/vision/pose-loop";
+import { loadSessionModels } from "@/lib/vision/session-models";
 
 type Question = { id: string; position: number; question_text: string };
 type Phase =
@@ -40,19 +40,6 @@ type Phase =
 const PREP_MS = sessionSettings.prepSeconds * 1000;
 const MAX_MS = sessionSettings.maxAnswerSeconds * 1000;
 
-// Vision models load once per page; posture is optional (the room still works on face alone).
-async function loadModels(): Promise<{ face: FaceModel | null; posture: PostureModels | null }> {
-  const face = await createFaceModel().catch(() => null);
-  const backends = backendOrder(hasWebGpu());
-  const posture = await Promise.all([
-    createYoloModel("pose", backends),
-    createYoloModel("objects", backends),
-    createYoloModel("behaviour", backends),
-  ])
-    .then(([pose, objects, behaviour]) => ({ pose, objects, behaviour }))
-    .catch(() => null);
-  return { face, posture };
-}
 
 // Figma 07 Ruang wawancara (UC-04): one question at a time, 15 s preparation, up to 3 minutes of
 // recording, live hints, restart once, skip. Only audio and numbers leave the browser (BR-04).
@@ -108,7 +95,7 @@ export function InterviewRoom({
 
   useEffect(() => {
     let cancelled = false;
-    void loadModels().then((loaded) => {
+    void loadSessionModels().then((loaded) => {
       if (cancelled) return;
       models.current = loaded;
       setNotices({ face: loaded.face !== null, posture: loaded.posture !== null });

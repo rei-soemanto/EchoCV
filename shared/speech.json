@@ -15,7 +15,7 @@
   "longPauseMs": 2000,
   "lexicalFillerGapMs": 300,
   "languageSwitchMarginZipf": 0.25,
-  "whisperBeamSize": 1,
+  "whisperBeamSize": 5,
   "pitchFminHz": 65,
   "pitchFmaxHz": 400,
   "vocalFillerForms": {

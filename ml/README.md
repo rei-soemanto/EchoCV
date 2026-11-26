@@ -91,6 +91,7 @@ uv run python -m yolo.export --version v1       # ONNX + parity check
 YOLO_AUTOINSTALL=false uv run python -m yolo.export_browser   # pose, objects, detector -> apps/web/public/models
 uv run python -m hub.push_models                # private HF repo; rewrites shared/model-hub.json (HF_TOKEN with write access in ml/.env)
 uv run python -m whisper.inhouse_pace           # needs services/speech running on :8000 -> calibration/results/inhouse_pace.json
+uv run python -m whisper.decoding_check --device cpu   # live decoding settings vs checked answers -> artifacts/whisper/decoding_check.json
 cd calibration && uv run python -m calib.export_thresholds && uv run python -m calib.export_face_fixture && uv run python -m calib.export_posture_fixture && cd ..   # browser parity fixtures: apps/web/tests/unit/vision
 cd calibration && uv run python -m calib.inhouse_scoring && uv run python -m calib.export_scoring && cd ..   # score bands -> a supabase/migrations file for scoring_bands
 uv run python report_v1.py                      # -> docs/model-report-v1.md

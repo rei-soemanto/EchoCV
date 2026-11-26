@@ -1,0 +1,109 @@
+{
+  "answers": 16,
+  "variants": {
+    "current": {
+      "all": {
+        "answers": 16,
+        "reference_words": 2066,
+        "wer": 0.1268,
+        "substitution_rate": 0.0692,
+        "deletion_rate": 0.0169,
+        "insertion_rate": 0.0407
+      },
+      "language:en": {
+        "answers": 8,
+        "reference_words": 1041,
+        "wer": 0.1153,
+        "substitution_rate": 0.049,
+        "deletion_rate": 0.0125,
+        "insertion_rate": 0.0538
+      },
+      "language:id": {
+        "answers": 8,
+        "reference_words": 1025,
+        "wer": 0.1385,
+        "substitution_rate": 0.0898,
+        "deletion_rate": 0.0215,
+        "insertion_rate": 0.0273
+      }
+    },
+    "beam5": {
+      "all": {
+        "answers": 16,
+        "reference_words": 2066,
+        "wer": 0.1084,
+        "substitution_rate": 0.0644,
+        "deletion_rate": 0.0111,
+        "insertion_rate": 0.0329
+      },
+      "language:en": {
+        "answers": 8,
+        "reference_words": 1041,
+        "wer": 0.0941,
+        "substitution_rate": 0.0442,
+        "deletion_rate": 0.0125,
+        "insertion_rate": 0.0375
+      },
+      "language:id": {
+        "answers": 8,
+        "reference_words": 1025,
+        "wer": 0.1229,
+        "substitution_rate": 0.0849,
+        "deletion_rate": 0.0098,
+        "insertion_rate": 0.0283
+      }
+    },
+    "loose_vad": {
+      "all": {
+        "answers": 16,
+        "reference_words": 2066,
+        "wer": 0.1263,
+        "substitution_rate": 0.0668,
+        "deletion_rate": 0.0227,
+        "insertion_rate": 0.0368
+      },
+      "language:en": {
+        "answers": 8,
+        "reference_words": 1041,
+        "wer": 0.1028,
+        "substitution_rate": 0.0471,
+        "deletion_rate": 0.0125,
+        "insertion_rate": 0.0432
+      },
+      "language:id": {
+        "answers": 8,
+        "reference_words": 1025,
+        "wer": 0.1502,
+        "substitution_rate": 0.0868,
+        "deletion_rate": 0.0332,
+        "insertion_rate": 0.0302
+      }
+    },
+    "beam5_loose_vad": {
+      "all": {
+        "answers": 16,
+        "reference_words": 2066,
+        "wer": 0.1191,
+        "substitution_rate": 0.0586,
+        "deletion_rate": 0.0203,
+        "insertion_rate": 0.0402
+      },
+      "language:en": {
+        "answers": 8,
+        "reference_words": 1041,
+        "wer": 0.1105,
+        "substitution_rate": 0.0413,
+        "deletion_rate": 0.0173,
+        "insertion_rate": 0.0519
+      },
+      "language:id": {
+        "answers": 8,
+        "reference_words": 1025,
+        "wer": 0.1278,
+        "substitution_rate": 0.0761,
+        "deletion_rate": 0.0234,
+        "insertion_rate": 0.0283
+      }
+    }
+  }
+}

@@ -123,6 +123,9 @@ All High-priority findings and key Medium-priority findings from the prototype u
 - `UC-05` Upload practice mode (MP4/MOV/WebM, `10m`, `500 MB`, progress, auto-delete)
 - `UC-06` Multimodal analysis (browser/server vision + speech service + LLM STAR scoring)
 - `UC-07` Feedback report (overall & aspect scores, `BR-08` disclaimer, Pace Meter, Timecode Tape, highlighted transcript, STAR breakdown)
+- `UC-12` Plans and checkout with the **Midtrans sandbox** (added to the MVP on 26 Nov 2026): Sprint Pass Rp 15.000 for 7 days, Premium Rp 29.000 per month and Yearly Rp 299.000 per year; a Snap checkout, a payment notification webhook that verifies the Midtrans signature and activates the plan, and plans visible after sign-in. Sandbox only: no real money moves. The free quota (`UC-11`) is not enforced in the MVP.
+- Landing page finished to the Figma design, with a plans section that leads to the plans page (added to the MVP on 26 Nov 2026).
+- Mid-MVP check revisions (26 Nov 2026): the date field moves to its next part by itself; the app follows the language chosen at sign-up; no placeholder pages in the demo flow; optimistic progress bars; a centred calibration face circle; the countdown above the camera preview; readable confirmation text; a larger upload progress bar; a specific error for each upload failure; asynchronous upload analysis the user can come back to; real practice history; better transcripts and faster session loading; a short explanation of each question set; and real copy instead of template subtexts.
 
 ### Post-MVP Planned (Sprint 4-8, 1–7 Dec 2026)
 
@@ -138,7 +141,7 @@ Sprints 4 to 8 are combined into one sprint, 1–7 Dec 2026, after a one-day MVP
 
 The following exist in the full use case specification and prototype but are **out of MVP scope** and not scheduled in Sprint 1, Sprint 2 and 3, or Sprint 4-8 unless approved by the PM:
 
-- `UC-11`, `UC-12`, `UC-18`: Usage quota enforcement, Sprint Pass / Premium / Yearly pricing tiers, and payment gateway checkout
+- `UC-11`, `UC-18`: Usage quota enforcement and plan administration (plans and checkout, `UC-12`, moved into the MVP)
 - `UC-13`, `UC-14`, `UC-19`: Institution / campus career centre (CDC) seats and cohort analytics
 - `UC-15`: External HR practitioner rating portal
 - `UC-16`, `UC-17`, `UC-20`: Admin screens for question bank, rubric/model management, and institutional partners

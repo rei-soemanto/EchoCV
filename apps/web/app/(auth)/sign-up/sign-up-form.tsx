@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { buttonVariants } from "@/components/ui/button";
 import { ChoiceGroup } from "@/components/ui/choice-group";
 import { ConsentRow } from "@/components/ui/consent-row";
+import { DateFields } from "@/components/ui/date-fields";
 import { TextField } from "@/components/ui/text-field";
 import { MINIMUM_AGE } from "@/lib/age";
 import { birthDateError, saveProfile, SIGN_IN_PATH, signOut, type ProfileForm } from "@/lib/auth";
@@ -108,7 +109,7 @@ export function SignUpForm({ next }: { next: string }) {
             <span key={s.title} className={`h-1 flex-1 rounded-full ${i <= step ? "bg-surface-accent" : "bg-border-default"}`} />
           ))}
         </div>
-        <p className="text-caption text-ink-tertiary">
+        <p className="text-body-sm text-ink-secondary">
           Langkah {step + 1} dari {STEPS.length}
         </p>
       </div>
@@ -131,15 +132,11 @@ export function SignUpForm({ next }: { next: string }) {
         />
       )}
       {step === 1 && (
-        <TextField
+        <DateFields
           label="Tanggal lahir"
-          type="date"
-          name="bday"
-          autoComplete="bday"
           hint={`Pengguna harus berusia ${MINIMUM_AGE} tahun atau lebih.`}
           error={fieldError}
-          value={form.date_of_birth}
-          onChange={(event) => set({ date_of_birth: event.target.value })}
+          onChange={(date_of_birth) => set({ date_of_birth })}
         />
       )}
       {step === 2 && (

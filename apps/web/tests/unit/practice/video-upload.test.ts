@@ -24,7 +24,7 @@ function fakeFetch(...responses: (Response | Error)[]) {
 
 const ticket = reply.bind(null, 201, { upload_id: "u1", signed_url: "https://storage/x" });
 const input = { sessionQuestionId: "q1", contentType: "video/mp4", sizeBytes: 10, seconds: 60 };
-const stored = vi.fn(async () => true);
+const stored = vi.fn(async () => 200);
 
 describe("file checks", () => {
   it("takes the type from the file, or from its name when the browser gives none", () => {
@@ -50,7 +50,7 @@ describe("file checks", () => {
 describe("sendVideo", () => {
   it("asks for a link, uploads, then starts the analysis", async () => {
     const f = fakeFetch(ticket(), reply(202));
-    const put = vi.fn(async () => true);
+    const put = vi.fn(async () => 200);
     expect(await sendVideo(input, put, f.fetch)).toEqual({ ok: true, uploadId: "u1" });
     expect(f.calls[0]).toEqual({
       url: "/api/uploads",
@@ -61,7 +61,7 @@ describe("sendVideo", () => {
   });
 
   it("starts over when the upload itself fails", async () => {
-    const result = await sendVideo(input, async () => false, fakeFetch(ticket()).fetch);
+    const result = await sendVideo(input, async () => 0, fakeFetch(ticket()).fetch);
     expect(result).toMatchObject({ ok: false });
     expect(result).not.toHaveProperty("uploadId");
   });
@@ -70,7 +70,7 @@ describe("sendVideo", () => {
     const failed = fakeFetch(ticket(), new TypeError("offline"), new TypeError("offline"));
     expect(await sendVideo(input, stored, failed.fetch)).toMatchObject({ ok: false, uploadId: "u1" });
 
-    const put = vi.fn(async () => true);
+    const put = vi.fn(async () => 200);
     const retry = fakeFetch(reply(202));
     expect(await sendVideo({ ...input, uploadId: "u1" }, put, retry.fetch)).toEqual({ ok: true, uploadId: "u1" });
     expect(put).not.toHaveBeenCalled();
@@ -84,8 +84,41 @@ describe("sendVideo", () => {
   it("does not offer the same video again when the API refuses it", async () => {
     const f = fakeFetch(ticket(), reply(409), reply(200, { status: "pending", answer_status: "pending" }));
     const result = await sendVideo(input, stored, f.fetch);
-    expect(result).toMatchObject({ ok: false, message: expect.stringContaining("tidak bisa diterima") });
+    expect(result).toMatchObject({ ok: false, message: expect.stringContaining("sudah selesai") });
     expect(result).not.toHaveProperty("uploadId");
+  });
+});
+
+describe("specific send errors", () => {
+  it.each([
+    [401, "Masuk lagi"],
+    [400, "MP4, MOV atau WEBM"],
+    [404, "tidak ditemukan"],
+    [409, "sudah selesai"],
+    [500, "bermasalah"],
+  ])("says what the API refused with %i", async (status, text) => {
+    const result = await sendVideo(input, stored, fakeFetch(reply(status)).fetch);
+    expect(result).toMatchObject({ ok: false, message: expect.stringContaining(text) });
+  });
+
+  it.each([
+    [0, "Koneksi terputus"],
+    [413, "terlalu besar"],
+    [400, "kedaluwarsa"],
+    [403, "kedaluwarsa"],
+    [500, "tidak bisa disimpan"],
+  ])("says why storage refused the video with %i", async (status, text) => {
+    const result = await sendVideo(input, async () => status, fakeFetch(ticket()).fetch);
+    expect(result).toMatchObject({ ok: false, message: expect.stringContaining(text) });
+  });
+
+  it("keeps the stored video when the speech service is busy, and asks for a new video when it is unreadable", async () => {
+    const pending = reply.bind(null, 200, { status: "uploaded", answer_status: "pending" });
+    const busy = await sendVideo(input, stored, fakeFetch(ticket(), reply(503), pending()).fetch);
+    expect(busy).toMatchObject({ ok: false, uploadId: "u1", message: expect.stringContaining("sibuk") });
+    const unreadable = await sendVideo(input, stored, fakeFetch(ticket(), reply(422), pending()).fetch);
+    expect(unreadable).toMatchObject({ ok: false, message: expect.stringContaining("tidak bisa dianalisis") });
+    expect(unreadable).not.toHaveProperty("uploadId");
   });
 });
 

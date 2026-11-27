@@ -48,21 +48,24 @@ export function readDuration(file: File): Promise<number | null> {
   });
 }
 
-/** Puts the file at a signed link. XMLHttpRequest, because fetch cannot report upload progress. */
+/**
+ * Puts the file at a signed link and resolves with the HTTP status, 0 when the connection failed.
+ * XMLHttpRequest, because fetch cannot report upload progress.
+ */
 export function putFile(
   url: string,
   file: Blob,
   contentType: string,
   onProgress: (fraction: number) => void,
   signal: AbortSignal,
-): Promise<boolean> {
+): Promise<number> {
   return new Promise((resolve) => {
-    if (signal.aborted) return resolve(false);
+    if (signal.aborted) return resolve(0);
     const xhr = new XMLHttpRequest();
     signal.addEventListener("abort", () => xhr.abort());
     xhr.upload.onprogress = (event) => event.lengthComputable && onProgress(event.loaded / event.total);
-    xhr.onload = () => resolve(xhr.status >= 200 && xhr.status < 300);
-    xhr.onerror = xhr.onabort = () => resolve(false);
+    xhr.onload = () => resolve(xhr.status);
+    xhr.onerror = xhr.onabort = () => resolve(0);
     xhr.open("PUT", url);
     xhr.setRequestHeader("content-type", contentType);
     xhr.send(file);
@@ -87,12 +90,41 @@ export async function uploadStatus(uploadId: string, fetcher: typeof fetch = fet
 /** uploadId on a failure: the video is already stored, so pass it back in to skip the upload. */
 export type SendResult = { ok: true; uploadId: string } | { ok: false; message: string; uploadId?: string };
 
-const NETWORK = "Video belum terkirim. Periksa koneksi internet, lalu coba lagi.";
-const REFUSED = "Video ini tidak bisa diterima. Muat ulang halaman untuk melihat status terbaru.";
+// A specific message for each way sending can fail (mid-MVP check).
+export const SEND_ERRORS = {
+  offline: "Koneksi terputus, jadi video belum terkirim. Periksa internet, lalu coba lagi.",
+  server: "Server EchoCV sedang bermasalah. Coba lagi beberapa menit lagi.",
+  signedOut: "Sesi masuk Anda berakhir. Masuk lagi, lalu buka halaman ini kembali.",
+  rejected: "Server menolak video ini: formatnya harus MP4, MOV atau WEBM, maksimal 500 MB dan 10 menit.",
+  closed: "Sesi ini sudah selesai, atau pertanyaan ini sudah dianalisis. Muat ulang halaman untuk melihat statusnya.",
+  missing: "Pertanyaan ini tidak ditemukan. Muat ulang halaman.",
+  storageFull: "Penyimpanan menolak video karena terlalu besar. Kompres video, lalu coba lagi.",
+  linkExpired: "Tautan unggah sudah kedaluwarsa. Coba lagi untuk meminta tautan baru.",
+  storage: "Video tidak bisa disimpan. Coba lagi sebentar lagi.",
+  busy: "Layanan analisis sedang sibuk. Video Anda sudah tersimpan; coba mulai analisis lagi sebentar lagi.",
+  unreadable: "Video ini tidak bisa dianalisis. Pastikan suara dan wajah terlihat, simpan ulang sebagai MP4, lalu unggah lagi.",
+} as const;
+
+/** Words for a refused request to the uploads API. */
+export function apiError(status: number): string {
+  if (status === 401) return SEND_ERRORS.signedOut;
+  if (status === 400) return SEND_ERRORS.rejected;
+  if (status === 404) return SEND_ERRORS.missing;
+  if (status === 409) return SEND_ERRORS.closed;
+  return SEND_ERRORS.server;
+}
+
+/** Words for a failed upload to storage (0: no connection). */
+export function storageError(status: number): string {
+  if (status === 0) return SEND_ERRORS.offline;
+  if (status === 413) return SEND_ERRORS.storageFull;
+  if (status === 400 || status === 401 || status === 403) return SEND_ERRORS.linkExpired;
+  return SEND_ERRORS.storage;
+}
 
 export async function sendVideo(
   input: { sessionQuestionId: string; contentType: string; sizeBytes: number; seconds: number; uploadId?: string },
-  put: (signedUrl: string) => Promise<boolean>,
+  put: (signedUrl: string) => Promise<number>,
   fetcher: typeof fetch = fetch,
 ): Promise<SendResult> {
   let uploadId = input.uploadId;
@@ -107,10 +139,11 @@ export async function sendVideo(
         duration_seconds: input.seconds,
       }),
     }).catch(() => null);
-    if (!res || res.status >= 500) return { ok: false, message: NETWORK };
-    if (!res.ok) return { ok: false, message: REFUSED };
+    if (!res) return { ok: false, message: SEND_ERRORS.offline };
+    if (!res.ok) return { ok: false, message: apiError(res.status) };
     const ticket = (await res.json()) as { upload_id: string; signed_url: string };
-    if (!(await put(ticket.signed_url))) return { ok: false, message: NETWORK };
+    const stored = await put(ticket.signed_url);
+    if (stored < 200 || stored >= 300) return { ok: false, message: storageError(stored) };
     uploadId = ticket.upload_id;
   }
 
@@ -119,6 +152,9 @@ export async function sendVideo(
   // The reply may have been lost after the server started, so look before calling it a failure.
   const status = await uploadStatus(uploadId, fetcher);
   if (status === "processing" || status === "done") return { ok: true, uploadId };
-  if (res && res.status < 500) return { ok: false, message: REFUSED };
-  return { ok: false, message: NETWORK, uploadId };
+  if (!res) return { ok: false, message: SEND_ERRORS.offline, uploadId };
+  if (res.status === 503) return { ok: false, message: SEND_ERRORS.busy, uploadId };
+  if (res.status === 422 || res.status === 400) return { ok: false, message: SEND_ERRORS.unreadable };
+  if (res.status >= 500) return { ok: false, message: SEND_ERRORS.server, uploadId };
+  return { ok: false, message: apiError(res.status) };
 }

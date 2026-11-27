@@ -39,9 +39,10 @@ function SummaryItem({ label, value }: { label: string; value?: string }) {
 export type SetupEnums = { roles: string[]; levels: string[]; question_sets: string[] };
 
 // Quick start (UC-02 A1) is one fixed question, so it has no question set to choose.
-export function SetupForm({ enums, quick }: { enums: SetupEnums; quick: boolean }) {
+// The interview language starts at the one chosen at sign-up (mid-MVP check).
+export function SetupForm({ enums, quick, language }: { enums: SetupEnums; quick: boolean; language: string }) {
   const router = useRouter();
-  const [choices, setChoices] = useState<Choices>({ language: "id", mode: "live" });
+  const [choices, setChoices] = useState<Choices>({ language, mode: "live" });
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const set = (field: Field) => (value: string) => setChoices((c) => ({ ...c, [field]: value }));
@@ -140,7 +141,7 @@ export function SetupForm({ enums, quick }: { enums: SetupEnums; quick: boolean 
           <Image src="/icons/arrow-right.svg" alt="" width={20} height={20} />
           {busy ? "Menyiapkan sesi…" : choices.mode === "upload" ? "Lanjut ke unggah" : "Lanjut ke kalibrasi"}
         </button>
-        <p className="text-caption text-ink-tertiary">
+        <p className="text-body-sm text-ink-secondary">
           Sesi baru dihitung setelah analisis selesai. Analisis yang gagal tidak mengurangi kuota.
         </p>
       </aside>

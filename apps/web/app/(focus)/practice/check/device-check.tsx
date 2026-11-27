@@ -70,29 +70,37 @@ export function DeviceCheck({ sessionId }: { sessionId?: string }) {
 
   return (
     <div className="flex flex-col gap-12 px-4 pt-8 pb-16 md:px-12 md:pt-12 lg:flex-row lg:gap-16">
-      <div className="relative flex aspect-video min-w-0 flex-1 items-center justify-center overflow-hidden rounded-xl bg-surface-sidebar lg:aspect-auto lg:h-[480px]">
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          playsInline
-          aria-label="Pratinjau kamera"
-          className={`absolute inset-0 size-full -scale-x-100 object-cover ${hasCamera ? "" : "hidden"}`}
-        />
-        <div className="relative flex flex-col items-center gap-4 px-6 text-center">
-          <Image src="/face-guide.png" alt="" width={180} height={240} className="h-auto w-32 opacity-70 sm:w-[180px]" priority />
+      <div className="flex min-w-0 flex-1 flex-col gap-3">
+        {/* The countdown sits above the preview, so the face guide stays centred (mid-MVP check). */}
+        <div className="flex min-h-[60px] items-end justify-between gap-4" aria-hidden="true">
           {running ? (
-            <p className="text-ink-inverse" aria-hidden="true">
-              <span className="block font-display text-[56px] leading-[60px]">{calibration.secondsLeft}</span>
-              <span className="text-body-sm opacity-80">
-                {calibration.faceVisible ? "Tatap lensa kamera" : "Wajah belum terlihat"}
-              </span>
-            </p>
+            <>
+              <p className="text-body">{calibration.faceVisible ? "Tatap lensa kamera" : "Wajah belum terlihat"}</p>
+              <p className="font-display text-[56px] leading-[60px]">{calibration.secondsLeft}</p>
+            </>
           ) : (
-            <p className="text-body-sm text-ink-inverse opacity-80">
-              {waiting ? "Izinkan akses kamera dan mikrofon di browser" : "Posisikan wajah dalam bingkai"}
+            <p className="text-body text-ink-secondary">
+              {waiting ? "Izinkan akses kamera dan mikrofon di browser" : "Posisikan wajah di dalam bingkai"}
             </p>
           )}
+        </div>
+        <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-surface-sidebar lg:aspect-auto lg:h-[480px]">
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            playsInline
+            aria-label="Pratinjau kamera"
+            className={`absolute inset-0 size-full -scale-x-100 object-cover ${hasCamera ? "" : "hidden"}`}
+          />
+          <Image
+            src="/face-guide.png"
+            alt=""
+            width={180}
+            height={240}
+            className="absolute top-1/2 left-1/2 h-auto w-32 -translate-x-1/2 -translate-y-1/2 opacity-70 sm:w-[180px]"
+            priority
+          />
         </div>
       </div>
 
@@ -187,7 +195,7 @@ export function DeviceCheck({ sessionId }: { sessionId?: string }) {
               >
                 <div className="h-full bg-surface-accent" style={{ width: `${calibration.progress * 100}%` }} />
               </div>
-              <p className="text-caption text-ink-tertiary">
+              <p className="text-body-sm text-ink-secondary">
                 {running ? `Tetap tatap lensa, ${calibration.secondsLeft} detik lagi` : "Menyiapkan analisis wajah…"}
               </p>
             </div>
@@ -206,7 +214,7 @@ export function DeviceCheck({ sessionId }: { sessionId?: string }) {
             </Notice>
           )}
           {calibration.delegate === "CPU" && (
-            <p role="status" className="text-caption text-ink-tertiary">
+            <p role="status" className="text-body-sm text-ink-secondary">
               Analisis berjalan di CPU karena akselerasi grafis tidak tersedia. Hasilnya sama, hanya
               sedikit lebih lambat.
             </p>

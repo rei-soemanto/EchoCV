@@ -45,7 +45,7 @@ describe("birthDateError", () => {
     expect(birthDateError("2008-11-24", today)).toBeNull();
     expect(birthDateError("2008-11-25", today)).toContain("18 tahun");
   });
-  it.each(["", "2027-01-01"])("refuses %j", (value) => {
+  it.each(["", "2027-01-01", "2001-02-31"])("refuses %j", (value) => {
     expect(birthDateError(value, today)).toBe("Isi tanggal lahir yang benar.");
   });
 });

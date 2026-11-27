@@ -390,7 +390,7 @@ export function InterviewRoom({
               </p>
             )}
             {notices && (!notices.face || !notices.posture) && (
-              <p role="status" className="text-caption text-ink-tertiary">
+              <p role="status" className="text-body-sm text-ink-secondary">
                 {!notices.face
                   ? "Analisis wajah tidak berjalan di browser ini, jadi kontak mata tidak dinilai. Jawaban tetap dianalisis dari suara."
                   : "Analisis postur tidak berjalan di browser ini, jadi postur tidak dinilai."}

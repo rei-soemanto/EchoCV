@@ -4,20 +4,11 @@ import { type RefObject, useCallback, useEffect, useRef, useState } from "react"
 
 import { Calibration, calibrationSettings } from "@/lib/vision/calibration";
 import { clearBaseline, saveBaseline } from "@/lib/vision/calibration-store";
-import { createFaceModel, type FaceDelegate, type FaceModel } from "@/lib/vision/face";
+import type { FaceDelegate, FaceModel } from "@/lib/vision/face";
 import { startFaceTracking } from "@/lib/vision/face-loop";
+import { loadFaceModel, preloadSessionModels } from "@/lib/vision/session-models";
 
 export type CalibrationPhase = "idle" | "loading" | "running" | "done" | "failed" | "unsupported";
-
-// One face model per page load: retries reuse it instead of downloading 3.6 MB again.
-let faceModel: Promise<FaceModel> | null = null;
-function loadFaceModel(): Promise<FaceModel> {
-  faceModel ??= createFaceModel().catch((error: unknown) => {
-    faceModel = null; // let a later retry try again
-    throw error;
-  });
-  return faceModel;
-}
 
 /**
  * The 5-second "look at the lens" step (UC-03): runs Rei's Calibration on the webcam video and
@@ -36,6 +27,8 @@ export function useCalibration(videoRef: RefObject<HTMLVideoElement | null>) {
   };
 
   useEffect(() => halt, []);
+
+  useEffect(() => preloadSessionModels(), []);
 
   const start = useCallback(async () => {
     const video = videoRef.current;

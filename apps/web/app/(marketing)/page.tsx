@@ -1,8 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { PlanCards } from "@/components/plan-cards";
 import { FeedbackMarker, PaceMeter, TimecodeTape } from "@/components/report-parts";
 import { buttonVariants } from "@/components/ui/button";
+import { INSTITUTION_NOTE, PLANS } from "@/lib/plans";
+import { createClient } from "@/lib/supabase/server";
 
 const STEPS = [
   {
@@ -22,38 +25,12 @@ const STEPS = [
   },
 ];
 
-const PLANS = [
-  {
-    name: "Gratis",
-    price: "Rp 0",
-    period: "per bulan",
-    features: ["3 sesi latihan per bulan", "Laporan dengan stempel waktu", "Kuota kembali setiap tanggal 1"],
-    cta: "Mulai gratis",
-  },
-  {
-    name: "Sprint Pass",
-    price: "Rp 15.000",
-    period: "untuk 7 hari",
-    features: ["Sesi latihan selama 7 hari", "Tidak diperpanjang otomatis", "Cocok sebelum hari wawancara"],
-    cta: "Beli Sprint Pass",
-  },
-  {
-    name: "Premium",
-    price: "Rp 29.000",
-    period: "per bulan",
-    features: [
-      "Laporan lengkap dan perbandingan percobaan",
-      "Percobaan ulang dalam satu sesi tanpa kuota tambahan",
-      "Perpanjangan otomatis hanya jika Anda setuju",
-    ],
-    cta: "Pilih Premium",
-    featured: true,
-  },
-];
-
 const section = "border-t border-border-default px-4 py-16 md:px-12 md:py-20";
 
-export default function Home() {
+export default async function Home() {
+  // A signed-in visitor goes back to the app instead of being asked to sign in again.
+  const { data } = await (await createClient()).auth.getClaims();
+  const signedIn = Boolean(data?.claims);
   return (
     <div className="flex flex-1 flex-col">
       <header className="flex items-center justify-between gap-6 border-b border-border-default px-4 py-4 md:px-12 md:py-6">
@@ -66,8 +43,8 @@ export default function Home() {
           <a href="#kampus" className="hover:text-ink-primary">Untuk kampus</a>
         </nav>
         <div className="flex items-center gap-4">
-          <Link href="/sign-in" className={buttonVariants({ variant: "link", size: "text" })}>
-            Masuk
+          <Link href={signedIn ? "/dashboard" : "/sign-in"} className={buttonVariants({ variant: "link", size: "text" })}>
+            {signedIn ? "Ke beranda" : "Masuk"}
           </Link>
           <Link href="/practice" className={buttonVariants()}>
             Mulai latihan
@@ -148,34 +125,19 @@ export default function Home() {
               Mulai gratis. Beli paket hanya saat Anda memang punya wawancara dalam waktu dekat.
             </p>
           </div>
-          <div className="grid gap-8 md:grid-cols-3">
-            {PLANS.map((p) => (
-              <div key={p.name} className="flex flex-col gap-4">
-                <div
-                  className={`flex flex-1 flex-col gap-3 border-t py-6 ${p.featured ? "border-surface-accent bg-surface-accent-subtle px-4" : "border-ink-primary"}`}
-                >
-                  <h3 className="text-label text-ink-secondary">{p.name}</h3>
-                  <p className="flex flex-wrap items-baseline gap-x-2">
-                    <span className="font-display text-[44px] leading-[48px]">{p.price}</span>
-                    <span className="text-body-sm text-ink-secondary">{p.period}</span>
-                  </p>
-                  <ul className="text-body-sm flex flex-col gap-1 text-ink-secondary">
-                    {p.features.map((f) => (
-                      <li key={f}>{f}</li>
-                    ))}
-                  </ul>
-                </div>
-                <Link
-                  href="/plans"
-                  className={buttonVariants({ variant: p.featured ? "default" : "outline", className: "w-full" })}
-                >
-                  {p.cta}
-                </Link>
-              </div>
-            ))}
-          </div>
+          <PlanCards
+            plans={PLANS}
+            action={(plan) => (
+              <Link
+                href="/plans"
+                className={buttonVariants({ variant: plan.featured ? "default" : "outline", className: "w-full" })}
+              >
+                {plan.cta}
+              </Link>
+            )}
+          />
           <p id="kampus" className="text-body-sm flex flex-wrap items-center gap-2 text-ink-secondary">
-            Untuk kampus dan institusi: Rp 50.000 per mahasiswa per tahun.
+            {INSTITUTION_NOTE}
             {/* shortcut: no team contact address yet; link it once there is one */}
             <span className={buttonVariants({ variant: "link", size: "text" })}>Hubungi kami</span>
           </p>

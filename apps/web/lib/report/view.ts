@@ -130,7 +130,7 @@ export function feedbackFor(report: Report, answerIndex: number): FeedbackItem[]
 }
 
 // One concrete next step per aspect (UC-07). Content uses the AI's own advice when there is any.
-const NEXT_STEPS: Record<string, string> = {
+export const NEXT_STEPS: Record<string, string> = {
   eye_contact: "Tempelkan catatan kecil di dekat kamera dan lihat ke sana saat menyampaikan poin utama.",
   posture: "Duduk tegak dengan kedua tangan di meja sebelum mulai, lalu pertahankan sampai jawaban selesai.",
   fillers: "Ganti kata pengisi dengan jeda satu napas sebelum kalimat berikutnya.",

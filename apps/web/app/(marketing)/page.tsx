@@ -94,7 +94,7 @@ export default function Home() {
                 Lihat contoh laporan
               </a>
             </div>
-            <p className="text-caption flex items-center gap-2 text-ink-tertiary">
+            <p className="text-body-sm flex items-center gap-2 text-ink-secondary">
               <Image src="/icons/lock.svg" alt="" width={16} height={16} />
               Mode Live: video Anda dianalisis di perangkat dan tidak dikirim ke server.
             </p>
@@ -104,7 +104,7 @@ export default function Home() {
             id="contoh-laporan"
             className="flex min-w-0 flex-1 flex-col gap-6 border-t border-ink-primary pt-6"
           >
-            <figcaption className="text-caption text-ink-tertiary">
+            <figcaption className="text-body-sm text-ink-secondary">
               Contoh laporan: Frontend Developer, pertanyaan 1
             </figcaption>
             <PaceMeter wpm={142} min={90} max={200} targetLow={110} targetHigh={160} />
@@ -185,7 +185,7 @@ export default function Home() {
       <footer className="flex flex-col justify-between gap-6 border-t border-border-default px-4 py-8 md:flex-row md:px-12">
         <div className="flex max-w-[640px] flex-col gap-2">
           <p className="text-h2">EchoCV</p>
-          <p className="text-caption text-ink-tertiary">
+          <p className="text-body-sm text-ink-secondary">
             Skor adalah latihan berbasis AI, bukan prediksi hasil wawancara kerja. EchoCV tidak
             menilai penampilan, pakaian atau atribut yang dilindungi.
           </p>

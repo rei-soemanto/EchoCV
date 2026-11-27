@@ -44,7 +44,8 @@ export async function signOut(fetcher: typeof fetch = fetch): Promise<boolean> {
 
 /** Words for a date of birth that cannot sign up, or null when it can (BR-01). */
 export function birthDateError(value: string, today: Date = new Date()): string | null {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(value) || value > today.toISOString().slice(0, 10)) {
+  const real = /^\d{4}-\d{2}-\d{2}$/.test(value) && new Date(`${value}T00:00:00Z`).toISOString().startsWith(value);
+  if (!real || value > today.toISOString().slice(0, 10)) {
     return "Isi tanggal lahir yang benar.";
   }
   return ageOn(value, today) < MINIMUM_AGE

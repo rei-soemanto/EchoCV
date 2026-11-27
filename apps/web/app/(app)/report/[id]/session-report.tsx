@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 
 import { FeedbackMarker, PaceMeter, TimecodeTape } from "@/components/report-parts";
 import { Badge } from "@/components/ui/badge";
+import { estimate, ProgressBar, useElapsed } from "@/components/ui/progress-bar";
 import { buttonVariants } from "@/components/ui/button";
 import {
   decimal,
@@ -153,6 +154,7 @@ export function SessionReport({
       live = false;
     };
   }, [sessionId, attempt]);
+  const waited = useElapsed(result === null);
   const load = (rebuild: boolean) => {
     setResult(null);
     setAttempt({ rebuild });
@@ -175,9 +177,12 @@ export function SessionReport({
     return (
       <div className="flex flex-col gap-10">
         {header}
-        <p role="status" className="text-body text-ink-secondary">
-          Menyusun laporan. Ini bisa memakan waktu hingga satu menit.
-        </p>
+        <div className="flex max-w-xl flex-col gap-3">
+          <ProgressBar label="Menyusun laporan" value={estimate(waited, 25_000)} />
+          <p role="status" className="text-body text-ink-secondary">
+            Menyusun laporan. Ini bisa memakan waktu hingga satu menit.
+          </p>
+        </div>
       </div>
     );
   }
@@ -292,7 +297,7 @@ export function SessionReport({
             </div>
           ))}
         </dl>
-        <p className="text-caption text-ink-tertiary">Senyum hanya umpan balik dan tidak dihitung dalam skor latihan.</p>
+        <p className="text-body-sm text-ink-secondary">Senyum hanya umpan balik dan tidak dihitung dalam skor latihan.</p>
       </Section>
     </div>
   );

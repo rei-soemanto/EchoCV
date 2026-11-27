@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { Badge, type BadgeTone } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { ConsentRow } from "@/components/ui/consent-row";
+import { estimate, ProgressBar, useElapsed } from "@/components/ui/progress-bar";
 import { MAX_VIDEO_BYTES, MAX_VIDEO_SECONDS } from "@/lib/db/uploads";
 import { finishSession } from "@/lib/practice/finish-session";
 import { timecode } from "@/lib/report/view";
@@ -30,6 +31,8 @@ export type UploadItem = {
   state: "waiting" | "sending" | "processing" | "done" | "skipped";
   uploadId?: string;
   problem?: string;
+  /** Video length, to estimate the analysis; unknown after a reload. */
+  seconds?: number;
 };
 
 const POLL_MS = 4000;
@@ -77,12 +80,13 @@ export function UploadSession({ sessionId, initial }: { sessionId: string; initi
 
   useEffect(() => {
     if (!processingIds) return;
-    const started = Date.now();
+    let started: number | null = null;
     let live = true;
     let asking = false;
     const timer = setInterval(async () => {
       if (asking) return;
       asking = true;
+      started ??= Date.now();
       for (const uploadId of processingIds.split(",")) {
         const status = await uploadStatus(uploadId);
         if (!live) return;
@@ -165,7 +169,7 @@ export function UploadSession({ sessionId, initial }: { sessionId: string; initi
     );
     sending.current = null;
     if (result.ok) {
-      change(current.id, { state: "processing", uploadId: result.uploadId });
+      change(current.id, { state: "processing", uploadId: result.uploadId, seconds });
       setPicked(null);
       setAllowed(false); // asked again for every file
       setOwn(false);
@@ -192,6 +196,12 @@ export function UploadSession({ sessionId, initial }: { sessionId: string; initi
 
   const percent = Math.round(progress * 100);
   const doneCount = items.filter((item) => item.state === "done" || item.state === "skipped").length;
+  // Analysis takes about as long as the video plays, plus a start-up (speech service README).
+  const elapsed = useElapsed(processing.length > 0);
+  const expectedMs = Math.max(...processing.map((item) => ((item.seconds ?? 120) + 30) * 1000), 1);
+  const analysed = processing.length ? estimate(elapsed, expectedMs) : 0;
+  const overall = (doneCount + processing.length * analysed) / items.length;
+  const minutesLeft = Math.max(1, Math.ceil((expectedMs - elapsed) / 60_000));
 
   return (
     <div className="flex flex-col gap-10">
@@ -326,24 +336,17 @@ export function UploadSession({ sessionId, initial }: { sessionId: string; initi
             ))}
           </ol>
           <div className="flex flex-col gap-2">
-            <div
-              role="progressbar"
-              aria-label={uploading ? "Kemajuan unggahan" : "Pertanyaan selesai"}
-              aria-valuenow={uploading ? percent : Math.round((doneCount / items.length) * 100)}
-              aria-valuemin={0}
-              aria-valuemax={100}
-              className="h-1.5 w-full overflow-hidden bg-border-default"
-            >
-              <div
-                className="h-full bg-surface-accent"
-                style={{ width: `${uploading ? percent : (doneCount / items.length) * 100}%` }}
-              />
-            </div>
+            <ProgressBar
+              label={uploading ? "Kemajuan unggahan" : "Kemajuan analisis"}
+              value={uploading ? progress : overall}
+            />
             <p role="status" className="text-body-sm text-ink-secondary">
               {uploading
                 ? `Mengunggah ${Math.floor(percent / 10) * 10}%`
                 : processing.length
-                  ? `${doneCount} dari ${items.length} selesai, ${processing.length} sedang dianalisis`
+                  ? elapsed < expectedMs
+                    ? `${processing.length} video dianalisis, sekitar ${minutesLeft} menit lagi`
+                    : `${processing.length} video dianalisis, hampir selesai`
                   : doneCount
                     ? `${doneCount} dari ${items.length} selesai`
                     : "Belum dimulai"}

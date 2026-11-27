@@ -4,6 +4,7 @@ import rubric from "@echocv/shared/rubric.json";
 import type { SpeechMetrics } from "@/lib/db/speech";
 import { fillerText } from "@/lib/scoring/report";
 import type { Band } from "@/lib/scoring/score";
+import { estimate } from "@/components/ui/progress-bar";
 import { decimal, fillerTarget, focusAreas, loadReport, sessionStats, strongest, timecode, transcriptLines, type ReportView } from "@/lib/report/view";
 
 const ID = "11111111-1111-4111-8111-111111111111";
@@ -83,6 +84,13 @@ describe("loadReport", () => {
 });
 
 describe("report helpers", () => {
+  it("estimates a wait without ever claiming it is done", () => {
+    expect(estimate(0, 10_000)).toBe(0);
+    expect(estimate(10_000, 10_000)).toBeCloseTo(0.632, 2);
+    expect(estimate(10_000_000, 10_000)).toBe(0.95);
+    expect(estimate(-5, 0)).toBe(0);
+  });
+
   it("takes the filler target from the session language's band, else the shared one", () => {
     const band = (language: "any" | "id" | "en", ideal_high: unknown) =>
       ({ dimension: "fillers", language, metric: "fillers_per_minute", ideal_low: 0, ideal_high, zero_low: 0, zero_high: 20, version: "1" }) as Band;

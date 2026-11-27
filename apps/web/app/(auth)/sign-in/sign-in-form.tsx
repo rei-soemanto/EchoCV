@@ -89,7 +89,7 @@ export function SignInForm({ next, failed }: { next: string; failed: boolean }) 
       >
         Lanjutkan dengan Google
       </button>
-      <p className="text-caption text-ink-tertiary">
+      <p className="text-body-sm text-ink-secondary">
         Dengan melanjutkan, Anda menyetujui Syarat penggunaan dan Kebijakan privasi. Pengguna harus berusia {MINIMUM_AGE}{" "}
         tahun atau lebih.
       </p>

@@ -1,4 +1,4 @@
-import { summarizeHistory, type HistoryReport, type HistorySession } from "@/lib/scoring/history";
+import { loadHistory } from "@/lib/db/history";
 import { createClient } from "@/lib/supabase/server";
 
 const DEFAULT_LIMIT = 20;
@@ -15,19 +15,7 @@ export async function GET(request: Request) {
   const { data: auth } = await supabase.auth.getUser();
   if (!auth.user) return Response.json({ error: "Sign in first." }, { status: 401 });
 
-  const { data: sessions, error } = await supabase
-    .from("practice_sessions")
-    .select("id, created_at, role, level, language, mode, status")
-    .eq("user_id", auth.user.id)
-    .order("created_at", { ascending: false })
-    .limit(limit);
-  if (error) return Response.json({ error: "Could not load the practice history." }, { status: 500 });
-
-  const ids = (sessions ?? []).map((session) => session.id);
-  const { data: reports, error: reportError } = ids.length
-    ? await supabase.from("reports").select("session_id, overall_score, report").in("session_id", ids)
-    : { data: [], error: null };
-  if (reportError) return Response.json({ error: "Could not load the practice history." }, { status: 500 });
-
-  return Response.json(summarizeHistory((sessions ?? []) as HistorySession[], (reports ?? []) as HistoryReport[]));
+  const history = await loadHistory(supabase, auth.user.id, limit);
+  if (!history) return Response.json({ error: "Could not load the practice history." }, { status: 500 });
+  return Response.json(history);
 }

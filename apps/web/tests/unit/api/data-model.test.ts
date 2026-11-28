@@ -74,7 +74,7 @@ describe("data model migrations", () => {
       `select relname, relrowsecurity from pg_class
        where relnamespace = 'public'::regnamespace and relkind = 'r'`,
     );
-    expect(rows.length).toBe(9);
+    expect(rows.length).toBe(12);
     expect(rows.every((row) => row.relrowsecurity)).toBe(true);
   });
 
@@ -101,6 +101,69 @@ describe("retention settings", () => {
 
   it("rejects a limit of zero or less", async () => {
     await expect(db.query("insert into public.retention_settings (key, value) values ('x', 0)")).rejects.toThrow(/check constraint/);
+  });
+});
+
+describe("plans and payments", () => {
+  const order = (id: string, userId: string, planId = "sprint", amount = 15000) =>
+    db.query("insert into public.payment_orders (id, user_id, plan_id, amount_idr) values ($1, $2, $3, $4)", [id, userId, planId, amount]);
+  const subscription = (userId: string) =>
+    db.query<{ plan_id: string; days: number }>(
+      "select plan_id, round(extract(epoch from ends_at - now()) / 86400)::int as days from public.subscriptions where user_id = $1",
+      [userId],
+    );
+
+  beforeEach(async () => {
+    await db.exec("truncate public.payment_orders, public.subscriptions;");
+  });
+
+  it("lets anyone read the three paid plans but nobody change them", async () => {
+    const seen = await asUser(alice, () =>
+      db.query<{ id: string; price_idr: number; duration_days: number }>("select id, price_idr, duration_days from public.plans order by price_idr"),
+    );
+    expect(seen.rows).toEqual([
+      { id: "sprint", price_idr: 15000, duration_days: 7 },
+      { id: "premium", price_idr: 29000, duration_days: 30 },
+      { id: "yearly", price_idr: 299000, duration_days: 365 },
+    ]);
+    const changed = await asUser(alice, () => db.query("update public.plans set price_idr = 1 returning id"));
+    expect(changed.rows).toEqual([]);
+  });
+
+  it("shows a user only their own orders and subscription, and lets them write neither", async () => {
+    await order("o-alice", alice);
+    await order("o-bob", bob);
+    await db.query("select public.complete_payment('o-bob', 't')");
+    const orders = await asUser(alice, () => db.query<{ id: string }>("select id from public.payment_orders"));
+    expect(orders.rows).toEqual([{ id: "o-alice" }]);
+    const subs = await asUser(alice, () => db.query("select user_id from public.subscriptions"));
+    expect(subs.rows).toEqual([]);
+    await expect(
+      asUser(alice, () => db.query("insert into public.payment_orders (id, user_id, plan_id, amount_idr) values ('x', $1, 'sprint', 1)", [alice])),
+    ).rejects.toThrow(/row-level security/);
+    const paid = await asUser(alice, () => db.query("update public.payment_orders set status = 'paid' returning id"));
+    expect(paid.rows).toEqual([]);
+  });
+
+  it("activates the plan once even when the same payment is reported twice", async () => {
+    await order("o1", alice);
+    const first = await db.query<{ ok: boolean }>("select public.complete_payment('o1', 't1') as ok");
+    const second = await db.query<{ ok: boolean }>("select public.complete_payment('o1', 't1') as ok");
+    expect([first.rows[0].ok, second.rows[0].ok]).toEqual([true, false]);
+    expect((await subscription(alice)).rows).toEqual([{ plan_id: "sprint", days: 7 }]);
+  });
+
+  it("adds a new purchase on top of the time still left", async () => {
+    await order("o1", alice);
+    await order("o2", alice, "premium", 29000);
+    await db.query("select public.complete_payment('o1', null)");
+    await db.query("select public.complete_payment('o2', null)");
+    expect((await subscription(alice)).rows).toEqual([{ plan_id: "premium", days: 37 }]);
+  });
+
+  it("does not let signed-in users run the activation themselves", async () => {
+    await order("o1", alice);
+    await expect(asUser(alice, () => db.query("select public.complete_payment('o1', null)"))).rejects.toThrow(/permission denied/);
   });
 });
 

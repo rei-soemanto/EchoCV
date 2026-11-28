@@ -227,13 +227,18 @@ export function SessionReport({
           <Stat label="Isi jawaban" value={content ? String(content.score) : "–"} unit="dari 100" />
         </div>
         {report.contentStatus === "pending" && (
-          <div className="flex flex-wrap items-center gap-4">
-            <Badge tone="warning" className="shrink whitespace-normal">
-              Ada isi jawaban yang belum dinilai
-            </Badge>
-            <button type="button" onClick={() => load(true)} className={buttonVariants({ variant: "outline" })}>
-              Nilai ulang isi jawaban
-            </button>
+          <div className="flex flex-col items-start gap-2 rounded-lg border border-border-default bg-surface-card p-4">
+            <div className="flex flex-wrap items-center gap-3">
+              <Badge tone="warning" className="shrink whitespace-normal">
+                Ada isi jawaban yang belum dinilai
+              </Badge>
+              <button type="button" onClick={() => load(true)} className={buttonVariants({ variant: "outline" })}>
+                Nilai ulang isi jawaban
+              </button>
+            </div>
+            <p className="text-caption text-ink-secondary">
+              Tombol ini hanya muncul ketika evaluasi AI sempat tertunda atau mengalami batas waktu, dan otomatis hilang setelah seluruh jawaban selesai dinilai.
+            </p>
           </div>
         )}
         {lessPrecise && (

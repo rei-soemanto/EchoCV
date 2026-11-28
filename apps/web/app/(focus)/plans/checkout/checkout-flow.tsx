@@ -304,7 +304,11 @@ export function CheckoutFlow({
       setErrorMessage("Alamat pembayaran Midtrans tidak valid. Coba lagi sebentar lagi.");
       return;
     }
-    window.open(nextOrder.redirect_url, "_blank", "noopener,noreferrer");
+    const popup = window.open(nextOrder.redirect_url, "_blank", "noopener,noreferrer");
+    if (!popup || popup.closed || typeof popup.closed === "undefined") {
+      window.location.href = nextOrder.redirect_url;
+      return;
+    }
     setSnapClosed(false);
     setPollExhausted(false);
     setStatusFeedback(null);

@@ -31,7 +31,18 @@ export function useMediaCapture() {
       setStream(await navigator.mediaDevices.getUserMedia(CAPTURE_CONSTRAINTS));
       setStatus("ready");
     } catch (err) {
-      setStatus(captureError(err));
+      const parsed = captureError(err);
+      if (parsed === "busy") {
+        await new Promise((resolve) => setTimeout(resolve, 350));
+        try {
+          setStream(await navigator.mediaDevices.getUserMedia(CAPTURE_CONSTRAINTS));
+          setStatus("ready");
+          return;
+        } catch {
+          // Keep first error
+        }
+      }
+      setStatus(parsed);
     }
   }, []);
 

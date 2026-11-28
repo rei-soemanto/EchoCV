@@ -51,15 +51,16 @@ export function PrivacySettings({ initial }: { initial: OptionalConsents }) {
     <>
       <section className="flex flex-col gap-2">
         <h2 className="text-h2">Persetujuan</h2>
-        <div className="flex w-full items-center gap-6 border-t border-border-default py-5">
+        <div className="flex w-full items-center justify-between gap-6 border-t border-border-default py-5">
           <span className="flex min-w-0 flex-1 flex-col gap-1">
             <span className="text-label">Analisis jawaban latihan (wajib)</span>
             <span className="text-body-sm text-ink-secondary">
-              Agar laporan dapat dibuat. Mode Live: video Anda dianalisis di perangkat dan tidak dikirim ke server. Untuk
-              menghentikannya, hapus akun di bawah.
+              Diperlukan agar sistem dapat menilai jawaban dan menyusun laporan latihan. Mode Live: video Anda dianalisis di perangkat dan tidak dikirim ke server.
             </span>
           </span>
-          <span className="text-label text-ink-success">Aktif</span>
+          <span className="shrink-0 rounded-full bg-success-bg px-2.5 py-1 text-caption font-semibold text-ink-success">
+            Wajib · Selalu aktif
+          </span>
         </div>
         <fieldset disabled={saving} className="contents">
           <ConsentRow
@@ -88,7 +89,7 @@ export function PrivacySettings({ initial }: { initial: OptionalConsents }) {
       <section className="flex flex-col gap-3 border-t border-border-default pt-6">
         <h2 className="text-h2">Unduh data saya</h2>
         <p className="text-body text-ink-secondary">
-          Dapatkan salinan profil, riwayat sesi, jawaban dan laporan Anda dalam satu berkas JSON. Rekaman tidak termasuk.
+          Unduh salinan resmi data akun, riwayat sesi latihan, transkrip, dan laporan evaluasi Anda dalam format terstruktur JSON (portabilitas data sesuai UU PDP No. 27/2022). Berkas rekaman tidak disertakan.
         </p>
         <a href="/api/account/export" download className={buttonVariants({ variant: "outline", className: "w-fit" })}>
           <Image src="/icons/arrow-right-dark.svg" alt="" width={20} height={20} />

@@ -1,8 +1,3 @@
-"""Compare runs A and B on Roboflow val, keep the better one, report per-class test metrics.
-
-Run from ml/:  uv run python -m yolo.evaluate
-"""
-
 import json
 import shutil
 
@@ -43,8 +38,6 @@ def main() -> None:
         weights = RUNS / f"v0_{variant}" / "weights" / "best.pt"
         if weights.exists():
             results[variant] = {"weights": weights, "val_rf": _metrics(YOLO(weights), "val_rf")}
-    # reading_notes only exists in the COCO-derived data, so run A can never detect it. Keep B
-    # unless A is clearly better on the classes both runs share.
     best = "B" if "B" in results else "A"
     if "A" in results and "B" in results:
         gap = results["A"]["val_rf"]["mAP50-95"] - results["B"]["val_rf"]["mAP50-95"]

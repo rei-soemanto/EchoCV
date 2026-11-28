@@ -1,5 +1,3 @@
-"""Run MediaPipe Face Landmarker on images and cache the features the rules need."""
-
 from multiprocessing import Pool
 from pathlib import Path
 
@@ -10,7 +8,7 @@ from PIL import Image
 from calib.paths import FACE_MODEL, RAW
 from calib.rules import head_angles, iris_offsets
 
-MAX_SIDE = 1280  # roughly webcam resolution; Columbia images are 5184x3456
+MAX_SIDE = 1280
 _landmarker = None
 
 
@@ -49,7 +47,6 @@ def _one(path: str) -> dict:
         "iris_x": ix,
         "iris_y_lid": iy_lid,
         "iris_y_corner": iy_corner,
-        # MediaPipe's own gaze blendshapes; down-positive to match image coordinates
         "look_v": (s["eyeLookDownLeft"] + s["eyeLookDownRight"]) / 2
         - (s["eyeLookUpLeft"] + s["eyeLookUpRight"]) / 2,
         "smile": (s["mouthSmileLeft"] + s["mouthSmileRight"]) / 2,

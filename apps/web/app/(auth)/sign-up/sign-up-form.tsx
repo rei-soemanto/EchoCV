@@ -12,9 +12,6 @@ import { TextField } from "@/components/ui/text-field";
 import { MINIMUM_AGE } from "@/lib/age";
 import { birthDateError, saveProfile, SIGN_IN_PATH, signOut, type ProfileForm } from "@/lib/auth";
 
-// Figma 03 Daftar. The values are the ones POST /api/profile accepts; the labels are ours.
-// Sign-in already created the account, so the design's email and password step asks for the date
-// of birth instead, which the API needs (BR-01).
 const STEPS = [
   { title: "Siapa nama Anda?", intro: "Nama ini tampil di laporan latihan Anda." },
   { title: "Kapan Anda lahir?", intro: "Kami memakainya hanya untuk memastikan usia Anda." },
@@ -49,7 +46,6 @@ export function SignUpForm({ next }: { next: string }) {
   const heading = useRef<HTMLHeadingElement>(null);
   const firstStep = useRef(true);
 
-  // Moving between steps replaces the form, so take keyboard and screen reader users to its heading.
   useEffect(() => {
     if (firstStep.current) firstStep.current = false;
     else heading.current?.focus();
@@ -94,7 +90,6 @@ export function SignUpForm({ next }: { next: string }) {
       setStep(step - 1);
       return;
     }
-    // Back from the first step means another account: sign out, or sign-in would return here.
     if (await signOut()) router.replace(SIGN_IN_PATH);
     else setError("Belum bisa keluar. Coba lagi.");
   }

@@ -1,5 +1,3 @@
-// Background motif: echo-like contour swirls in the paper's own darker tone (surface-sunken),
-// so they catch the eye without competing with content. Decorative only.
 const RINGS = [0, 1, 2, 3, 4];
 
 function Swirl({ className }: { className: string }) {
@@ -13,7 +11,6 @@ function Swirl({ className }: { className: string }) {
     >
       {RINGS.map((i) => {
         const r = 70 + i * 46;
-        // A loose spiral arc: each ring starts a little further round, so the set reads as a swirl.
         return (
           <path
             key={i}

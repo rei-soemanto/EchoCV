@@ -2,15 +2,10 @@
 
 import { useEffect, useState } from "react";
 
-/**
- * How far a wait of about `expectedMs` has come, as a fraction that keeps moving but never claims to
- * be done: it reaches 63% at the expected time and stops at 95% (an optimistic bar, mid-MVP check).
- */
 export function estimate(elapsedMs: number, expectedMs: number): number {
   return Math.min(0.95, 1 - Math.exp(-Math.max(0, elapsedMs) / Math.max(1, expectedMs)));
 }
 
-/** Re-renders every half second while a wait runs, giving the time since it started. */
 export function useElapsed(running: boolean): number {
   const [start, setStart] = useState<number | null>(null);
   const [now, setNow] = useState(0);

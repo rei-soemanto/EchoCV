@@ -1,6 +1,5 @@
 import { useId } from "react";
 
-// Figma "Input": always a visible label; an error is words, not colour alone.
 export function TextField({
   label,
   hint,

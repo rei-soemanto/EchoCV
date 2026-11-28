@@ -1,19 +1,3 @@
-"""Choose the eye-contact rule constants on Columbia Gaze; report false positives on MPIIFaceGaze.
-
-Both datasets are non-commercial: they are used only to choose and measure a few constants.
-No model is trained on them.
-
-Rule: gaze ~ (head yaw/pitch) + k * (eye feature), relative to each person's 'looking at the
-camera' baseline (the runtime 5-second calibration). Eye contact if the angular error <= T.
-
-Eye contact is scored as the gaze-perception cone (vertical gaze on the camera, horizontal within
-5 degrees), not exact lens lock: Columbia's nearest negatives are 5 degrees off, below both
-MediaPipe's iris precision and what a viewer perceives as eye contact. Strict gaze-lock is still
-reported.
-
-Run from ml/calibration/:  uv run python -m calib.eye_contact
-"""
-
 import json
 import re
 
@@ -26,7 +10,7 @@ from calib.rules import f1, gaze_error
 
 COLUMBIA_NAME = re.compile(r"(\d{4})_2m_(-?\d+)P_(-?\d+)V_(-?\d+)H\.jpg$", re.I)
 VERTICAL_FEATURES = ["iris_y_corner", "iris_y_lid", "look_v"]
-K_GRID = np.arange(-40, 40.01, 1.0)  # degrees per standard deviation of the eye feature
+K_GRID = np.arange(-40, 40.01, 1.0)
 T_GRID = np.arange(1.0, 25.01, 0.5)
 CONE_H = 5
 MPII_PER_PERSON = 1000
@@ -53,7 +37,6 @@ def columbia(cols: list[str]) -> pd.DataFrame:
         if len(g[(g["P"] == 0) & g["lock"]])
     }
     df = _add_base(df[df["key"].isin(refs)].copy(), refs, cols)
-    # The per-subject reference image would trivially score as contact; leave it out of scoring.
     return df[~((df["P"] == 0) & df["lock"])]
 
 
@@ -118,7 +101,6 @@ def mpii(params: dict, cols: list[str]) -> dict:
     feats = extract([*meta["path"]], "mpiifacegaze")
     df = meta.merge(feats, on="path")
     df = df[df["detected"]].copy()
-    # Baseline: each person's 30 frames closest to the camera direction (approximate).
     refs = {k: g.nsmallest(30, "true_angle")[cols].mean() for k, g in df.groupby("key")}
     df = _add_base(df, refs, cols)
     df["pred"] = errors(df, params) <= params["toleranceDeg"]

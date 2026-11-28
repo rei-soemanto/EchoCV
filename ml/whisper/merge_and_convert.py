@@ -1,11 +1,3 @@
-"""Merge the LoRA into turbo, convert to CTranslate2 int8 for faster-whisper, and check parity.
-
-ctranslate2 wheels expect CUDA 12 while this env ships CUDA 13, so the faster-whisper check runs on
-CPU int8. The HF reference runs on GPU.
-
-Run from ml/:  uv run python -m whisper.merge_and_convert
-"""
-
 import json
 import shutil
 import subprocess
@@ -24,7 +16,7 @@ from whisper.evaluate import TEST_SETS, V0
 from whisper.infer import score, transcribe
 from whisper.tokens import filler_safe_suppress
 
-PARITY_ROWS = 25  # per test set -> 100 utterances
+PARITY_ROWS = 25
 TOLERANCE = 0.02
 
 
@@ -35,8 +27,6 @@ def main() -> None:
     model = PeftModel.from_pretrained(model, V0 / "lora").merge_and_unload()
     model.save_pretrained(merged)
     processor.save_pretrained(merged)
-    # transformers v5 writes processor_config.json; the CTranslate2 converter and faster-whisper
-    # read preprocessor_config.json (n_mels etc.), which is unchanged from the base model.
     shutil.copyfile(WHISPER_BASE / "preprocessor_config.json", merged / "preprocessor_config.json")
 
     if ct2.exists():

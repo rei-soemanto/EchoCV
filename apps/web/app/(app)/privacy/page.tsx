@@ -4,7 +4,6 @@ import { PrivacySettings } from "./privacy-settings";
 
 export const metadata = { title: "Privasi dan data · EchoCV" };
 
-// Figma 13 Privasi dan data, on Life's KAN-62 API.
 export default async function PrivacyPage() {
   const supabase = await createClient();
   const { data: auth } = await supabase.auth.getUser();

@@ -1,34 +1,27 @@
-"""Derive behaviour labels from COCO 2017 person keypoints.
-
-COCO has no interview-behaviour labels, so we infer three classes from geometry and crop each person
-to the upper body to look more like a laptop-webcam frame. Distances are in shoulder widths.
-"""
-
 from dataclasses import dataclass
 
 import numpy as np
 
-# COCO-17 keypoint indices
 NOSE, L_EYE, R_EYE, L_EAR, R_EAR = 0, 1, 2, 3, 4
 L_SH, R_SH, L_ELB, R_ELB, L_WR, R_WR, L_HIP, R_HIP = 5, 6, 7, 8, 9, 10, 11, 12
 FACE = (NOSE, L_EYE, R_EYE, L_EAR, R_EAR)
 
-BOOK, CELL_PHONE = 84, 77  # COCO category ids
+BOOK, CELL_PHONE = 84, 77
 
-MIN_PERSON_H = 200  # px
-MIN_SHOULDER_W = 40  # px
-TOUCH_DIST = 0.35  # wrist-to-face, in shoulder widths
-CROSS_ELBOW_DIST = 0.85  # wrist-to-opposite-elbow
-NOTES_DIST = 0.5  # held object centre to wrist
-NOTES_BELOW_NOSE = 0.5  # held object below the chin (excludes phone calls at the ear)
-CLEAN_NEG_DIST = 0.9  # wrists at least this far from the face for a negative
+MIN_PERSON_H = 200
+MIN_SHOULDER_W = 40
+TOUCH_DIST = 0.35
+CROSS_ELBOW_DIST = 0.85
+NOTES_DIST = 0.5
+NOTES_BELOW_NOSE = 0.5
+CLEAN_NEG_DIST = 0.9
 
-Box = tuple[float, float, float, float]  # x1, y1, x2, y2 in image pixels
+Box = tuple[float, float, float, float]
 
 
 @dataclass
 class Person:
-    kps: np.ndarray  # (17, 3): x, y, visibility
+    kps: np.ndarray
     bbox: Box
 
     def vis(self, i: int) -> bool:
@@ -77,7 +70,6 @@ def _face_dist(p: Person, wrist: int) -> float:
 
 
 def touching_face(p: Person) -> Box | None:
-    """A wrist at the face, not raised above the eyes (waving, throwing, hands on head)."""
     sw = p.shoulder_w
     eye_y = min(p.pt(i)[1] for i in (L_EYE, R_EYE, NOSE) if p.vis(i))
     for w in (L_WR, R_WR):
@@ -93,7 +85,7 @@ def arms_crossed(p: Person) -> Box | None:
         return None
     sw = p.shoulder_w
     mid = (p.pt(L_SH)[0] + p.pt(R_SH)[0]) / 2
-    side = np.sign(p.pt(L_SH)[0] - p.pt(R_SH)[0])  # +1 if the person's left is on image right
+    side = np.sign(p.pt(L_SH)[0] - p.pt(R_SH)[0])
     sh_y = (p.pt(L_SH)[1] + p.pt(R_SH)[1]) / 2
     low_y = sh_y + 2.2 * sw
     if p.vis(L_HIP) and p.vis(R_HIP):
@@ -117,7 +109,6 @@ def arms_crossed(p: Person) -> Box | None:
 
 
 def reading_notes(p: Person, objects: list[Box]) -> Box | None:
-    """A book or phone held next to a wrist, below the chin (not at the ear)."""
     sw = p.shoulder_w
     for box in objects:
         c = np.array([(box[0] + box[2]) / 2, (box[1] + box[3]) / 2])
@@ -130,13 +121,11 @@ def reading_notes(p: Person, objects: list[Box]) -> Box | None:
 
 
 def clean_negative(p: Person) -> bool:
-    """Both wrists visible and well away from the face: safe 'no behaviour' example."""
     sw = p.shoulder_w
     return all(p.vis(w) and _face_dist(p, w) > CLEAN_NEG_DIST * sw for w in (L_WR, R_WR))
 
 
 def upper_body_crop(p: Person, img_w: int, img_h: int) -> Box:
-    """Head-to-hips crop at roughly 4:3, like a laptop webcam frame."""
     sw = p.shoulder_w
     cx = (p.pt(L_SH)[0] + p.pt(R_SH)[0]) / 2
     sh_y = (p.pt(L_SH)[1] + p.pt(R_SH)[1]) / 2
@@ -153,7 +142,6 @@ def upper_body_crop(p: Person, img_w: int, img_h: int) -> Box:
 
 
 def crowded(crop: Box, me: Box, others: list[Box]) -> bool:
-    """Another large person inside the crop would carry unlabelled behaviours."""
     crop_h = crop[3] - crop[1]
     for o in others:
         if o == me:
@@ -167,7 +155,6 @@ def crowded(crop: Box, me: Box, others: list[Box]) -> bool:
 
 
 def to_crop(box: Box, crop: Box) -> Box | None:
-    """Clip box to crop and shift into crop coordinates; drop it if mostly cut off."""
     x1, y1 = max(box[0], crop[0]), max(box[1], crop[1])
     x2, y2 = min(box[2], crop[2]), min(box[3], crop[3])
     if x2 <= x1 or y2 <= y1:

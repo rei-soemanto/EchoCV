@@ -1,9 +1,3 @@
-"""Record which datasets each checkpoint touched (see docs/tech-stack-and-datasets.md, Conclusion).
-
-Every model output directory gets a datasets.json so a commercial retrain can later drop anything
-that isn't commercially safe without forensic work.
-"""
-
 import json
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
@@ -16,7 +10,7 @@ class Dataset:
     url: str
     licence: str
     commercial: bool
-    use: str  # "train", "eval" or "eval-only (non-commercial)"
+    use: str
     caveat: str = ""
 
 

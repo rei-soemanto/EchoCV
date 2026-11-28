@@ -1,4 +1,3 @@
-// Privacy page calls to Life's KAN-62 API, with the reply in words the user reads.
 
 export type OptionalConsents = { model_training: boolean; hr_rater_sharing: boolean };
 
@@ -30,7 +29,6 @@ export async function changeConsent(
   };
 }
 
-/** null when the account is gone, else what to tell the user. */
 export async function deleteAccount(fetcher: typeof fetch = fetch): Promise<string | null> {
   const res = await fetcher("/api/account", {
     method: "DELETE",

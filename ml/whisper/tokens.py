@@ -1,10 +1,3 @@
-"""Whisper's default suppress list blocks tokens starting with '[' (and ']'), so the filler tokens
-could never be generated. Remove the token ids that spell the filler tokens from that list.
-
-The resulting list ships with the model (suppress_tokens.json); services/speech must pass it to
-faster-whisper as `suppress_tokens` instead of the default [-1].
-"""
-
 from whisper.normalize import TOKENS
 
 

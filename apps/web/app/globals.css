@@ -11,7 +11,6 @@
   --font-mono: var(--font-plex-mono), ui-monospace, monospace;
   --font-heading: var(--font-newsreader), Georgia, serif;
   --font-display: var(--font-newsreader), Georgia, serif;
-  /* Paper and Ink tokens from the Figma file (Foundations page) */
   --color-ink-primary: var(--ink-primary);
   --color-ink-secondary: var(--ink-secondary);
   --color-ink-tertiary: var(--ink-tertiary);
@@ -100,7 +99,6 @@
   --status-warning-bg: #f6ead0;
   --status-danger-bg: #f4dcd8;
 
-  /* shadcn roles mapped onto the Paper and Ink tokens */
   --background: var(--surface-page);
   --foreground: var(--ink-primary);
   --card: var(--surface-page);
@@ -124,7 +122,7 @@
   --chart-3: var(--ink-accent);
   --chart-4: var(--border-strong);
   --chart-5: var(--ink-primary);
-  --radius: 5px; /* radius-md = 4px, the design's control radius */
+  --radius: 5px;
   --sidebar: var(--surface-sidebar);
   --sidebar-foreground: var(--ink-inverse);
   --sidebar-primary: var(--ink-inverse);
@@ -181,7 +179,6 @@
   }
 }
 
-/* Type scale from the Figma text styles */
 @utility text-display { font-family: var(--font-display); font-weight: 500; font-size: 56px; line-height: 60px; }
 @utility text-h1 { font-family: var(--font-display); font-weight: 500; font-size: 40px; line-height: 44px; }
 @utility text-h2 { font-family: var(--font-display); font-weight: 500; font-size: 28px; line-height: 34px; }
@@ -193,7 +190,6 @@
 @utility text-caption { font-size: 12px; line-height: 16px; }
 @utility text-number { font-family: var(--font-display); font-weight: 400; font-size: 56px; line-height: 60px; }
 
-/* Background swirls drift slowly; motion is off for people who ask for less of it. */
 @keyframes swirl-drift {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }

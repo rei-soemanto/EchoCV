@@ -5,7 +5,6 @@ type Supabase = Awaited<ReturnType<typeof createClient>>;
 
 export type History = ReturnType<typeof summarizeHistory>;
 
-/** The user's newest sessions with their reports (KAN-55 API), or null when the database fails. */
 export async function loadHistory(supabase: Supabase, userId: string, limit: number): Promise<History | null> {
   const { data: sessions, error } = await supabase
     .from("practice_sessions")

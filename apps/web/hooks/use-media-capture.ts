@@ -13,10 +13,6 @@ import {
 
 export type CaptureStatus = "requesting" | "ready" | CaptureError;
 
-/**
- * Opens the webcam and microphone, shows the preview in `videoRef`, and reports a live mic
- * level, a lighting check and the connection state. Everything stays on the device.
- */
 export function useMediaCapture() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
@@ -28,7 +24,7 @@ export function useMediaCapture() {
   const start = useCallback(async () => {
     setStatus("requesting");
     if (!navigator.mediaDevices?.getUserMedia) {
-      setStatus("unsupported"); // insecure origin (plain http) or a very old browser
+      setStatus("unsupported");
       return;
     }
     try {
@@ -39,13 +35,11 @@ export function useMediaCapture() {
     }
   }, []);
 
-  // Ask once on mount; the user can retry from the page after fixing a permission.
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- getUserMedia is the external system
     void start();
   }, [start]);
 
-  // Release the camera when the stream is replaced or the page unmounts.
   useEffect(() => () => stream?.getTracks().forEach((t) => t.stop()), [stream]);
 
   const checkLighting = useCallback(() => {
@@ -60,16 +54,14 @@ export function useMediaCapture() {
     setLighting(meanLuma(ctx.getImageData(0, 0, canvas.width, canvas.height).data) < DARK_LUMA ? "dark" : "ok");
   }, []);
 
-  // Attach the preview, then check the light once the first frames arrive.
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !stream) return;
     video.srcObject = stream;
-    const timer = setTimeout(checkLighting, 1000); // auto-exposure needs a moment to settle
+    const timer = setTimeout(checkLighting, 1000);
     return () => clearTimeout(timer);
   }, [stream, checkLighting]);
 
-  // Mic meter: ~15 updates a second is plenty for a bar display.
   useEffect(() => {
     if (!stream?.getAudioTracks().length) return;
     const audio = new AudioContext();

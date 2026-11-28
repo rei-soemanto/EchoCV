@@ -1,8 +1,3 @@
-"""Merge calibration results into shared/thresholds.json.
-
-Run from ml/calibration/:  uv run python -m calib.export_thresholds
-"""
-
 import json
 
 from calib.inhouse_calibrate import BASELINE_S, FPS

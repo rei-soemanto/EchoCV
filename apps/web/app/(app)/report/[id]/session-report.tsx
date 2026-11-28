@@ -23,7 +23,6 @@ import {
   type ReportView,
 } from "@/lib/report/view";
 
-// Figma 09 Laporan.
 const LABELS: Record<string, string> = Object.fromEntries(rubric.dimensions.map((d) => [d.id, d.label.id]));
 
 function Stat({ label, value, unit }: { label: string; value: string; unit: string }) {

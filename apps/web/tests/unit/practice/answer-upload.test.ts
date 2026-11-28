@@ -12,7 +12,6 @@ function reply(status: number, body: unknown = {}) {
   return new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
 }
 
-/** A fetch that answers each call in turn and records what was sent. */
 function fakeFetch(...responses: (Response | Error)[]) {
   const calls: { url: string; body: unknown }[] = [];
   const fn = vi.fn(async (url: string | URL | Request, init?: RequestInit) => {
@@ -87,7 +86,7 @@ describe("completeUpload", () => {
 describe("room helpers", () => {
   it("formats the clock", () => {
     expect(formatClock(15_000)).toBe("00:15");
-    expect(formatClock(14_001)).toBe("00:15"); // counts down in whole seconds
+    expect(formatClock(14_001)).toBe("00:15");
     expect(formatClock(180_000)).toBe("03:00");
     expect(formatClock(-5)).toBe("00:00");
   });

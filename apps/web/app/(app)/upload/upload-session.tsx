@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
@@ -10,20 +11,18 @@ import { ConsentRow } from "@/components/ui/consent-row";
 import { estimate, ProgressBar, useElapsed } from "@/components/ui/progress-bar";
 import { MAX_VIDEO_BYTES, MAX_VIDEO_SECONDS } from "@/lib/db/uploads";
 import { finishSession } from "@/lib/practice/finish-session";
-import { timecode } from "@/lib/report/view";
 import {
   durationProblem,
+  failureReasonMessage,
   putFile,
   readDuration,
   sendVideo,
-  uploadStatus,
+  uploadCheck,
   videoProblem,
   videoType,
 } from "@/lib/practice/video-upload";
+import { timecode } from "@/lib/report/view";
 import { createClient } from "@/lib/supabase/client";
-
-// Figma 08 Unggah dan proses, 08b Proses analisis. The design has one file per session; the API
-// takes one video per question (UC-05), so the status column lists the questions.
 
 export type UploadItem = {
   id: string;
@@ -31,12 +30,10 @@ export type UploadItem = {
   state: "waiting" | "sending" | "processing" | "done" | "skipped";
   uploadId?: string;
   problem?: string;
-  /** Video length, to estimate the analysis; unknown after a reload. */
   seconds?: number;
 };
 
 const POLL_MS = 4000;
-// Videos are analysed one at a time, at about playing speed. Past this, let the user try again.
 const STUCK_MS = 4 * MAX_VIDEO_SECONDS * 1000;
 
 const STATES: Record<UploadItem["state"], { tone: BadgeTone; label: string }> = {
@@ -62,10 +59,8 @@ export function UploadSession({ sessionId, initial }: { sessionId: string; initi
   const [skipping, setSkipping] = useState(false);
   const [finish, setFinish] = useState({ failed: false, attempt: 0 });
   const sending = useRef<AbortController | null>(null);
-  /** The latest pick, so a slow read of an earlier file cannot replace it. */
   const pick = useRef(0);
 
-  // Stay on the question being worked on: an earlier one can fail and go back to waiting meanwhile.
   const current =
     items.find((item) => item.state === "sending") ??
     items.find((item) => item.state === "waiting" && item.id === picked?.itemId) ??
@@ -88,16 +83,16 @@ export function UploadSession({ sessionId, initial }: { sessionId: string; initi
       asking = true;
       started ??= Date.now();
       for (const uploadId of processingIds.split(",")) {
-        const status = await uploadStatus(uploadId);
+        const check = await uploadCheck(uploadId);
         if (!live) return;
         const problem =
-          status === "failed"
-            ? "Analisis gagal dan tidak dihitung. Unggah video lagi, atau lewati pertanyaan ini."
+          check?.status === "failed"
+            ? failureReasonMessage(check.failureReason)
             : Date.now() - started > STUCK_MS
-              ? "Analisis memakan waktu terlalu lama. Unggah video lagi, atau lewati pertanyaan ini."
+              ? failureReasonMessage("timeout")
               : null;
         const changes: Partial<UploadItem> | null =
-          status === "done"
+          check?.status === "done"
             ? { state: "done", problem: undefined }
             : problem
               ? { state: "waiting", uploadId: undefined, problem }
@@ -125,7 +120,6 @@ export function UploadSession({ sessionId, initial }: { sessionId: string; initi
     };
   }, [settled, sessionId, router, finish.attempt]);
 
-  // Leaving during the upload itself would lose it; once it is stored, leaving is fine.
   const uploading = current?.state === "sending";
   useEffect(() => {
     if (!uploading) return;
@@ -171,7 +165,7 @@ export function UploadSession({ sessionId, initial }: { sessionId: string; initi
     if (result.ok) {
       change(current.id, { state: "processing", uploadId: result.uploadId, seconds });
       setPicked(null);
-      setAllowed(false); // asked again for every file
+      setAllowed(false);
       setOwn(false);
       return;
     }
@@ -196,7 +190,6 @@ export function UploadSession({ sessionId, initial }: { sessionId: string; initi
 
   const percent = Math.round(progress * 100);
   const doneCount = items.filter((item) => item.state === "done" || item.state === "skipped").length;
-  // Analysis takes about as long as the video plays, plus a start-up (speech service README).
   const elapsed = useElapsed(processing.length > 0);
   const expectedMs = Math.max(...processing.map((item) => ((item.seconds ?? 120) + 30) * 1000), 1);
   const analysed = processing.length ? estimate(elapsed, expectedMs) : 0;
@@ -250,7 +243,7 @@ export function UploadSession({ sessionId, initial }: { sessionId: string; initi
                   disabled={uploading}
                   onChange={(event) => {
                     choose(event.target.files?.[0]);
-                    event.target.value = ""; // so picking the same file again still counts
+                    event.target.value = "";
                   }}
                   className="sr-only"
                 />
@@ -361,6 +354,11 @@ export function UploadSession({ sessionId, initial }: { sessionId: string; initi
                   ? "Pilih berkas dan setujui izin, lalu mulai analisis."
                   : "Semua pertanyaan sudah selesai."}
           </p>
+          {processing.length > 0 && (
+            <Link href="/dashboard" className={buttonVariants({ variant: "link", size: "text", className: "w-fit" })}>
+              Kembali ke beranda
+            </Link>
+          )}
         </aside>
       </div>
     </div>

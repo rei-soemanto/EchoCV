@@ -9,7 +9,6 @@ import { SignUpForm } from "./sign-up-form";
 
 export const metadata = { title: "Daftar · EchoCV" };
 
-// Reached after every sign-in: a user who already has a profile goes straight on to `next`.
 export default async function SignUpPage(props: PageProps<"/sign-up">) {
   const params = await props.searchParams;
   const next = safeNextPath(typeof params.next === "string" ? params.next : null);

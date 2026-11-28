@@ -1,5 +1,3 @@
-// Page frame for routes whose content lands in a later sprint: the design's page header
-// (Display/H1 + body) so the shell and navigation can be reviewed end to end now.
 export function PlaceholderPage({
   title,
   description,

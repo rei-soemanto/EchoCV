@@ -9,17 +9,12 @@ const PARTS = [
 ] as const;
 type Part = (typeof PARTS)[number]["key"];
 
-/** "2000-05-01" once all three parts are filled in, else "" (the form then asks for a date). */
 export function joinDate(parts: Record<Part, string>): string {
   const { day, month, year } = parts;
   if (!day || !month || year.length !== 4) return "";
   return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
 }
 
-/**
- * Day, month and year in three boxes that move to the next box once one is full (mid-MVP check):
- * the browser's own date field is slow to fill in on a phone and in some desktop locales.
- */
 export function DateFields({
   label,
   hint,
@@ -36,7 +31,6 @@ export function DateFields({
   const boxes = useRef<(HTMLInputElement | null)[]>([]);
 
   function type(index: number, raw: string) {
-    // Digits beyond a full box carry on into the next ones, so pasting "05032001" fills all three.
     const next = { ...parts };
     let digits = raw.replace(/\D/g, "");
     let at = index;
@@ -71,7 +65,7 @@ export function DateFields({
               onChange={(event) => type(i, event.target.value)}
               onKeyDown={(event) => {
                 if (event.key === "Backspace" && !parts[part.key] && i > 0) {
-                  event.preventDefault(); // only move back; deleting stays a separate key press
+                  event.preventDefault();
                   boxes.current[i - 1]?.focus();
                 }
               }}

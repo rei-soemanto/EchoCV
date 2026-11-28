@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-// Top bar for full-width session steps (calibration, interview room): no sidebar.
 export function TopBar({ note }: { note: string }) {
   return (
     <header className="flex items-center justify-between gap-6 border-b border-border-default px-4 py-4 md:px-12 md:py-6">

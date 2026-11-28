@@ -3,8 +3,6 @@ import { ageOn, MINIMUM_AGE } from "@/lib/age";
 export const SIGN_IN_PATH = "/sign-in";
 export const SIGN_UP_PATH = "/sign-up";
 
-// Sign-in always lands on sign-up first: it asks a new user for their profile and consents, and
-// sends everyone else straight on to `next`.
 export function afterSignIn(next: string) {
   return `${SIGN_UP_PATH}?${new URLSearchParams({ next })}`;
 }
@@ -42,7 +40,6 @@ export async function signOut(fetcher: typeof fetch = fetch): Promise<boolean> {
   return Boolean(res?.ok);
 }
 
-/** Words for a date of birth that cannot sign up, or null when it can (BR-01). */
 export function birthDateError(value: string, today: Date = new Date()): string | null {
   const real = /^\d{4}-\d{2}-\d{2}$/.test(value) && new Date(`${value}T00:00:00Z`).toISOString().startsWith(value);
   if (!real || value > today.toISOString().slice(0, 10)) {
@@ -62,7 +59,6 @@ export type ProfileForm = {
   consents: { analysis: boolean; model_training: boolean; hr_rater_sharing: boolean };
 };
 
-/** POST /api/profile: null when the account is ready, else what to tell the user. */
 export async function saveProfile(form: ProfileForm, fetcher: typeof fetch = fetch): Promise<string | null> {
   const res = await fetcher("/api/profile", {
     method: "POST",
@@ -70,7 +66,7 @@ export async function saveProfile(form: ProfileForm, fetcher: typeof fetch = fet
     body: JSON.stringify(form),
   }).catch(() => null);
   if (!res) return "Periksa koneksi internet, lalu coba lagi.";
-  if (res.ok || res.status === 409) return null; // 409: the profile is already there
+  if (res.ok || res.status === 409) return null;
   if (res.status === 401) return "Sesi masuk Anda berakhir. Masuk lagi untuk melanjutkan.";
   const body = (await res.json().catch(() => null)) as { code?: string } | null;
   if (body?.code === "under_age") {

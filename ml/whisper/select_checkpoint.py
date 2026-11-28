@@ -1,17 +1,10 @@
-"""Pick the final LoRA checkpoint: best validation filler F1 among checkpoints whose WER stays
-within the guard (filler F1 alone can peak where the model starts looping or over-inserting).
-
-Run from ml/ after training:  uv run python -m whisper.select_checkpoint
-"""
-
 import json
 import shutil
 
 from whisper.train_lora import OUT
 
-# Ceilings on validation WER. Stock turbo on the matching test sets: AMI 16.6%, FLEURS-id 7.1%.
 AMI_WER_MAX = 0.20
-FLEURS_WER_MAX = 0.081  # stock + 1 point (the plan's Indonesian regression budget)
+FLEURS_WER_MAX = 0.081
 
 
 def main() -> None:

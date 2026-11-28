@@ -4,7 +4,6 @@ from yolo import coco_rules as R
 
 
 def frontal(**moves) -> R.Person:
-    """A person facing the camera; shoulder width 100 px. Keyword args move keypoints."""
     pts = {
         R.NOSE: (250, 120),
         R.L_EYE: (265, 110),
@@ -42,7 +41,7 @@ def test_hand_on_face_is_touching_face():
     p = frontal(r_wr=(240, 140))
     box = R.touching_face(p)
     assert box is not None
-    assert box[0] <= 215 and box[3] >= 165  # covers the hand and the face
+    assert box[0] <= 215 and box[3] >= 165
     assert not R.clean_negative(p)
 
 
@@ -72,7 +71,7 @@ def test_phone_next_to_wrist_is_reading_notes():
 def test_upper_body_crop_and_box_conversion():
     p = frontal()
     crop = R.upper_body_crop(p, 640, 480)
-    assert crop[1] <= 110 and 350 <= crop[3] < 420  # head to just above the hips
+    assert crop[1] <= 110 and 350 <= crop[3] < 420
     assert R.to_crop((crop[0] + 10, crop[1] + 10, crop[0] + 50, crop[1] + 50), crop) == (
         10,
         10,

@@ -1,13 +1,3 @@
-"""Synthetic Indonesian filler speech: splice filler clips into FLEURS id_id utterances at word
-boundaries and insert the matching token into the transcript.
-
-No public Indonesian filler audio exists, so this teaches the model to emit [EEE]/[UM]/[HMM] inside
-Indonesian sentences until in-house recordings arrive. "eee" is approximated by time-stretching
-"uh" clips (Indonesian "eee" tends to be long).
-
-Run from ml/:  uv run python -m whisper.synth_id
-"""
-
 import difflib
 import json
 import re
@@ -34,11 +24,6 @@ def _norm(word: str) -> str:
 def boundaries(
     ref_words: list[str], hyp: list[tuple[str, float, float]]
 ) -> list[tuple[int, float]]:
-    """(i, t): a filler may go before reference word i at time t (seconds).
-
-    hyp: (word, start, end) from Whisper word timestamps. Only boundaries where both neighbouring
-    reference words matched a hypothesis word are used, so the audio and text stay aligned.
-    """
     ref_n = [_norm(w) for w in ref_words]
     hyp_n = [_norm(w) for w, _, _ in hyp]
     match: dict[int, int] = {}
@@ -80,14 +65,13 @@ def _fade(clip: np.ndarray, ms: int = 10) -> np.ndarray:
 def _filler_clip(rng, bank: dict, token: str, host_rms: float) -> np.ndarray:
     pool = bank[token] if token != EEE else bank[EEE]
     clip = load(rng.choice(pool))
-    if token == EEE:  # stretch "uh" into a longer Indonesian-style "eee"
+    if token == EEE:
         clip = librosa.effects.time_stretch(clip, rate=float(rng.uniform(0.4, 1.0)))
     clip = librosa.effects.pitch_shift(clip, sr=SR, n_steps=float(rng.uniform(-2, 2)))
     return _fade(clip * (host_rms * rng.uniform(0.6, 1.0) / rms(clip)))
 
 
 def snap_to_quiet(audio: np.ndarray, t: float, window: float = 0.15) -> float:
-    """Move t to the quietest 10 ms frame within +-window seconds (DTW timestamps are coarse)."""
     hop = SR // 100
     lo = max(0, int((t - window) * SR))
     hi = min(len(audio), int((t + window) * SR))
@@ -98,11 +82,6 @@ def snap_to_quiet(audio: np.ndarray, t: float, window: float = 0.15) -> float:
 
 
 def token_words(tokens: list[str], times: list[float]) -> list[tuple[str, float, float]]:
-    """Group BPE tokens into words with (start, end) times.
-
-    HF token_timestamps[i + 1] is the start of token i (checked empirically: boundaries under
-    this reading sit at lower audio energy). Word end = start of the next word.
-    """
     words: list[list] = []
     for i, tok in enumerate(tokens):
         start = times[i + 1] if i + 1 < len(times) else times[-1]
@@ -116,11 +95,6 @@ def token_words(tokens: list[str], times: list[float]) -> list[tuple[str, float,
 
 
 def word_timestamps(rows: list[dict]) -> dict[str, list]:
-    """Stock turbo word timestamps on GPU (cached).
-
-    The encoder runs separately so `generate` only keeps the decoder's cross-attentions;
-    the HF word-timestamp pipeline keeps every encoder attention map and runs out of 4 GB.
-    """
     cache = WORK / "fleurs_word_timestamps.json"
     have = json.loads(cache.read_text(encoding="utf-8")) if cache.exists() else {}
     todo = [r for r in rows if str(r["audio"]) not in have]
@@ -194,7 +168,6 @@ def main() -> None:
                     zip(picks, tokens, strict=True), key=lambda x: -x[0][1]
                 ):
                     clip = _filler_clip(rng, bank, str(token), host)
-                    # Descending time order, so the original timeline still holds before t.
                     t = snap_to_quiet(audio, t)
                     out = splice(out, clip, t, tuple(rng.uniform(0.05, 0.35, 2)))
                 if len(out) / SR > MAX_S:

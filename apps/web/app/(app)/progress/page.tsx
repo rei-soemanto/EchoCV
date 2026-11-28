@@ -10,7 +10,6 @@ export const metadata = { title: "Kemajuan · EchoCV" };
 
 const DATE = new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "short", timeZone: "Asia/Jakarta" });
 
-/** A 0..100 score as a bar with its number, so the value never depends on the bar alone. */
 function Bar({ label, score }: { label: string; score: number }) {
   return (
     <li className="grid grid-cols-[minmax(0,10rem)_1fr_3rem] items-center gap-4 sm:grid-cols-[14rem_1fr_3rem]">

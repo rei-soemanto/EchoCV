@@ -1,5 +1,3 @@
-// Webcam and microphone capture helpers. Plain functions so they test without a browser;
-// hooks/use-media-capture.ts wires them to React.
 
 export type CaptureError = "denied" | "missing" | "busy" | "unsupported" | "error";
 
@@ -13,7 +11,6 @@ export const CAPTURE_ERROR_TEXT: Record<CaptureError, string> = {
   error: "Kamera tidak bisa dibuka. Coba lagi.",
 };
 
-/** Map a getUserMedia rejection to something we can tell the user how to fix. */
 export function captureError(err: unknown): CaptureError {
   const name = err instanceof Error || err instanceof DOMException ? err.name : "";
   if (name === "NotAllowedError" || name === "SecurityError") return "denied";
@@ -28,16 +25,13 @@ export const CAPTURE_CONSTRAINTS: MediaStreamConstraints = {
   audio: { echoCancellation: true, noiseSuppression: true },
 };
 
-/** Loudness 0..1 from an AnalyserNode's byte time-domain data (128 = silence). */
 export function micLevel(samples: Uint8Array): number {
   if (samples.length === 0) return 0;
   let sum = 0;
   for (const s of samples) sum += ((s - 128) / 128) ** 2;
-  // Normal speech sits around RMS 0.05-0.2; scale so a spoken sentence fills most of the meter.
   return Math.min(1, Math.sqrt(sum / samples.length) * 5);
 }
 
-/** Mean luma 0..255 of RGBA pixels (Rec. 601 weights). */
 export function meanLuma(rgba: Uint8ClampedArray): number {
   const n = rgba.length / 4;
   if (n === 0) return 0;
@@ -48,21 +42,14 @@ export function meanLuma(rgba: Uint8ClampedArray): number {
   return sum / n;
 }
 
-// shortcut: one fixed threshold picked by eye on laptop webcams; calibrate on the in-house
-// recordings if users report false "too dark" warnings.
 export const DARK_LUMA = 70;
 
-/** First audio container this browser can record (Chrome/Firefox: webm/opus, Safari: mp4). */
 export function audioMimeType(
   isSupported: (type: string) => boolean = (t) => MediaRecorder.isTypeSupported(t),
 ): string | undefined {
   return ["audio/webm;codecs=opus", "audio/webm", "audio/mp4"].find(isSupported);
 }
 
-/**
- * Record the stream's audio tracks only: in Live mode the video never leaves the device
- * (architecture doc §1.2), only the audio goes to the speech service.
- */
 export function startAudioRecorder(stream: MediaStream): { stop: () => Promise<Blob> } {
   const mimeType = audioMimeType();
   const recorder = new MediaRecorder(
@@ -73,7 +60,7 @@ export function startAudioRecorder(stream: MediaStream): { stop: () => Promise<B
   recorder.ondataavailable = (e) => {
     if (e.data.size > 0) chunks.push(e.data);
   };
-  recorder.start(1000); // 1 s chunks, so a crash mid-answer loses at most a second
+  recorder.start(1000);
   return {
     stop: () =>
       new Promise<Blob>((resolve, reject) => {

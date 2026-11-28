@@ -1,8 +1,5 @@
 import type { VisualMetrics } from "@/lib/vision/answer-tracker";
 
-// Sends one live answer: POST /api/uploads for a signed link, upload the audio straight to
-// storage, then POST /api/uploads/[id]/complete with the visual metrics (KAN-36 contract).
-// Only audio and numbers leave the browser (BR-04).
 
 export type UploadTicket = { uploadId: string; bucket: string; path: string; token: string };
 
@@ -14,10 +11,6 @@ export type StorageUpload = (
 
 export type SubmitResult =
   | { ok: true }
-  /**
-   * retry with a ticket: call completeUpload(ticket) again. retry without one: call submitAnswer
-   * again with the same audio. rerecord: the take is unusable, record the answer again.
-   */
   | { ok: false; next: "retry" | "rerecord"; ticket?: UploadTicket; message: string };
 
 const BUSY = "Layanan analisis sedang sibuk. Coba kirim lagi sebentar lagi.";
@@ -72,8 +65,6 @@ export async function submitAnswer(
   const ticket: UploadTicket = { uploadId: body.upload_id, bucket: body.bucket, path: body.path, token: body.token };
 
   const { error } = await upload(ticket, input.audio, contentType);
-  // Link expired or network dropped: the take is still in memory, so send it again with a new
-  // link (the API reuses the same answer until it is analysed).
   if (error) return { ok: false, next: "retry", message: NETWORK };
   return completeUpload(ticket, input.metrics, fetcher);
 }

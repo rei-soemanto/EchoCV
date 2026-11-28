@@ -1,8 +1,3 @@
-"""Compile metrics.json / datasets.json from every v0 model into docs/model-report-v0.md.
-
-Run from ml/:  uv run python report.py
-"""
-
 import json
 from pathlib import Path
 

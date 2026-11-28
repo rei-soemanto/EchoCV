@@ -5,10 +5,6 @@ export type SessionQuestion = { id: string; position: number; question_text: str
 
 type Supabase = Awaited<ReturnType<typeof createClient>>;
 
-/**
- * An in-progress session of the given mode with its questions and answers, or why it cannot be
- * opened. Row-level security limits every read to the signed-in user's own rows.
- */
 export async function openSession(supabase: Supabase, id: string, mode: "live" | "upload") {
   const { data: session } = await supabase
     .from("practice_sessions")

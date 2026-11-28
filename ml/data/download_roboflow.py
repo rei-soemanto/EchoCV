@@ -1,9 +1,3 @@
-"""Download the CC BY 4.0 Roboflow seed sets over the REST API (no SDK: its OpenCV build clashes
-with ultralytics). Needs ROBOFLOW_API_KEY in ml/.env.
-
-Run from ml/:  uv run python -m data.download_roboflow
-"""
-
 import json
 import os
 import time
@@ -16,7 +10,6 @@ from common.paths import DATA, ML_ROOT
 
 API = "https://api.roboflow.com"
 
-# provenance key -> (workspace, project)
 PROJECTS = {
     "rf_body_language": ("skin-deseases", "body-language-datasets"),
     "rf_sitting_posture_cls": ("khaldas-workspace", "sitting-posture-classification-ccvao-e9i4p"),
@@ -38,7 +31,7 @@ def export_link(ws: str, project: str, version: int, fmt: str, key: str) -> str:
         link = info.get("export", {}).get("link")
         if link:
             return link
-        time.sleep(5)  # Roboflow generates the export on first request
+        time.sleep(5)
     raise TimeoutError(f"export of {ws}/{project}/{version} not ready")
 
 
@@ -49,7 +42,7 @@ def main() -> None:
         out = DATA / "roboflow" / name
         meta = get_json(f"{API}/{ws}/{project}?api_key={key}")
         ptype = meta["project"]["type"]
-        if not meta["versions"]:  # no generated dataset version: nothing to export
+        if not meta["versions"]:
             print(f"{name}: skipped, project has no published version")
             continue
         version = max(int(v["id"].rsplit("/", 1)[1]) for v in meta["versions"])

@@ -1,8 +1,3 @@
-"""Contact sheets of random labelled crops per class and origin, for a visual check before training.
-
-Run from ml/:  uv run python -m yolo.preview
-"""
-
 import random
 from collections import defaultdict
 from pathlib import Path

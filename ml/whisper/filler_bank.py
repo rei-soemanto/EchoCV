@@ -1,11 +1,3 @@
-"""Collect standalone filler clips from AMI segments whose whole transcript is one filler.
-
-Clips are kept per AMI split (train/val/test meetings), so synthetic val/test audio uses clips the
-model never heard in training.
-
-Run from ml/:  uv run python -m whisper.filler_bank
-"""
-
 import json
 from collections import Counter
 
@@ -16,7 +8,7 @@ from whisper.common import BANK, ami_rows
 from whisper.normalize import FORMS
 
 MIN_S, MAX_S = 0.2, 2.0
-CAP = {"train": 1500, "val": 200, "test": 300}  # per token type
+CAP = {"train": 1500, "val": 200, "test": 300}
 
 
 def main() -> None:

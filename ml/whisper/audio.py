@@ -1,5 +1,3 @@
-"""Audio I/O without torchcodec/FFmpeg: soundfile for decode/encode, librosa for resampling."""
-
 import io
 from pathlib import Path
 
@@ -11,7 +9,6 @@ SR = 16_000
 
 
 def decode(data: bytes) -> np.ndarray:
-    """Encoded audio bytes (wav/flac) -> mono float32 at 16 kHz."""
     audio, sr = sf.read(io.BytesIO(data), dtype="float32", always_2d=True)
     return _mono16k(audio, sr)
 

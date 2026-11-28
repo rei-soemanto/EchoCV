@@ -24,7 +24,6 @@ export type ScoredAnswer = {
 
 const MAX_FILLER_NOTES = 3;
 
-/** Vocal fillers arrive as labels such as "[EEE]"; people read "eee". */
 export function fillerText(token: string): string {
   return token.replace(/[[\]]/g, "").toLowerCase();
 }

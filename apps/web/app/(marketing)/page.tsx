@@ -28,7 +28,6 @@ const STEPS = [
 const section = "border-t border-border-default px-4 py-16 md:px-12 md:py-20";
 
 export default async function Home() {
-  // A signed-in visitor goes back to the app instead of being asked to sign in again.
   const { data } = await (await createClient()).auth.getClaims();
   const signedIn = Boolean(data?.claims);
   return (
@@ -138,7 +137,6 @@ export default async function Home() {
           />
           <p id="kampus" className="text-body-sm flex flex-wrap items-center gap-2 text-ink-secondary">
             {INSTITUTION_NOTE}
-            {/* shortcut: no team contact address yet; link it once there is one */}
             <span className={buttonVariants({ variant: "link", size: "text" })}>Hubungi kami</span>
           </p>
         </section>

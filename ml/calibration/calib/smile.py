@@ -1,8 +1,3 @@
-"""Choose the smile threshold on GENKI-4K (commercially safe, attribution required).
-
-Run from ml/calibration/:  uv run python -m calib.smile
-"""
-
 import json
 
 import numpy as np

@@ -1,9 +1,3 @@
-"""Download smile/eye-contact calibration data and the MediaPipe face model.
-
-Columbia Gaze and MPIIFaceGaze are non-commercial: evaluation and threshold choice only.
-Run from ml/:  uv run python -m data.download_calibration
-"""
-
 from urllib.parse import quote
 
 from common.download import extract, fetch
@@ -34,7 +28,6 @@ def main() -> None:
     print("MPIIFaceGaze")
     extract(fetch(MPIIFACEGAZE, DATA / "mpiifacegaze" / "MPIIFaceGaze.zip"), DATA / "mpiifacegaze")
 
-    # GENKI's server is slow and drops connections; fetch() resumes the partial file.
     print("GENKI-4K")
     extract(fetch(GENKI, DATA / "genki4k" / "genki4k.tar"), DATA / "genki4k")
     print("done")

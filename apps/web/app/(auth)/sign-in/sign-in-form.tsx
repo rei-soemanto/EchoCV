@@ -22,7 +22,7 @@ export function SignInForm({ next, failed }: { next: string; failed: boolean }) 
     setError(null);
     const result = await signIn(by, next);
     if (result.ok && result.url) {
-      window.location.assign(result.url); // stays busy while the browser leaves for Google
+      window.location.assign(result.url);
       return;
     }
     setBusy(false);

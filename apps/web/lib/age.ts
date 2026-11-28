@@ -1,4 +1,3 @@
-// Apart from lib/db/profile.ts so client pages do not bundle the question bank with it.
 export const MINIMUM_AGE = 18;
 
 export function ageOn(dateOfBirth: string, today: Date): number {

@@ -1,13 +1,3 @@
-"""LoRA fine-tune of whisper-large-v3-turbo to keep fillers, sized for a 4 GB RTX 3050 Ti.
-
-Stage 1 (default): encoder frozen and run under no_grad; LoRA on the 4 decoder layers only.
-Stage 2 (--encoder-lora N): also LoRA on the top N encoder layers, with gradient checkpointing.
-
-Run from ml/:
-  uv run python -m whisper.train_lora --smoke          # 50 steps, checks VRAM fit
-  uv run python -m whisper.train_lora                  # full run, resumes from lora_last/
-"""
-
 import argparse
 import json
 import random
@@ -73,7 +63,6 @@ class SpeechSet(Dataset):
 
 
 def spec_augment(feats: np.ndarray, p: float = 0.5) -> np.ndarray:
-    """Light SpecAugment: two time masks (<=40 frames) and two frequency masks (<=15 bins)."""
     if random.random() > p:
         return feats
     feats = feats.copy()
@@ -175,7 +164,7 @@ def main() -> None:
         shuffle=True,
         num_workers=4,
         persistent_workers=True,
-        collate_fn=partial(collate, pad_id=pad_id),  # lambdas can't be pickled for Windows workers
+        collate_fn=partial(collate, pad_id=pad_id),
     )
     steps_per_epoch = len(loader) // args.accum
     total = 50 if args.smoke else args.steps or int(steps_per_epoch * args.epochs)
@@ -211,8 +200,6 @@ def main() -> None:
         log.write(json.dumps(rec) + "\n")
         log.flush()
         print(json.dumps({k: rec[k] for k in ("step", "val_filler_f1", "val_fleurs_wer")}))
-        # Keep every checkpoint (17 MB each); select_checkpoint.py picks the final one with a
-        # WER guard, since the best filler F1 alone can coincide with hallucination loops.
         model.save_pretrained(out / "lora_steps" / f"step{step}")
         best_f1 = max(best_f1, rec["val_filler_f1"])
 

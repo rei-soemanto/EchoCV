@@ -1,4 +1,3 @@
-// Figma "Consent Row" with its "Toggle": a checkbox shown as a switch, labelled by the text beside it.
 export function ConsentRow({
   title,
   description,

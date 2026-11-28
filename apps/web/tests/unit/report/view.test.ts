@@ -111,7 +111,6 @@ describe("report helpers", () => {
   it("puts vocal fillers back and marks only the fillers", () => {
     const lines = transcriptLines(
       speech({
-        // As the speech service sends it: no vocal filler in words, the lexical "anu" kept.
         words: [word("Saya", 0), word("anu", 800), word("senang.", 1200), word("Terima", 2000), word("kasih", 2400)],
         fillers: [
           { token: "[EEE]", startMs: 250, endMs: 900, kind: "vocal" },
@@ -138,16 +137,16 @@ describe("report helpers", () => {
     const report = {
       answers,
       dimensionScores: [
-        { id: "smile", score: 0 }, // never counts (BR-09)
+        { id: "smile", score: 0 },
         { id: "pace", score: 100 },
-        { id: "fillers", score: 30 }, // 0.125 * 70 = 8.75
-        { id: "content", score: 55 }, // 0.25 * 45 = 11.25
+        { id: "fillers", score: 30 },
+        { id: "content", score: 55 },
         { id: "pauses", score: 80 },
         { id: "voice", score: 90 },
       ],
     };
     expect(focusAreas(report).map((a) => a.id)).toEqual(["content", "fillers", "pauses"]);
-    expect(focusAreas(report)[0].nextStep).toBe("Sebutkan hasilnya."); // from the weakest answer
+    expect(focusAreas(report)[0].nextStep).toBe("Sebutkan hasilnya.");
     expect(focusAreas(report)[1].nextStep).toContain("jeda satu napas");
     expect(strongest(report)).toEqual({ id: "pace", score: 100 });
   });

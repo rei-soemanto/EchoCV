@@ -1,10 +1,3 @@
-"""Evaluate stock turbo (baseline) or the fine-tuned LoRA on the held-out test sets.
-
-Run from ml/:
-  uv run python -m whisper.evaluate --model base       # -> artifacts/whisper/baseline_metrics.json
-  uv run python -m whisper.evaluate --model lora       # -> artifacts/whisper/v0/metrics.json
-"""
-
 import argparse
 import json
 

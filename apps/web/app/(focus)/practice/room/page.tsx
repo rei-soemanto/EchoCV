@@ -35,12 +35,11 @@ export default async function InterviewRoomPage(props: PageProps<"/practice/room
   if ("problem" in opened) return <Unavailable description={opened.problem!} />;
   const { questions, answers } = opened;
 
-  // After a reload, carry on from the first question that is not analysed or skipped yet.
   const done = new Set(
     answers.filter((a) => a.status === "analyzed" || a.status === "skipped").map((a) => a.session_question_id),
   );
   const next = questions.findIndex((q) => !done.has(q.id));
-  const startAt = next === -1 ? questions.length : next; // all done: the room just finishes
+  const startAt = next === -1 ? questions.length : next;
 
   return <InterviewRoom sessionId={opened.sessionId} questions={questions} startAt={startAt} />;
 }

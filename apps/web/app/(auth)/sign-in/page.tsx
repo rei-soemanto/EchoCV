@@ -11,7 +11,6 @@ export const metadata = { title: "Masuk atau daftar · EchoCV" };
 
 const TICKS = Array.from({ length: 17 }, (_, i) => i);
 
-// Figma 02 Masuk.
 export default async function SignInPage(props: PageProps<"/sign-in">) {
   const params = await props.searchParams;
   const next = safeNextPath(typeof params.next === "string" ? params.next : null);

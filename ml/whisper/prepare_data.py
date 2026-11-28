@@ -1,9 +1,3 @@
-"""Build training/eval manifests: AMI (merged same-speaker segments), DisfluencySpeech and the
-FLEURS original + synthetic sets from synth_id.py. Writes 16 kHz FLAC files.
-
-Run from ml/ after filler_bank.py and synth_id.py:  uv run python -m whisper.prepare_data
-"""
-
 import random
 from collections import defaultdict
 
@@ -13,7 +7,7 @@ from whisper.audio import SR, decode, save
 from whisper.common import AUDIO, ami_rows, disfl_rows, read_manifest, write_manifest
 from whisper.normalize import TOKENS, to_target
 
-AMI_TARGET = {"train": 5000, "val": 300, "test": 1000}  # half with fillers, half without
+AMI_TARGET = {"train": 5000, "val": 300, "test": 1000}
 MAX_GROUP_S, MAX_GAP_S, MIN_GROUP_S = 25.0, 1.5, 1.0
 VAL_MIX_PER_SET = 75
 SEED = 0
@@ -24,7 +18,6 @@ def _has_filler(text: str) -> bool:
 
 
 def ami_groups(split: str) -> list[list[dict]]:
-    """Merge consecutive segments of the same speaker in a meeting into answer-length chunks."""
     by_speaker = defaultdict(list)
     for r in ami_rows(
         split, ["meeting_id", "speaker_id", "audio_id", "text", "begin_time", "end_time"]
@@ -67,7 +60,7 @@ def ami(split: str, rng: random.Random) -> list[dict]:
         if len(pending[gi]) < len(g):
             continue
         parts = []
-        for k, s in enumerate(g):  # keep real gaps between segments, capped at 0.5 s
+        for k, s in enumerate(g):
             if k:
                 gap = min(0.5, max(0.0, s["begin_time"] - g[k - 1]["end_time"]))
                 parts.append(np.zeros(int(gap * SR), np.float32))

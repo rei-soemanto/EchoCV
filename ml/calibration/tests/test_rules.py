@@ -24,7 +24,6 @@ def test_head_angles_recovers_yaw_and_pitch():
 
 def _eyes(iris_dx=0.0, iris_dy=0.0, swap=False):
     pts = np.zeros((478, 2))
-    # subject's right eye on image left
     pts[RIGHT_EYE["corner_a"]], pts[RIGHT_EYE["corner_b"]] = (100, 200), (140, 200)
     pts[RIGHT_EYE["upper"]], pts[RIGHT_EYE["lower"]] = (120, 195), (120, 205)
     pts[LEFT_EYE["corner_a"]], pts[LEFT_EYE["corner_b"]] = (180, 200), (220, 200)
@@ -46,7 +45,6 @@ def test_iris_offsets_handles_swapped_iris_indices():
 
 
 def test_gaze_error_zero_when_eyes_compensate_head_turn():
-    # head turned +20 deg, eyes rotated back so gaze stays on the camera: k_x * dx = -20
     err = gaze_error(
         np.array([20.0]), np.array([0.0]), np.array([-0.4]), np.array([0.0]), (0, 0, 0, 0), 50, 50
     )

@@ -1,9 +1,3 @@
-"""Export the selected detector to ONNX (works on Windows) and check it matches PyTorch.
-
-LiteRT (.tflite) export needs Linux: run ml/yolo/export_litert.ipynb in Colab.
-Run from ml/:  uv run python -m yolo.export
-"""
-
 import argparse
 import json
 from pathlib import Path
@@ -33,7 +27,6 @@ def main() -> None:
     onnx_path = Path(pt.export(format="onnx", imgsz=640, simplify=True))
     onnx = YOLO(onnx_path, task="detect")
 
-    # Images that have labels, so the comparison isn't vacuous (most test images are negatives).
     labelled = []
     lists = DATA / "behaviour" / "lists"
     inhouse = [p.stem for p in sorted(lists.glob("inhouse_p*.txt")) if "_x" not in p.stem]

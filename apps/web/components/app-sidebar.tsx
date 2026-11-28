@@ -17,8 +17,6 @@ const NAV = [
   { href: "/privacy", label: "Privasi dan data", icon: "nav-shield" },
 ] as const;
 
-// Figma "Sidebar" (04 Beranda). Active item: 2px left rule and a heavier label.
-// Below md it becomes a top bar with a scrollable nav row.
 export function AppSidebar({ fullName, email }: { fullName: string; email: string }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -30,7 +28,7 @@ export function AppSidebar({ fullName, email }: { fullName: string; email: strin
       return;
     }
     router.replace("/");
-    router.refresh(); // drops this user's pages from the router cache
+    router.refresh();
   }
 
   return (

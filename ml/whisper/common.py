@@ -1,5 +1,3 @@
-"""Locations and readers shared by the Whisper data scripts."""
-
 import csv
 import json
 from collections.abc import Iterator
@@ -18,7 +16,6 @@ FLEURS_SPLITS = {"train": "train", "val": "dev", "test": "test"}
 
 
 def ami_rows(split: str, columns: list[str]) -> Iterator[dict]:
-    """Stream AMI IHM rows (audio is {bytes, path}) without loading whole shards into memory."""
     for shard in sorted((DATA / "ami" / "ihm").glob(f"{AMI_SPLITS[split]}-*.parquet")):
         for batch in pq.ParquetFile(shard).iter_batches(batch_size=256, columns=columns):
             yield from batch.to_pylist()
@@ -32,7 +29,6 @@ def disfl_rows(split: str, columns: list[str]) -> Iterator[dict]:
 
 
 def fleurs_rows(split: str) -> list[dict]:
-    """FLEURS tsv: id, file, raw transcription, normalised transcription, chars, samples, gender."""
     root = DATA / "fleurs_id"
     tsv = root / "data" / "id_id" / f"{FLEURS_SPLITS[split]}.tsv"
     audio_dir = next(p for p in root.joinpath("audio").rglob(FLEURS_SPLITS[split]) if p.is_dir())

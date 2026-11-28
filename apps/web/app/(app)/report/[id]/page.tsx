@@ -28,7 +28,6 @@ export default async function ReportPage(props: PageProps<"/report/[id]">) {
   const { id } = await props.params;
   if (!isUuid(id)) notFound();
 
-  // Row-level security limits the read to the signed-in user's own session.
   const supabase = await createClient();
   const { data: session } = await supabase
     .from("practice_sessions")
@@ -60,8 +59,6 @@ export default async function ReportPage(props: PageProps<"/report/[id]">) {
     <SessionReport
       sessionId={id}
       fillerTarget={fillerTarget((bands ?? []) as Band[], session.language)}
-      // Upload mode has no calibration: the speech service measures against the answer's own start
-      // (baseline "answer_start"). The API does not store that field, and it is the same for every upload.
       lessPrecise={session.mode === "upload"}
       title={`Laporan sesi, ${date}`}
       subtitle={`${session.role}, ${LEVELS[session.level] ?? session.level}, set ${SETS[session.question_set] ?? session.question_set}, ${time.replace(".", ":")}`}

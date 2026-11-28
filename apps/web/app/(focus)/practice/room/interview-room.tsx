@@ -41,8 +41,6 @@ const PREP_MS = sessionSettings.prepSeconds * 1000;
 const MAX_MS = sessionSettings.maxAnswerSeconds * 1000;
 
 
-// Figma 07 Ruang wawancara (UC-04): one question at a time, 15 s preparation, up to 3 minutes of
-// recording, live hints, restart once, skip. Only audio and numbers leave the browser (BR-04).
 export function InterviewRoom({
   sessionId,
   questions,
@@ -58,11 +56,11 @@ export function InterviewRoom({
   const [index, setIndex] = useState(startAt);
   const [phase, setPhase] = useState<Phase>("loading");
   const [now, setNow] = useState(0);
-  const [phaseStartedAt, setPhaseStartedAt] = useState(0); // render copy of phaseStart
+  const [phaseStartedAt, setPhaseStartedAt] = useState(0);
   const [hints, setHints] = useState<string[]>([]);
   const [message, setMessage] = useState<string | null>(null);
   const [restarted, setRestarted] = useState<Set<number>>(new Set());
-  const [notices, setNotices] = useState<{ face: boolean; posture: boolean } | null>(null); // null: loading
+  const [notices, setNotices] = useState<{ face: boolean; posture: boolean } | null>(null);
 
   const models = useRef<{ face: FaceModel | null; posture: PostureModels | null } | null>(null);
   const phaseStart = useRef(0);
@@ -87,7 +85,6 @@ export function InterviewRoom({
     setPhase(next);
   }, []);
 
-  // The baseline comes from the calibration page through this tab's sessionStorage.
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- sessionStorage is the external system
     setBaseline(loadBaseline());
@@ -105,7 +102,6 @@ export function InterviewRoom({
     };
   }, []);
 
-  /** Stop the current take and return its audio and metrics (null audio when discarded). */
   const endTake = useCallback(async (keep: boolean) => {
     const current = take.current;
     take.current = null;
@@ -123,7 +119,6 @@ export function InterviewRoom({
 
   const startTake = useCallback(() => {
     const video = videoRef.current;
-    // Guard: the 250 ms clock can fire again before React re-renders.
     if (!stream || !video || take.current) return;
     const loaded = models.current;
     const answer = loaded?.face && baseline ? new AnswerTracker(baseline) : null;
@@ -141,7 +136,6 @@ export function InterviewRoom({
     if (loaded?.posture && behaviour) {
       stops.push(
         startPostureTracking(video, loaded.posture, (d) => behaviour.add({ ...d, face: latestFace }), () => {
-          // A failing frame is skipped; the face metrics carry on.
         }),
       );
     }
@@ -189,7 +183,7 @@ export function InterviewRoom({
   }, [go, nextQuestion]);
 
   const finishAnswer = useCallback(async () => {
-    if (!take.current) return; // already sent (the limit and a click can land together)
+    if (!take.current) return;
     go("sending");
     const done = await endTake(true);
     if (!done) {
@@ -218,12 +212,11 @@ export function InterviewRoom({
   }, [go, handle, question]);
 
   const skip = useCallback(async () => {
-    if (skipping.current) return; // a double click must not skip the next question too
+    if (skipping.current) return;
     skipping.current = true;
-    const from = take.current ? "rerecord" : phase; // a take in progress is discarded below
-    go("skipping"); // stops the preparation countdown from starting a take meanwhile
+    const from = take.current ? "rerecord" : phase;
+    go("skipping");
     await endTake(false);
-    // UC-04: a skipped question is marked so the report can say so. Own rows only (RLS).
     const { error } = await sb()
       .from("answers")
       .upsert({ session_question_id: question.id, status: "skipped" }, { onConflict: "session_question_id" });
@@ -241,7 +234,6 @@ export function InterviewRoom({
     startTake();
   }, [endTake, index, startTake]);
 
-  // Start once the camera, mic and models are ready.
   const ready = status === "ready" && hasCamera && hasMic && notices !== null && baseline !== undefined;
   useEffect(() => {
     if (phase !== "loading" || !ready) return;
@@ -250,7 +242,6 @@ export function InterviewRoom({
     else go(isGuideSeen() ? "prep" : "guide");
   }, [finish, go, index, phase, questions.length, ready]);
 
-  // One clock drives the countdown, the recording limit and the live hints.
   useEffect(() => {
     if (phase !== "prep" && phase !== "recording") return;
     const timer = setInterval(() => {
@@ -261,13 +252,12 @@ export function InterviewRoom({
       if (phase === "recording") {
         const current = take.current;
         setHints(hintText(current?.answer?.hint() ?? null, current?.behaviour?.active() ?? []));
-        if (elapsed >= MAX_MS) void finishAnswer(); // hard limit: stop and send (UC-04)
+        if (elapsed >= MAX_MS) void finishAnswer();
       }
     }, 250);
     return () => clearInterval(timer);
   }, [finishAnswer, phase, startTake]);
 
-  // Leaving the page mid-answer: stop the recorder and the vision loops, send nothing.
   useEffect(
     () => () => {
       const current = take.current;
@@ -352,7 +342,6 @@ export function InterviewRoom({
             {guide ? "Cara kerja ruang wawancara" : (question?.question_text ?? "Semua pertanyaan sudah dijawab.")}
           </h1>
           {guide ? (
-            // First visit only. The question stays hidden, so reading this does not use up preparation time.
             <ol className="text-body flex list-decimal flex-col gap-3 pl-6 text-ink-secondary">
               <li>
                 Anda punya {sessionSettings.prepSeconds} detik untuk bersiap, lalu perekaman mulai sendiri. Tekan{" "}

@@ -1,6 +1,5 @@
 import type { Plan } from "@/lib/plans";
 
-// Figma 01 Landing, "Paket": the featured plan has a tint and an accent rule.
 export function PlanCards({ plans, action }: { plans: Plan[]; action: (plan: Plan) => React.ReactNode }) {
   return (
     <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-4">

@@ -15,8 +15,6 @@ test("device calibration detects fake media devices and keeps the room locked", 
   await practice.expectCalibrationReady();
 });
 
-// Chrome's fake camera shows a test pattern, not a face, so calibration must fail cleanly (UC-03).
-// The success path needs a real face: checked by hand with a webcam.
 test("calibration with no face reports it and keeps the room locked", async ({ page, request }) => {
   const model = await request.get("/models/face_landmarker.task");
   test.skip(!model.ok(), "face model not in public/models (git-ignored, see apps/web/README.md)");

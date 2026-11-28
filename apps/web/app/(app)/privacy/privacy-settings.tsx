@@ -44,7 +44,7 @@ export function PrivacySettings({ initial }: { initial: OptionalConsents }) {
       setDeleting("open");
       return setDeleteError(failure);
     }
-    window.location.replace("/?account_deleted=1"); // a full load drops everything cached for this user
+    window.location.replace("/?account_deleted=1");
   }
 
   return (

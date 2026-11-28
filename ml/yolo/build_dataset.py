@@ -1,13 +1,3 @@
-"""Build the behaviour-detector dataset from the Roboflow seed sets and COCO-derived crops.
-
-Output (ml/data/behaviour/):
-  images/<source>/<name>.jpg, labels/<source>/<name>.txt   YOLO format (shared/labels.json classes)
-  lists/{train,val,test}_{rf,coco}.txt                     image lists per origin
-  data_A.yaml (Roboflow only), data_B.yaml (Roboflow + COCO); both validate on Roboflow val.
-
-Run from ml/:  uv run python -m yolo.build_dataset
-"""
-
 import hashlib
 import json
 import shutil
@@ -31,16 +21,13 @@ def _split_by_hash(name: str) -> str:
 
 
 def _half(name: str) -> str:
-    """COCO val2017 is split evenly into val and test."""
     return "val" if int(hashlib.md5(name.encode()).hexdigest(), 16) % 2 else "test"
 
 
-TOUCH_OVERLAP = 0.2  # share of the hand box that must lie on the face box
+TOUCH_OVERLAP = 0.2
 
 
 def _hand_on_face(face, hand) -> bool:
-    """Hand box mostly on the face, with its centre on the face (a little extra room below for
-    chin rests). Rejects palms raised beside the face whose boxes merely clip the face box."""
     ix = max(0.0, min(face[2], hand[2]) - max(face[0], hand[0]))
     iy = max(0.0, min(face[3], hand[3]) - max(face[1], hand[1]))
     area = (hand[2] - hand[0]) * (hand[3] - hand[1])
@@ -49,13 +36,11 @@ def _hand_on_face(face, hand) -> bool:
     centre_on_face = (
         face[0] - 0.1 * fw <= cx <= face[2] + 0.1 * fw and face[1] <= cy <= face[3] + 0.3 * fh
     )
-    hand_sized = area <= 3 * fw * fh  # some sources box a whole raised arm/person as "hand"
+    hand_sized = area <= 3 * fw * fh
     return area > 0 and ix * iy / area >= TOUCH_OVERLAP and centre_on_face and hand_sized
 
 
 def keep_negative(name: str, split: str, fraction: float) -> bool:
-    """Subsample label-free training images (deterministic); val/test keep all of them so
-    false positives are measured on the real mix."""
     if split != "train" or fraction >= 1:
         return True
     return int(hashlib.md5(name.encode()).hexdigest(), 16) % 1000 < fraction * 1000
@@ -83,7 +68,6 @@ def _write(src_img: Path | Image.Image, name: str, source: str, labels: list, w:
 
 
 def remap_boxes(boxes: list, rules: dict) -> list | None:
-    """boxes: [(source_class, xyxy)]. Returns [(target_class, xyxy)], or None to drop the image."""
     out, faces, hands = [], [], []
     for name, box in boxes:
         role = rules.get(name, "ignore")
@@ -95,7 +79,7 @@ def remap_boxes(boxes: list, rules: dict) -> list | None:
             hands.append(box)
         elif role in CLASSES:
             out.append((role, box))
-    for f in faces:  # a hand box on a face box -> touching_face over their union
+    for f in faces:
         for hb in hands:
             if _hand_on_face(f, hb):
                 out.append(
@@ -123,7 +107,7 @@ def roboflow_detection(source: str, rules: dict, lists: dict) -> Counter:
             v = line.split()
             if len(v) < 5:
                 continue
-            c, cx, cy, bw, bh = int(v[0]), *map(float, v[1:5])  # keypoint rows: keep the box only
+            c, cx, cy, bw, bh = int(v[0]), *map(float, v[1:5])
             box = ((cx - bw / 2) * w, (cy - bh / 2) * h, (cx + bw / 2) * w, (cy + bh / 2) * h)
             boxes.append((names[c], box))
         labels = remap_boxes(boxes, rules)
@@ -138,7 +122,6 @@ def roboflow_detection(source: str, rules: dict, lists: dict) -> Counter:
 
 
 def roboflow_classification(source: str, rules: dict, lists: dict, person_model) -> Counter:
-    """Image-level posture labels -> a slouching box on the main person (or a negative)."""
     export = DATA / "roboflow" / source / "export"
     counts = Counter()
     for img in sorted(export.glob("*/*/*")):
@@ -151,7 +134,6 @@ def roboflow_classification(source: str, rules: dict, lists: dict, person_model)
         name = f"{source}_{img.parent.name}_{img.stem}"[:150]
         if role not in CLASSES and not keep_negative(name, split, rules.get("_neg_keep", 1.0)):
             continue
-        # CPU: the 4 GB GPU is kept for one training/inference job at a time.
         res = person_model.predict(img, classes=[0], conf=0.35, verbose=False, device="cpu")[0]
         if not len(res.boxes):
             continue

@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "enums": {
     "job_fields": ["IT"],
     "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
@@ -478,6 +478,771 @@
         "en": "How do you use Git and code reviews in a team project to keep changes safe and avoid conflicts?"
       },
       "tags": ["git", "code_review", "engineering_workflow"]
+    },
+    {
+      "id": "q31",
+      "question_set": "general",
+      "category": "motivation",
+      "job_field": "IT",
+      "roles": ["all"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 90,
+      "text": {
+        "id": "Mengapa Anda melamar posisi ini dan hal apa dari perusahaan atau produk kami yang membuat Anda tertarik?",
+        "en": "Why are you applying for this role, and what about our company or product interests you?"
+      },
+      "tags": ["motivation", "company_fit"]
+    },
+    {
+      "id": "q32",
+      "question_set": "general",
+      "category": "work_style",
+      "job_field": "IT",
+      "roles": ["all"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 90,
+      "text": {
+        "id": "Bagaimana sikap Anda saat menerima kritik atau masukan yang cukup keras terhadap hasil kerja Anda?",
+        "en": "How do you respond when you receive direct or critical feedback on your work?"
+      },
+      "tags": ["feedback", "work_style", "growth_mindset"]
+    },
+    {
+      "id": "q33",
+      "question_set": "general",
+      "category": "work_style",
+      "job_field": "IT",
+      "roles": ["all"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 90,
+      "text": {
+        "id": "Bagaimana cara Anda mengatur prioritas tugas harian dan menyampaikan hambatan kerja kepada tim?",
+        "en": "How do you organize your daily tasks and communicate blockers to your team?"
+      },
+      "tags": ["time_management", "communication", "work_style"]
+    },
+    {
+      "id": "q34",
+      "question_set": "general",
+      "category": "self_assessment",
+      "job_field": "IT",
+      "roles": ["all"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 90,
+      "text": {
+        "id": "Bagaimana cara Anda mengikuti perkembangan teknologi terbaru, dan keterampilan apa yang sedang Anda dalami saat ini?",
+        "en": "How do you keep up with new developments in technology, and what skill are you focusing on right now?"
+      },
+      "tags": ["learning", "self_assessment", "curiosity"]
+    },
+    {
+      "id": "q35",
+      "question_set": "general",
+      "category": "motivation",
+      "job_field": "IT",
+      "roles": ["all"],
+      "levels": ["internship", "fresh_graduate"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 90,
+      "text": {
+        "id": "Proyek kuliah, organisasi, atau studi mandiri mana yang paling Anda banggakan, dan apa kontribusi utama Anda di dalamnya?",
+        "en": "Which university project, student activity, or independent build are you proudest of, and what was your main contribution?"
+      },
+      "tags": ["campus_project", "portfolio", "ownership"]
+    },
+    {
+      "id": "q36",
+      "question_set": "general",
+      "category": "career_goals",
+      "job_field": "IT",
+      "roles": ["all"],
+      "levels": ["junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 90,
+      "text": {
+        "id": "Dari pengalaman kerja Anda sebelumnya, lingkungan kerja dan tanggung jawab seperti apa yang paling Anda cari di peran berikutnya?",
+        "en": "Based on your previous experience, what kind of team culture and level of responsibility are you looking for next?"
+      },
+      "tags": ["career_goals", "culture_fit", "ownership"]
+    },
+    {
+      "id": "q37",
+      "question_set": "behavioral",
+      "category": "behavioral_star",
+      "job_field": "IT",
+      "roles": ["all"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Ceritakan saat Anda menemukan masalah atau hal yang bisa diperbaiki tanpa diminta sebelumnya. Apa yang Anda lakukan dan apa dampaknya?",
+        "en": "Tell me about a time you noticed a problem or improvement nobody asked you to fix. What did you do and what changed?"
+      },
+      "tags": ["star", "initiative", "ownership"]
+    },
+    {
+      "id": "q38",
+      "question_set": "behavioral",
+      "category": "behavioral_star",
+      "job_field": "IT",
+      "roles": ["all"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Ceritakan pengalaman Anda menjelaskan kendala teknis atau keterlambatan proyek kepada orang nonteknis, seperti klien atau anggota tim lain.",
+        "en": "Tell me about a time you had to explain a technical constraint or delay to a non-technical stakeholder or teammate."
+      },
+      "tags": ["star", "communication", "stakeholder_management"]
+    },
+    {
+      "id": "q39",
+      "question_set": "behavioral",
+      "category": "behavioral_star",
+      "job_field": "IT",
+      "roles": ["all"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Ceritakan pengalaman Anda membantu rekan tim yang kesulitan atau membimbing anggota baru memahami alur kerja proyek.",
+        "en": "Tell me about a time you helped a stuck teammate or helped someone new get up to speed on a project."
+      },
+      "tags": ["star", "teamwork", "mentoring"]
+    },
+    {
+      "id": "q40",
+      "question_set": "behavioral",
+      "category": "behavioral_star",
+      "job_field": "IT",
+      "roles": ["all"],
+      "levels": ["internship", "fresh_graduate"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Ceritakan pengalaman dalam proyek tim ketika ada anggota yang tertinggal atau pembagian tugas terasa kurang seimbang. Bagaimana Anda mengatasinya?",
+        "en": "Tell me about a group project where responsibilities felt uneven or a teammate fell behind. How did you help the team finish?"
+      },
+      "tags": ["star", "teamwork", "accountability"]
+    },
+    {
+      "id": "q41",
+      "question_set": "behavioral",
+      "category": "situational",
+      "job_field": "IT",
+      "roles": ["all"],
+      "levels": ["junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Ceritakan keputusan sulit yang pernah Anda ambil saat harus memilih antara kecepatan rilis dan kualitas teknis yang ideal.",
+        "en": "Tell me about a difficult trade-off you had to make between shipping on time and maintaining ideal technical quality."
+      },
+      "tags": ["star", "tradeoffs", "decision_making"]
+    },
+    {
+      "id": "q42",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Backend developer", "Fullstack developer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda menerapkan autentikasi dan otorisasi pengguna pada layanan backend agar data satu pengguna tidak bisa diakses pengguna lain?",
+        "en": "How do you implement authentication and authorization in a backend service so users can only access their own data?"
+      },
+      "tags": ["backend", "security", "authentication", "authorization"]
+    },
+    {
+      "id": "q43",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Backend developer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Kapan Anda memilih memakai caching atau background job queue pada layanan backend, dan risiko apa yang perlu diantisipasi?",
+        "en": "When would you introduce caching or a background job queue in a backend service, and what risks do you watch out for?"
+      },
+      "tags": ["backend", "caching", "async_jobs", "scalability"]
+    },
+    {
+      "id": "q44",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Backend developer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda merancang logging, penanganan error, dan pengujian otomatis pada API agar masalah di server mudah dilacak?",
+        "en": "How do you design error handling, structured logging, and automated tests for an API so server issues are easy to trace?"
+      },
+      "tags": ["backend", "observability", "testing", "reliability"]
+    },
+    {
+      "id": "q45",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Backend developer"],
+      "levels": ["internship", "fresh_graduate"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda merancang struktur tabel database dan relasi antar entitas saat memulai proyek backend baru dari awal?",
+        "en": "How do you design database tables and relationships when starting a new backend project from scratch?"
+      },
+      "tags": ["backend", "data_modeling", "databases"]
+    },
+    {
+      "id": "q46",
+      "question_set": "role_specific",
+      "category": "situational_technical",
+      "job_field": "IT",
+      "roles": ["Backend developer"],
+      "levels": ["junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda menangani migrasi skema database dan perubahan kontrak API pada layanan yang sudah dipakai pengguna tanpa memicu downtime?",
+        "en": "How do you handle database schema migrations and API contract changes in a live service without causing downtime?"
+      },
+      "tags": ["backend", "migrations", "zero_downtime", "architecture"]
+    },
+    {
+      "id": "q47",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Frontend developer", "Fullstack developer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Kapan Anda memilih server-side rendering, static generation, atau client-side rendering dalam membangun aplikasi web modern?",
+        "en": "When do you choose server-side rendering, static generation, or client-side rendering when building a modern web application?"
+      },
+      "tags": ["frontend", "rendering", "ssr", "architecture"]
+    },
+    {
+      "id": "q48",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Frontend developer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda membangun form web yang aman dan ramah pengguna, termasuk validasi input serta pencegahan serangan seperti XSS?",
+        "en": "How do you build web forms that are both user-friendly and secure, including input validation and protection against XSS?"
+      },
+      "tags": ["frontend", "forms", "security", "validation"]
+    },
+    {
+      "id": "q49",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Frontend developer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana pendekatan Anda dalam menyusun komponen UI yang dapat digunakan ulang, serta menguji alur antarmuka sebelum dirilis?",
+        "en": "How do you structure reusable UI components and test interface flows before shipping?"
+      },
+      "tags": ["frontend", "components", "testing", "maintainability"]
+    },
+    {
+      "id": "q50",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Frontend developer"],
+      "levels": ["internship", "fresh_graduate"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda mengatur layout CSS agar sebuah halaman web tetap rapi, terbaca, dan mudah digunakan di layar ponsel maupun desktop?",
+        "en": "How do you structure CSS layouts so a web page stays clean, readable, and easy to use on both mobile and desktop screens?"
+      },
+      "tags": ["frontend", "css", "responsive_design"]
+    },
+    {
+      "id": "q51",
+      "question_set": "role_specific",
+      "category": "situational_technical",
+      "job_field": "IT",
+      "roles": ["Frontend developer"],
+      "levels": ["junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Jika ukuran bundle JavaScript membengkak dan waktu muat halaman melambat, bagaimana cara Anda mengaudit dan memperbaikinya?",
+        "en": "If your JavaScript bundle grows too large and initial page load slows down, how do you audit and reduce it?"
+      },
+      "tags": ["frontend", "bundle_size", "web_performance"]
+    },
+    {
+      "id": "q52",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Fullstack developer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Saat membangun fitur baru dari antarmuka hingga database, bagaimana Anda menjaga tipe data dan validasi tetap sinkron antara frontend dan backend?",
+        "en": "When building a feature end to end from UI to database, how do you keep types and validation in sync between frontend and backend?"
+      },
+      "tags": ["fullstack", "contracts", "validation", "end_to_end"]
+    },
+    {
+      "id": "q53",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Fullstack developer"],
+      "levels": ["internship", "fresh_graduate"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda memecahkan masalah ketika request dari frontend ke API backend gagal karena CORS atau sesi login tidak terbaca?",
+        "en": "How do you troubleshoot when a frontend request to a backend API fails because of CORS or a missing auth session?"
+      },
+      "tags": ["fullstack", "cors", "debugging", "auth"]
+    },
+    {
+      "id": "q54",
+      "question_set": "role_specific",
+      "category": "situational_technical",
+      "job_field": "IT",
+      "roles": ["Fullstack developer"],
+      "levels": ["junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda menentukan apakah suatu logika validasi atau perhitungan sebaiknya dijalankan di browser, di server API, atau di dalam database?",
+        "en": "How do you decide whether validation or business logic belongs in the browser, the API server, or the database?"
+      },
+      "tags": ["fullstack", "architecture", "security", "tradeoffs"]
+    },
+    {
+      "id": "q55",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Mobile developer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda menyimpan data lokal dan token autentikasi secara aman di perangkat mobile?",
+        "en": "How do you store local app data and authentication tokens securely on a mobile device?"
+      },
+      "tags": ["mobile", "security", "local_storage"]
+    },
+    {
+      "id": "q56",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Mobile developer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda menangani permintaan izin perangkat seperti kamera, mikrofon, atau lokasi agar pengguna paham manfaatnya dan aplikasi tidak crash jika ditolak?",
+        "en": "How do you handle device permissions like camera, microphone, or location so users understand why they are needed and the app handles denial gracefully?"
+      },
+      "tags": ["mobile", "permissions", "ux", "error_handling"]
+    },
+    {
+      "id": "q57",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Mobile developer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana cara Anda mengatur navigasi layar, deep link, dan manajemen state pada aplikasi mobile agar alurnya tetap konsisten?",
+        "en": "How do you structure screen navigation, deep links, and state management in a mobile app to keep flows consistent?"
+      },
+      "tags": ["mobile", "navigation", "state_management"]
+    },
+    {
+      "id": "q58",
+      "question_set": "role_specific",
+      "category": "situational_technical",
+      "job_field": "IT",
+      "roles": ["Mobile developer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana proses Anda menyiapkan rilis aplikasi ke Play Store atau App Store serta memantau crash setelah aplikasi dipakai pengguna?",
+        "en": "How do you prepare an app release for the Play Store or App Store and monitor crashes once users are on it?"
+      },
+      "tags": ["mobile", "release", "monitoring", "crash_reporting"]
+    },
+    {
+      "id": "q59",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Mobile developer"],
+      "levels": ["internship", "fresh_graduate"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda menguji tampilan aplikasi mobile di berbagai ukuran layar dan kepadatan piksel sebelum aplikasi dirilis atau diserahkan ke tim?",
+        "en": "How do you test mobile layouts across different screen sizes and pixel densities before handing off or releasing an app?"
+      },
+      "tags": ["mobile", "testing", "responsive_ui"]
+    },
+    {
+      "id": "q60",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Mobile developer"],
+      "levels": ["junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda menjaga penggunaan baterai, memori, dan ukuran aplikasi mobile tetap hemat saat aplikasi menjalankan tugas latar belakang atau pemrosesan media?",
+        "en": "How do you keep battery usage, memory, and app size under control when a mobile app runs background tasks or media processing?"
+      },
+      "tags": ["mobile", "performance", "optimization"]
+    },
+    {
+      "id": "q61",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["QA engineer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda menentukan kasus uji mana yang cukup diuji manual dan mana yang perlu dijadikan tes otomatis seperti unit, integrasi, atau end-to-end?",
+        "en": "How do you decide which test cases to run manually and which to automate across unit, integration, and end-to-end tests?"
+      },
+      "tags": ["qa", "test_automation", "test_pyramid"]
+    },
+    {
+      "id": "q62",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["QA engineer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Saat menguji REST API, hal apa saja yang Anda periksa di luar kasus sukses agar skenario gagal dan batas input tetap aman?",
+        "en": "When testing a REST API, what do you check beyond the happy path to verify error handling and edge cases?"
+      },
+      "tags": ["qa", "api_testing", "edge_cases"]
+    },
+    {
+      "id": "q63",
+      "question_set": "role_specific",
+      "category": "situational_technical",
+      "job_field": "IT",
+      "roles": ["QA engineer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda menangani automated test yang sering gagal secara acak atau flaky agar tim tetap percaya pada hasil pengujian?",
+        "en": "How do you investigate and fix flaky automated tests so the team continues to trust the test suite?"
+      },
+      "tags": ["qa", "flaky_tests", "ci_cd", "reliability"]
+    },
+    {
+      "id": "q64",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["QA engineer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Selain fungsi fitur berjalan benar, aspek nonfungsional apa saja yang biasa Anda uji seperti aksesibilitas, responsivitas, atau keamanan dasar?",
+        "en": "Beyond functional correctness, what non-functional checks do you run, such as accessibility, responsiveness, or basic security?"
+      },
+      "tags": ["qa", "accessibility", "security", "non_functional"]
+    },
+    {
+      "id": "q65",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["QA engineer"],
+      "levels": ["internship", "fresh_graduate"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda merancang skenario uji positif dan negatif dari sebuah dokumen kebutuhan fitur atau user story yang baru Anda terima?",
+        "en": "How do you derive positive and negative test scenarios from a new feature requirement or user story?"
+      },
+      "tags": ["qa", "test_design", "requirements"]
+    },
+    {
+      "id": "q66",
+      "question_set": "role_specific",
+      "category": "situational_technical",
+      "job_field": "IT",
+      "roles": ["QA engineer"],
+      "levels": ["junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Jika sebuah bug lolos ke production dan ditemukan pengguna, perbaikan apa yang Anda terapkan pada proses QA agar masalah serupa tidak terulang?",
+        "en": "When a bug escapes to production and is reported by a user, how do you update your QA process so it does not recur?"
+      },
+      "tags": ["qa", "regression", "root_cause", "process"]
+    },
+    {
+      "id": "q67",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Data / AI engineer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda menangani data yang tidak seimbang atau mencegah data leakage saat melatih model machine learning?",
+        "en": "How do you handle imbalanced datasets and prevent data leakage when training a machine learning model?"
+      },
+      "tags": ["ai", "ml", "data_leakage", "validation"]
+    },
+    {
+      "id": "q68",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Data / AI engineer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda merancang pipeline pemrosesan data yang tetap andal ketika format sumber berubah atau ada sebagian data yang rusak?",
+        "en": "How do you design a data pipeline that stays reliable when upstream schemas change or partial records fail?"
+      },
+      "tags": ["data", "etl", "data_pipelines", "reliability"]
+    },
+    {
+      "id": "q69",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Data / AI engineer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Saat membangun fitur berbasis LLM, bagaimana cara Anda mengurangi halusinasi, menjaga privasi data pengguna, dan mengevaluasi kualitas jawabannya?",
+        "en": "When building an LLM-powered feature, how do you reduce hallucinations, protect user data privacy, and evaluate output quality?"
+      },
+      "tags": ["ai", "llm", "evaluation", "privacy"]
+    },
+    {
+      "id": "q70",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Data / AI engineer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda memilih metrik evaluasi yang tepat untuk sebuah model atau analisis data, seperti precision, recall, F1, atau RMSE?",
+        "en": "How do you choose the right evaluation metric for a model or analysis, such as precision, recall, F1, or RMSE?"
+      },
+      "tags": ["ai", "metrics", "evaluation"]
+    },
+    {
+      "id": "q71",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Data / AI engineer"],
+      "levels": ["internship", "fresh_graduate"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Langkah apa saja yang Anda lakukan saat exploratory data analysis untuk menemukan anomali, nilai kosong, atau pola penting di dataset baru?",
+        "en": "What steps do you take during exploratory data analysis to spot anomalies, missing values, and key patterns in a new dataset?"
+      },
+      "tags": ["data", "eda", "analytics"]
+    },
+    {
+      "id": "q72",
+      "question_set": "role_specific",
+      "category": "situational_technical",
+      "job_field": "IT",
+      "roles": ["Data / AI engineer"],
+      "levels": ["junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda memantau performa model AI yang sudah berjalan di production, seperti latensi inferensi, biaya komputasi, atau penurunan akurasi?",
+        "en": "How do you monitor a deployed AI model in production for inference latency, compute cost, and performance drift?"
+      },
+      "tags": ["ai", "mlops", "monitoring", "drift"]
+    },
+    {
+      "id": "q73",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["UI/UX designer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda menyusun arsitektur informasi dan alur pengguna agar fitur yang kompleks tetap terasa sederhana bagi pengguna baru?",
+        "en": "How do you structure information architecture and user flows so a complex feature still feels simple for first-time users?"
+      },
+      "tags": ["ui_ux", "information_architecture", "user_flows"]
+    },
+    {
+      "id": "q74",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["UI/UX designer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana cara Anda merancang kondisi loading, empty state, dan pesan error agar pengguna selalu tahu apa yang terjadi dan langkah berikutnya?",
+        "en": "How do you design loading, empty, and error states so users always understand what is happening and what to do next?"
+      },
+      "tags": ["ui_ux", "edge_states", "microcopy"]
+    },
+    {
+      "id": "q75",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["UI/UX designer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda menerapkan prinsip aksesibilitas seperti kontras warna, ukuran tombol sentuh, dan kejelasan teks dalam desain Anda?",
+        "en": "How do you apply accessibility principles such as color contrast, touch target size, and clear copy in your designs?"
+      },
+      "tags": ["ui_ux", "accessibility", "inclusive_design"]
+    },
+    {
+      "id": "q76",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["UI/UX designer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda membangun dan merawat design system atau kumpulan komponen di Figma agar konsisten dipakai di layar desktop dan ponsel?",
+        "en": "How do you build and maintain a design system or component library in Figma so it stays consistent across desktop and mobile?"
+      },
+      "tags": ["ui_ux", "design_system", "responsive_design"]
+    },
+    {
+      "id": "q77",
+      "question_set": "role_specific",
+      "category": "situational_technical",
+      "job_field": "IT",
+      "roles": ["UI/UX designer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Jika ada masukan yang bertentangan antara permintaan stakeholder bisnis dan temuan riset pengguna, bagaimana Anda mengambil keputusan desain?",
+        "en": "When stakeholder requests conflict with user research findings, how do you align the team and decide on the design?"
+      },
+      "tags": ["ui_ux", "stakeholder_management", "decision_making"]
+    },
+    {
+      "id": "q78",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["UI/UX designer"],
+      "levels": ["internship", "fresh_graduate"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Ceritakan bagaimana Anda menyiapkan dokumentasi desain dan aset di Figma agar developer dapat mengimplementasikannya tanpa kebingungan.",
+        "en": "Describe how you prepare design specs and assets in Figma so developers can implement them without ambiguity."
+      },
+      "tags": ["ui_ux", "handoff", "collaboration"]
+    },
+    {
+      "id": "q79",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["UI/UX designer"],
+      "levels": ["junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda mengukur keberhasilan sebuah perubahan desain setelah fitur dirilis ke pengguna nyata?",
+        "en": "How do you measure whether a design change succeeded after a feature ships to real users?"
+      },
+      "tags": ["ui_ux", "product_metrics", "evaluation"]
+    },
+    {
+      "id": "q80",
+      "question_set": "role_specific",
+      "category": "situational_technical",
+      "job_field": "IT",
+      "roles": ["Frontend developer", "UI/UX designer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Saat melakukan design QA sebelum rilis, ketidaksesuaian apa yang paling sering Anda periksa antara desain Figma dan halaman yang sudah dibangun?",
+        "en": "During pre-release design QA, what mismatches do you check most carefully between the Figma design and the implemented page?"
+      },
+      "tags": ["design_qa", "frontend", "ui_ux", "quality"]
+    },
+    {
+      "id": "q81",
+      "question_set": "role_specific",
+      "category": "technical",
+      "job_field": "IT",
+      "roles": ["Backend developer", "Fullstack developer", "Data / AI engineer"],
+      "levels": ["internship", "fresh_graduate", "junior", "mid_level"],
+      "prep_time_sec": 15,
+      "suggested_duration_sec": 120,
+      "text": {
+        "id": "Bagaimana Anda melindungi data pribadi pengguna seperti file unggahan, log sistem, atau permintaan ke pihak ketiga agar tetap aman dan sesuai aturan privasi?",
+        "en": "How do you protect personal user data across uploaded files, server logs, and third-party API calls so privacy rules are respected?"
+      },
+      "tags": ["privacy", "security", "data_protection"]
     }
   ]
 }

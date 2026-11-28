@@ -26,7 +26,7 @@ export function snapUrl(): string {
 }
 
 export function newOrderId(planId: string): string {
-  return `echocv-${planId}-${randomUUID()}`;
+  return `echocv-${planId}-${randomUUID().replace(/-/g, "")}`;
 }
 
 export function parsePlanRequest(body: unknown): string | null {

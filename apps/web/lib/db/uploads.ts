@@ -104,3 +104,30 @@ export function parseVisualMetrics(value: unknown, answerIndex: number): Result<
   }
   return { ok: true, value: metrics as VisualMetrics };
 }
+
+export type FailureReason = "timeout" | "service_unavailable" | "unreadable" | "too_large" | "server";
+
+export const VIDEO_ANALYSIS_BUDGET_MS = 270_000;
+export const STALE_PROCESSING_MS = 360_000;
+
+type ServiceFailure = { status: number | null; retryable: boolean; message: string };
+
+function isServiceFailure(error: unknown): error is ServiceFailure {
+  return error instanceof Error && "status" in error && "retryable" in error;
+}
+
+export function failureReason(error: unknown): FailureReason {
+  if (!isServiceFailure(error)) return "server";
+  if (error.status === null) {
+    if (!error.retryable) return "server";
+    return error.message.includes("in time") ? "timeout" : "service_unavailable";
+  }
+  if (error.status === 413) return "too_large";
+  if (error.status === 400 || error.status === 422) return "unreadable";
+  if (error.retryable) return "service_unavailable";
+  return "server";
+}
+
+export function isStaleProcessing(status: string, updatedAt: string, now: Date): boolean {
+  return status === "processing" && now.getTime() - new Date(updatedAt).getTime() > STALE_PROCESSING_MS;
+}

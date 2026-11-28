@@ -45,6 +45,9 @@ function table(name: string) {
     delete: () => ((op = "delete"), query),
     eq: (column: string, value: unknown) => (filters.push((row) => row[column] === value), query),
     in: (column: string, values: unknown[]) => (filters.push((row) => values.includes(row[column])), query),
+    neq: (column: string, value: unknown) => (filters.push((row) => row[column] !== value), query),
+    order: () => query,
+    limit: () => query,
     single: async () => ({ data: run()[0] ?? null, error: null }),
     maybeSingle: async () => ({ data: run()[0] ?? null, error: null }),
     then: (resolve: (value: unknown) => unknown) => resolve({ data: run(), error: null }),
@@ -79,7 +82,7 @@ vi.mock("@/lib/db/speech", async (importOriginal) => ({
 }));
 
 const { analyzeAnswer, analyzeVideo, SpeechServiceError } = await import("@/lib/db/speech");
-const { POST: startUpload } = await import("@/app/api/uploads/route");
+const { POST: startUpload, GET: listUploads } = await import("@/app/api/uploads/route");
 const { POST: completeUpload } = await import("@/app/api/uploads/[id]/complete/route");
 const { GET: uploadStatus } = await import("@/app/api/uploads/[id]/route");
 const analyze = vi.mocked(analyzeAnswer);
@@ -353,8 +356,10 @@ describe("video uploads (upload mode)", () => {
       { videoUrl: `https://storage.test/sign/answer-videos/${USER}/${SESSION}/${ANSWER}/v.mp4?expires=1800` },
       "en",
       1,
+      { timeoutMs: 270_000, attempts: 1 },
     );
     expect(db.answers[0]).toMatchObject({ status: "analyzed", transcript: "hello there", visual_metrics: visual });
+    expect(db.uploads[0].failure_reason).toBeNull();
     expect(removed).toEqual([`${USER}/${SESSION}/${ANSWER}/v.mp4`]);
     expect(await (await status(UPLOAD)).json()).toMatchObject({ status: "processed", answer_status: "analyzed", counted: true, file_deleted: true });
   });
@@ -366,6 +371,43 @@ describe("video uploads (upload mode)", () => {
     await runAfter();
     expect(await (await status(UPLOAD)).json()).toMatchObject({ status: "failed", answer_status: "failed", counted: false, file_deleted: true });
     expect(removed).toHaveLength(1);
+  });
+
+  it.each([
+    ["too_large", new SpeechServiceError("too big", 413, false)],
+    ["unreadable", new SpeechServiceError("no speech", 422, false)],
+    ["timeout", new SpeechServiceError("The speech service did not answer in time.", null, true)],
+    ["service_unavailable", new SpeechServiceError("The speech service could not be reached.", null, true)],
+    ["service_unavailable", new SpeechServiceError("busy", 503, true)],
+    ["server", new Error("boom")],
+  ])("tells the page why the analysis failed: %s", async (reason, error) => {
+    seedVideo();
+    analyzeVid.mockRejectedValue(error);
+    await complete(UPLOAD);
+    await runAfter();
+    expect(await (await status(UPLOAD)).json()).toMatchObject({ status: "failed", failure_reason: reason });
+  });
+
+  it("clears an old failure reason when the analysis is tried again", async () => {
+    seedVideo();
+    db.uploads[0].status = "failed";
+    db.uploads[0].failure_reason = "service_unavailable";
+    expect((await complete(UPLOAD)).status).toBe(202);
+    expect(db.uploads[0]).toMatchObject({ status: "processing", failure_reason: null });
+  });
+
+  it("stops an analysis that has been processing too long, so the page is not stuck (UC-05)", async () => {
+    seedVideo();
+    db.uploads[0].status = "processing";
+    db.uploads[0].updated_at = new Date(Date.now() - 7 * 60_000).toISOString();
+    expect(await (await status(UPLOAD)).json()).toMatchObject({ status: "failed", failure_reason: "timeout", answer_status: "failed", counted: false });
+  });
+
+  it("leaves a recent analysis running", async () => {
+    seedVideo();
+    db.uploads[0].status = "processing";
+    db.uploads[0].updated_at = new Date(Date.now() - 60_000).toISOString();
+    expect(await (await status(UPLOAD)).json()).toMatchObject({ status: "processing", answer_status: "pending" });
   });
 
   it("rejects visual metrics from the service that belong to another answer", async () => {
@@ -390,5 +432,24 @@ describe("GET /api/uploads/[id]", () => {
     expect((await status(UPLOAD)).status).toBe(404);
     user = null;
     expect((await status(UPLOAD)).status).toBe(401);
+  });
+});
+
+describe("GET /api/uploads", () => {
+  it("lists the user's sent videos with their session so the page can pick them up again", async () => {
+    db.uploads = [
+      { id: UPLOAD, answer_id: ANSWER, kind: "video", storage_path: `${USER}/${SESSION}/${ANSWER}/v.mp4`, status: "processing", failure_reason: null, created_at: "2026-11-28T01:00:00Z" },
+      { id: "x", answer_id: ANSWER, kind: "video", storage_path: `${USER}/${SESSION}/${ANSWER}/w.mp4`, status: "pending", failure_reason: null, created_at: "2026-11-28T00:00:00Z" },
+      { id: "y", answer_id: ANSWER, kind: "audio", storage_path: `${USER}/${SESSION}/${ANSWER}/a.webm`, status: "processed", failure_reason: null, created_at: "2026-11-28T00:00:00Z" },
+    ];
+    const response = await listUploads();
+    expect(await response.json()).toEqual({
+      uploads: [{ upload_id: UPLOAD, answer_id: ANSWER, session_id: SESSION, status: "processing", failure_reason: null, created_at: "2026-11-28T01:00:00Z" }],
+    });
+  });
+
+  it("rejects a signed-out visitor", async () => {
+    user = null;
+    expect((await listUploads()).status).toBe(401);
   });
 });

@@ -3,13 +3,18 @@ import type { Language } from "@/lib/db/sessions";
 import { analyzeAnswer, analyzeVideo, SpeechServiceError } from "@/lib/db/speech";
 import {
   AUDIO_BUCKET,
+  failureReason,
   isUuid,
   parseVisualMetrics,
   SIGNED_AUDIO_LINK_SECONDS,
   SIGNED_VIDEO_LINK_SECONDS,
+  VIDEO_ANALYSIS_BUDGET_MS,
   VIDEO_BUCKET,
+  type FailureReason,
 } from "@/lib/db/uploads";
 import { createClient } from "@/lib/supabase/server";
+
+export const maxDuration = 300;
 
 type Supabase = Awaited<ReturnType<typeof createClient>>;
 type Upload = { id: string; answer_id: string; storage_path: string; status: string; kind: "audio" | "video" };
@@ -24,9 +29,13 @@ async function analyseVideoInBackground(
   language: Language,
   answerIndex: number,
 ) {
-  const markUpload = (status: string) => supabase.from("uploads").update({ status }).eq("id", upload.id);
+  const markUpload = (status: string, reason: FailureReason | null = null) =>
+    supabase.from("uploads").update({ status, failure_reason: reason }).eq("id", upload.id);
   try {
-    const result = await analyzeVideo({ videoUrl }, language, answerIndex);
+    const result = await analyzeVideo({ videoUrl }, language, answerIndex, {
+      timeoutMs: VIDEO_ANALYSIS_BUDGET_MS,
+      attempts: 1,
+    });
     const visual = parseVisualMetrics(result.visual, answerIndex);
     if (!visual.ok) throw new SpeechServiceError(visual.error, null, false);
     const { error } = await supabase
@@ -38,10 +47,10 @@ async function analyseVideoInBackground(
         visual_metrics: visual.value,
       })
       .eq("id", answerId);
-    await markUpload(error ? "failed" : "processed");
+    await markUpload(error ? "failed" : "processed", error ? "server" : null);
     if (error) await supabase.from("answers").update({ status: "failed" }).eq("id", answerId);
-  } catch {
-    await markUpload("failed");
+  } catch (error) {
+    await markUpload("failed", failureReason(error));
     await supabase.from("answers").update({ status: "failed" }).eq("id", answerId);
   } finally {
     const { error } = await supabase.storage.from(VIDEO_BUCKET).remove([upload.storage_path]);
@@ -97,7 +106,7 @@ export async function POST(request: Request, ctx: RouteContext<"/api/uploads/[id
 
   const { data: claimed } = await supabase
     .from("uploads")
-    .update({ status: "processing" })
+    .update({ status: "processing", failure_reason: null })
     .eq("id", upload.id)
     .in("status", CLAIMABLE)
     .select("id")

@@ -1,52 +1,41 @@
-import { PlanCards } from "@/components/plan-cards";
-import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
-import { INSTITUTION_NOTE, PLANS } from "@/lib/plans";
+import {
+  mergeServerPlans,
+  normalizeActivePlan,
+  PLANS,
+  type ActivePlan,
+  type ServerPlan,
+} from "@/lib/plans";
+import { createClient } from "@/lib/supabase/server";
+
+import { PlansView } from "./plans-view";
 
 export const metadata = { title: "Paket · EchoCV" };
 
-// Figma 11 Paket. Payment comes with Life's Midtrans sandbox checkout (KAN-76); until that API exists,
-// every account is on the free plan and the buy buttons are switched off.
-export default function PlansPage() {
-  return (
-    <div className="flex flex-col gap-10">
-      <header className="flex flex-col gap-2">
-        <h1 className="text-h1">Paket</h1>
-        <p className="text-body max-w-2xl text-ink-secondary">
-          Mulai gratis. Beli paket hanya saat Anda memang punya wawancara dalam waktu dekat.
-        </p>
-      </header>
+export default async function PlansPage() {
+  const supabase = await createClient();
+  const [{ data: planRows }, { data: auth }] = await Promise.all([
+    supabase
+      .from("plans")
+      .select("id, name, price_idr, duration_days")
+      .eq("active", true)
+      .order("price_idr", { ascending: true }),
+    supabase.auth.getUser(),
+  ]);
 
-      <p role="status" className="text-body-sm flex flex-wrap items-center gap-3 text-ink-secondary">
-        <Badge tone="accent">Paket Anda: Gratis</Badge>
-        Pembayaran lewat Midtrans sedang disiapkan. Tombol beli aktif setelah itu siap.
-      </p>
+  const initialPlans =
+    Array.isArray(planRows) && planRows.length > 0
+      ? mergeServerPlans(planRows as ServerPlan[])
+      : PLANS;
 
-      <PlanCards
-        plans={PLANS}
-        action={(plan) =>
-          plan.id === "free" ? (
-            <p className="text-label flex min-h-11 items-center justify-center border border-border-default text-ink-secondary">
-              Paket Anda saat ini
-            </p>
-          ) : (
-            <button
-              type="button"
-              disabled
-              className={buttonVariants({ variant: plan.featured ? "default" : "outline", className: "w-full" })}
-            >
-              {plan.cta}
-            </button>
-          )
-        }
-      />
+  let initialActive: ActivePlan = { plan_id: "free", starts_at: null, ends_at: null };
+  if (auth.user) {
+    const { data: subscription } = await supabase
+      .from("subscriptions")
+      .select("plan_id, starts_at, ends_at")
+      .eq("user_id", auth.user.id)
+      .maybeSingle();
+    initialActive = normalizeActivePlan(subscription);
+  }
 
-      <section className="flex flex-col gap-2 border-t border-border-default pt-6">
-        <h2 className="text-h2">Kampus dan institusi</h2>
-        <p className="text-body text-ink-secondary">
-          {INSTITUTION_NOTE}
-        </p>
-      </section>
-    </div>
-  );
+  return <PlansView initialPlans={initialPlans} initialActive={initialActive} />;
 }

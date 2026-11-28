@@ -45,3 +45,13 @@ import { join } from "node:path";
 const bankPath = join(process.cwd(), "../../shared/questions/bank.json");
 const bank = JSON.parse(readFileSync(bankPath, "utf8"));
 ```
+
+## Role and Question Set Explanations (`explanations.json`)
+
+`shared/questions/explanations.json` confirms the 7 MVP IT roles in `bank.json` (`confirmed_roles`, `mvp_roles_confirmed: true`) and provides concise, non-jargon Indonesian (`id`) and English (`en`) copy (`label`, `description`, `best_for`) for the session setup page (`apps/web/app/(app)/practice/setup-form.tsx`):
+
+- `question_sets`: explanations for `"general"`, `"behavioral"`, and `"role_specific"`.
+- `roles`: explanations for all 7 roles in `bank.enums.roles`.
+- `role_specific_sets`: per-role technical track descriptions across all 7 roles (completing the 9-set breakdown: 1 `general` + 1 `behavioral` + 7 `role_specific` tracks).
+- `quick_start`: copy for the 1-question `/practice?quick=1` flow.
+- `levels`: explanations for `"internship"`, `"fresh_graduate"`, `"junior"`, and `"mid_level"`.

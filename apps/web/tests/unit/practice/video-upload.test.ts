@@ -1,13 +1,19 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { MAX_VIDEO_BYTES, MAX_VIDEO_SECONDS } from "@/lib/db/uploads";
+import { MAX_VIDEO_BYTES, MAX_VIDEO_SECONDS, type FailureReason } from "@/lib/db/uploads";
 import { finishSession } from "@/lib/practice/finish-session";
 import {
   durationProblem,
+  failureReasonMessage,
+  fetchRecentUploads,
+  parseFailureReason,
   sendVideo,
+  summarizeRecentUploads,
+  uploadCheck,
   uploadStatus,
   videoProblem,
   videoType,
+  type RecentUpload,
 } from "@/lib/practice/video-upload";
 
 const reply = (status: number, body: unknown = {}) => new Response(JSON.stringify(body), { status });
@@ -126,7 +132,6 @@ describe("specific send errors", () => {
 describe("uploadStatus", () => {
   it.each([
     [{ status: "processing", answer_status: "pending" }, "processing"],
-    // A second video after a failed one: the answer still says failed until it is analysed.
     [{ status: "processing", answer_status: "failed" }, "processing"],
     [{ status: "processed", answer_status: "analyzed" }, "done"],
     [{ status: "deleted", answer_status: "analyzed" }, "done"],
@@ -140,6 +145,176 @@ describe("uploadStatus", () => {
   it("is unknown when it cannot be read", async () => {
     expect(await uploadStatus("u1", fakeFetch(new TypeError("offline")).fetch)).toBeNull();
     expect(await uploadStatus("u1", fakeFetch(reply(500)).fetch)).toBeNull();
+  });
+});
+
+describe("failure reasons and uploadCheck", () => {
+  it.each<FailureReason>(["timeout", "service_unavailable", "unreadable", "too_large", "server"])(
+    "parses valid failure reason %s",
+    (reason) => {
+      expect(parseFailureReason(reason)).toBe(reason);
+    },
+  );
+
+  it.each([null, undefined, "", "unknown", 123, {}])("rejects invalid failure reason %j", (value) => {
+    expect(parseFailureReason(value)).toBeNull();
+  });
+
+  it.each<[FailureReason | null, string]>([
+    ["timeout", "terlalu lama"],
+    ["service_unavailable", "sedang sibuk"],
+    ["unreadable", "tidak bisa dianalisis"],
+    ["too_large", "terlalu besar"],
+    ["server", "Server EchoCV mengalami kendala"],
+    [null, "Analisis gagal dan tidak dihitung"],
+  ])("formats specific message for %s", (reason, snippet) => {
+    const text = failureReasonMessage(reason);
+    expect(text).toContain("tidak dihitung");
+    expect(text).toContain(snippet);
+  });
+
+  it("returns status and failureReason from uploadCheck", async () => {
+    expect(
+      await uploadCheck(
+        "u1",
+        fakeFetch(reply(200, { status: "failed", answer_status: "failed", failure_reason: "timeout" })).fetch,
+      ),
+    ).toEqual({ status: "failed", failureReason: "timeout" });
+    expect(
+      await uploadCheck(
+        "u1",
+        fakeFetch(reply(200, { status: "processed", answer_status: "analyzed", failure_reason: "bad" })).fetch,
+      ),
+    ).toEqual({ status: "done", failureReason: null });
+    expect(await uploadCheck("u1", fakeFetch(new Response("not json", { status: 200 })).fetch)).toBeNull();
+    expect(await uploadCheck("u1", fakeFetch(reply(500)).fetch)).toBeNull();
+  });
+});
+
+describe("fetchRecentUploads and summarizeRecentUploads", () => {
+  it("normalizes recent uploads and skips invalid entries", async () => {
+    const f = fakeFetch(
+      reply(200, {
+        uploads: [
+          {
+            upload_id: "u1",
+            answer_id: "a1",
+            session_id: "s1",
+            status: "failed",
+            failure_reason: "unreadable",
+            created_at: "2026-11-28T03:00:00Z",
+          },
+          {
+            upload_id: "u2",
+            answer_id: 99,
+            session_id: "s2",
+            status: "processing",
+            failure_reason: "invalid",
+            created_at: "2026-11-28T02:00:00Z",
+          },
+          { upload_id: "", session_id: "s3", status: "failed" },
+          { upload_id: "u4", session_id: "", status: "failed" },
+          null,
+        ],
+      }),
+    );
+    expect(await fetchRecentUploads(f.fetch)).toEqual([
+      {
+        upload_id: "u1",
+        answer_id: "a1",
+        session_id: "s1",
+        status: "failed",
+        failure_reason: "unreadable",
+        created_at: "2026-11-28T03:00:00Z",
+      },
+      {
+        upload_id: "u2",
+        answer_id: "",
+        session_id: "s2",
+        status: "processing",
+        failure_reason: null,
+        created_at: "2026-11-28T02:00:00Z",
+      },
+    ]);
+  });
+
+  it("returns empty array when recent uploads cannot be fetched or parsed", async () => {
+    expect(await fetchRecentUploads(fakeFetch(new TypeError("offline")).fetch)).toEqual([]);
+    expect(await fetchRecentUploads(fakeFetch(reply(401)).fetch)).toEqual([]);
+    expect(await fetchRecentUploads(fakeFetch(reply(200, { uploads: "bad" })).fetch)).toEqual([]);
+    expect(await fetchRecentUploads(fakeFetch(new Response("bad", { status: 200 })).fetch)).toEqual([]);
+  });
+
+  it("summarizes sessions newest-first with processing, failed and processed rules", () => {
+    const uploads: RecentUpload[] = [
+      {
+        upload_id: "u-old-fail",
+        answer_id: "a1",
+        session_id: "s-proc",
+        status: "failed",
+        failure_reason: "server",
+        created_at: "2026-11-28T01:00:00Z",
+      },
+      {
+        upload_id: "u-proc",
+        answer_id: "a2",
+        session_id: "s-proc",
+        status: "processing",
+        failure_reason: null,
+        created_at: "2026-11-28T04:00:00Z",
+      },
+      {
+        upload_id: "u-fail-null",
+        answer_id: "a3",
+        session_id: "s-fail",
+        status: "failed",
+        failure_reason: null,
+        created_at: "2026-11-28T03:30:00Z",
+      },
+      {
+        upload_id: "u-fail-reason",
+        answer_id: "a4",
+        session_id: "s-fail",
+        status: "failed",
+        failure_reason: "too_large",
+        created_at: "2026-11-28T02:30:00Z",
+      },
+      {
+        upload_id: "u-done",
+        answer_id: "a5",
+        session_id: "s-done",
+        status: "processed",
+        failure_reason: null,
+        created_at: "2026-11-28T02:00:00Z",
+      },
+    ];
+
+    expect(summarizeRecentUploads(uploads)).toEqual([
+      {
+        sessionId: "s-proc",
+        status: "processing",
+        processingCount: 1,
+        failedCount: 1,
+        failureReason: null,
+        createdAt: "2026-11-28T04:00:00Z",
+      },
+      {
+        sessionId: "s-fail",
+        status: "failed",
+        processingCount: 0,
+        failedCount: 2,
+        failureReason: "too_large",
+        createdAt: "2026-11-28T03:30:00Z",
+      },
+      {
+        sessionId: "s-done",
+        status: "processed",
+        processingCount: 0,
+        failedCount: 0,
+        failureReason: null,
+        createdAt: "2026-11-28T02:00:00Z",
+      },
+    ]);
   });
 });
 

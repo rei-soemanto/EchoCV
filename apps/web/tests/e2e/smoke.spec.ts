@@ -1,11 +1,31 @@
 import { expect, test } from "@playwright/test";
 
-test("landing page sends a signed-out visitor to sign-in, then practice", async ({ page }) => {
-  await page.goto("/");
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("Latihan wawancara kerja");
-  await page.getByRole("link", { name: "Mulai latihan gratis" }).click();
-  await expect(page).toHaveURL(/\/sign-in\?next=%2Fpractice$/);
-  await expect(page.getByRole("heading", { name: "Masuk atau daftar" })).toBeVisible();
+import { SIGNED_OUT_STATE } from "./auth-state";
+
+test.describe("signed out", () => {
+  test.use({ storageState: SIGNED_OUT_STATE });
+
+  test("landing page sends a signed-out visitor to sign-in, then practice", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("Latihan wawancara kerja");
+    await page.getByRole("link", { name: "Mulai latihan gratis" }).click();
+    await expect(page).toHaveURL(/\/sign-in\?next=%2Fpractice$/);
+    await expect(page.getByRole("heading", { name: "Masuk atau daftar" })).toBeVisible();
+  });
+
+  test("sessions API refuses to create a session without sign-in", async ({ request }) => {
+    const res = await request.post("/api/sessions", {
+      data: {
+        job_field: "IT",
+        role: "Frontend developer",
+        level: "fresh_graduate",
+        language: "id",
+        question_set: "behavioral",
+        mode: "live",
+      },
+    });
+    expect(res.status()).toBe(401);
+  });
 });
 
 test("sidebar reaches every app page and marks the current one", async ({ page }) => {
@@ -24,9 +44,4 @@ test("sidebar reaches every app page and marks the current one", async ({ page }
     await expect(nav.getByRole("link", { name: label })).toHaveAttribute("aria-current", "page");
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   }
-});
-
-test("API stubs return 501", async ({ request }) => {
-  const res = await request.post("/api/sessions");
-  expect(res.status()).toBe(501);
 });

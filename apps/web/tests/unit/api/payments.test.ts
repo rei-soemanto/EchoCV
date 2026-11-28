@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { amountMatches, parseNotification, paymentOutcome, type MidtransNotification } from "@/lib/db/payments";
+import { amountMatches, newOrderId, parseNotification, paymentOutcome, type MidtransNotification } from "@/lib/db/payments";
 
 const ALICE = "11111111-1111-4111-8111-111111111111";
 const SERVER_KEY = "SB-Mid-server-test";
@@ -118,6 +118,14 @@ describe("payment rules", () => {
     expect(amountMatches("15000.00", 15000)).toBe(true);
     expect(amountMatches("1500.00", 15000)).toBe(false);
     expect(amountMatches("abc", 15000)).toBe(false);
+  });
+
+  it("keeps generated order IDs within Midtrans' 50-character limit", () => {
+    for (const planId of ["sprint", "premium", "yearly"]) {
+      const id = newOrderId(planId);
+      expect(id.startsWith(`echocv-${planId}-`)).toBe(true);
+      expect(id.length).toBeLessThanOrEqual(50);
+    }
   });
 
   it.each([null, [], {}, { order_id: "o1" }, { ...notification(), transaction_id: 5 }])("rejects the notification %j", (body) => {

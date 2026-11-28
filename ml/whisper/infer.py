@@ -1,5 +1,3 @@
-"""Batched HF Whisper transcription and scoring, shared by training, evaluation and conversion."""
-
 from itertools import groupby
 
 import jiwer
@@ -9,9 +7,6 @@ from whisper.audio import load
 from whisper.normalize import filler_prf, for_wer
 
 MAX_NEW_TOKENS = 220
-# Length cap from audio duration: a repetition loop ("and and and ...") on a 2 s clip would
-# otherwise run to MAX_NEW_TOKENS and dominate WER. ~8 tokens/s is well above real speech
-# (fillers cost 3-4 tokens each).
 TOKENS_PER_SECOND, TOKEN_HEADROOM = 8, 16
 
 
@@ -23,8 +18,6 @@ def max_tokens(seconds: float) -> int:
 def transcribe(
     model, processor, rows: list[dict], suppress: list[int], batch_size: int = 8
 ) -> list[str]:
-    """Greedy decoding, batched by language and similar duration. Returns hypotheses in the
-    order of rows."""
     model.eval()
     audio = {i: load(r["audio"]) for i, r in enumerate(rows)}
     order = sorted(range(len(rows)), key=lambda i: (rows[i]["language"], len(audio[i])))

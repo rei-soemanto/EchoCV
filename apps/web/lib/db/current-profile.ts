@@ -17,7 +17,6 @@ export async function currentProfile() {
   return { email: auth.user.email ?? "", fullName: (profile?.full_name as string | undefined) ?? null };
 }
 
-/** For app layouts: nobody practises before the profile and the analysis consent are saved (BR-02). */
 export async function requireProfile() {
   const account = await currentProfile();
   if (!account) redirect(SIGN_IN_PATH);

@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { cn } from "cn";
 
-// Figma "Badge": short status tag. The icon plus label means colour never carries meaning alone.
 const TONES = {
   accent: { box: "bg-surface-accent-subtle", text: "text-ink-accent", icon: null },
   neutral: { box: "border border-border-strong", text: "text-ink-secondary", icon: null },

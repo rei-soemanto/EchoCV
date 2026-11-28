@@ -14,15 +14,12 @@ export class PracticePage {
   constructor(page: Page) {
     this.page = page;
     this.setupHeading = page.getByRole("heading", { name: "Atur sesi latihan" });
-    // The setup form submits with this button (it creates the session first).
     this.calibrationLink = page.getByRole("button", { name: "Lanjut ke kalibrasi" });
     this.cameraPreview = page.getByLabel("Pratinjau kamera");
     this.continueToRoomLink = page.getByRole("link", { name: "Mulai wawancara" });
-    // Until the 5-second calibration succeeds, "Mulai wawancara" is a disabled button, not a link.
     this.lockedStartButton = page.getByRole("button", { name: "Mulai wawancara" });
     this.startCalibrationButton = page.getByRole("button", { name: "Mulai kalibrasi" });
     this.faceNotFoundAlert = page.getByRole("alert").filter({ hasText: "Wajah tidak terlihat cukup lama" });
-    // The room shows the question as its heading; the recording bar shows the progress.
     this.roomHeading = page.getByText(/^Pertanyaan \d+ dari \d+$/);
   }
 
@@ -38,11 +35,18 @@ export class PracticePage {
     await this.page.goto("/practice/room");
   }
 
-  /** Pick the fields the sessions API requires; language and mode keep their defaults. */
   async chooseSetup(role = "Frontend developer", level = "Fresh graduate", questionSet = "Perilaku (STAR)") {
     await this.page.getByRole("radio", { name: role }).check({ force: true });
     await this.page.getByRole("radio", { name: level }).check({ force: true });
     await this.page.getByRole("radio", { name: questionSet }).check({ force: true });
+  }
+
+  async createSession(): Promise<string> {
+    await this.gotoSetup();
+    await this.chooseSetup();
+    await this.calibrationLink.click();
+    await expect(this.page).toHaveURL(/\/practice\/check\?session=[0-9a-f-]{36}$/);
+    return new URL(this.page.url()).searchParams.get("session")!;
   }
 
   async expectSetupLoaded() {

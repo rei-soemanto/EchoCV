@@ -17,7 +17,7 @@ HYP = [
 def test_boundaries_use_gaps_between_matched_words():
     spots = dict(boundaries(REF, HYP))
     assert spots[0] == 0.05
-    assert spots[2] == 1.10  # midpoint of the 1.00-1.20 gap before "akan"
+    assert spots[2] == 1.10
     assert len(spots) == len(REF)
 
 
@@ -25,7 +25,7 @@ def test_boundaries_skip_unmatched_words():
     hyp = [w for w in HYP if w[0] != "lebih"] + []
     hyp = [(("lbh" if w[0] == "akan" else w[0]), w[1], w[2]) for w in hyp]
     spots = dict(boundaries(REF, hyp))
-    assert 2 not in spots and 3 not in spots and 4 not in spots  # around the mismatches
+    assert 2 not in spots and 3 not in spots and 4 not in spots
     assert 1 in spots and 5 in spots
 
 
@@ -37,7 +37,7 @@ def test_insert_tokens_at_word_indices():
 
 def test_token_words_groups_bpe_pieces_with_shifted_times():
     tokens = ["ĠP", "ert", "ama", "Ġyang", "Ġdi"]
-    times = [0.0, 3.02, 3.18, 3.34, 3.44, 3.62]  # times[i + 1] = start of token i
+    times = [0.0, 3.02, 3.18, 3.34, 3.44, 3.62]
     assert token_words(tokens, times) == [
         ("Pertama", 3.02, 3.44),
         ("yang", 3.44, 3.62),
@@ -47,7 +47,7 @@ def test_token_words_groups_bpe_pieces_with_shifted_times():
 
 def test_snap_to_quiet_finds_the_gap():
     audio = np.ones(SR, np.float32)
-    audio[int(0.55 * SR) : int(0.58 * SR)] = 0.0  # 30 ms gap
+    audio[int(0.55 * SR) : int(0.58 * SR)] = 0.0
     t = snap_to_quiet(audio, 0.5, window=0.15)
     assert 0.55 <= t <= 0.58
 

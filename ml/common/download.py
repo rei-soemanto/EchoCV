@@ -1,5 +1,3 @@
-"""Resumable HTTP downloads and archive extraction (stdlib only)."""
-
 import shutil
 import tarfile
 import time
@@ -15,7 +13,6 @@ USER_AGENT = "Mozilla/5.0 (EchoCV dataset downloader)"
 def fetch(
     url: str, dest: Path, expect_binary: bool = True, quiet: bool = False, retries: int = 30
 ) -> Path:
-    """Download url to dest; resume the .part file after timeouts or dropped connections."""
     dest.parent.mkdir(parents=True, exist_ok=True)
     if dest.exists():
         if not quiet:
@@ -54,7 +51,6 @@ def _fetch_once(url: str, dest: Path, expect_binary: bool, quiet: bool) -> Path:
 
 
 def extract(archive: Path, out_dir: Path) -> Path:
-    """Extract a .zip/.tar/.tar.gz once; a marker file makes it idempotent."""
     marker = out_dir / f".extracted-{archive.name}"
     if marker.exists():
         return out_dir

@@ -1,9 +1,3 @@
-"""Download COCO 2017 keypoint annotations, select upper-body person crops that show (or clearly
-don't show) a behaviour, then fetch only those images.
-
-Run from ml/:  uv run python -m data.download_coco
-"""
-
 import json
 import random
 from collections import Counter, defaultdict

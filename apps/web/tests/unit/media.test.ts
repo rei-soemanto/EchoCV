@@ -69,7 +69,7 @@ describe("startAudioRecorder", () => {
       }
       stop() {
         this.ondataavailable?.({ data: new Blob(["ab"]) });
-        this.ondataavailable?.({ data: new Blob([]) }); // empty chunks are dropped
+        this.ondataavailable?.({ data: new Blob([]) });
         this.ondataavailable?.({ data: new Blob(["cd"]) });
         this.onstop?.();
       }

@@ -6,7 +6,6 @@ import type { VisualMetrics } from "@/lib/db/uploads";
 import { fillerText, type FeedbackItem, type Report } from "@/lib/scoring/report";
 import { findBand, type Band } from "@/lib/scoring/score";
 
-/** GET /api/reports: the saved report plus each question of the session. */
 export type ReportView = Report & {
   answers: {
     answerIndex: number;
@@ -22,7 +21,6 @@ export type LoadResult = { ok: true; report: ReportView } | { ok: false; status:
 
 const OFFLINE = { ok: false as const, status: null, message: "Periksa koneksi internet, lalu coba lagi." };
 
-// The API's error texts are English; the page is Indonesian.
 const ERRORS: Record<number, string> = {
   401: "Masuk dulu untuk membuka laporan ini.",
   404: "Sesi ini tidak ditemukan.",
@@ -56,10 +54,6 @@ async function fetchReport(sessionId: string, rebuild: boolean, fetcher: typeof 
 
 const inFlight = new Map<string, Promise<LoadResult>>();
 
-/**
- * Reads the saved report, building it when there is none yet or when asked to rebuild. Simultaneous
- * calls share one request, so an effect that runs twice does not pay for two AI scorings.
- */
 export function loadReport(sessionId: string, rebuild = false, fetcher: typeof fetch = fetch): Promise<LoadResult> {
   const running = inFlight.get(sessionId);
   if (running) return running;
@@ -68,29 +62,22 @@ export function loadReport(sessionId: string, rebuild = false, fetcher: typeof f
   return request;
 }
 
-/** mm:ss of a moment in an answer. */
 export function timecode(ms: number) {
   const s = Math.max(0, Math.floor(ms / 1000));
   return `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
 }
 
-/** Indonesian decimal comma, one place. */
 export function decimal(value: number) {
   return (Math.round(value * 10) / 10).toString().replace(".", ",");
 }
 
-/** The most fillers per minute that still score full marks; null when the band is not set up. */
 export function fillerTarget(bands: Band[], language: Language): number | null {
   const band = findBand(bands, "fillers", language);
-  return band ? Number(band.ideal_high) : null; // Postgres numeric can arrive as a string
+  return band ? Number(band.ideal_high) : null;
 }
 
 export type TranscriptLine = { atMs: number; parts: { text: string; filler: boolean }[] };
 
-/**
- * Splits the answer into sentences with its fillers marked. The speech service keeps lexical fillers
- * in words but leaves vocal ones ("[EEE]") out, so those are put back at their own time.
- */
 export function transcriptLines(speech: SpeechMetrics): TranscriptLine[] {
   const lexical = new Set(speech.fillers.filter((f) => f.kind === "lexical").map((f) => f.startMs));
   const parts = [
@@ -110,13 +97,11 @@ export function transcriptLines(speech: SpeechMetrics): TranscriptLine[] {
   return lines;
 }
 
-/** Session totals for the stat row, over the analysed answers. */
 export function sessionStats(answers: ReportView["answers"]) {
   const speech = answers.map((a) => a.speechMetrics).filter((s): s is SpeechMetrics => !!s);
   const minutes = speech.reduce((sum, s) => sum + s.durationMs, 0) / 60_000;
   const speechMs = speech.reduce((sum, s) => sum + s.speechMs, 0);
   const fillers = speech.reduce((sum, s) => sum + s.fillers.length, 0);
-  // shared/thresholds.json pace rule: speakingRateWps * 60, which leaves fillers out.
   const words = speech.reduce((sum, s) => sum + (s.speakingRateWps * s.speechMs) / 1000, 0);
   return {
     fillersPerMinute: minutes > 0 ? fillers / minutes : null,
@@ -129,7 +114,6 @@ export function feedbackFor(report: Report, answerIndex: number): FeedbackItem[]
   return report.feedback.filter((f) => f.answerIndex === answerIndex);
 }
 
-// One concrete next step per aspect (UC-07). Content uses the AI's own advice when there is any.
 export const NEXT_STEPS: Record<string, string> = {
   eye_contact: "Tempelkan catatan kecil di dekat kamera dan lihat ke sana saat menyampaikan poin utama.",
   posture: "Duduk tegak dengan kedua tangan di meja sebelum mulai, lalu pertahankan sampai jawaban selesai.",
@@ -141,7 +125,6 @@ export const NEXT_STEPS: Record<string, string> = {
 };
 const WEIGHTS = new Map(rubric.dimensions.map((d) => [d.id, d.weight]));
 
-/** The aspects that cost the most points, each with a next step. Unweighted ones (smile, BR-09) never count. */
 export function focusAreas(report: Pick<ReportView, "dimensionScores" | "answers">, max = 3) {
   const lost = (d: { id: string; score: number }) => (WEIGHTS.get(d.id) ?? 0) * (100 - d.score);
   const advice = report.answers
@@ -154,7 +137,6 @@ export function focusAreas(report: Pick<ReportView, "dimensionScores" | "answers
     .map((d) => ({ ...d, nextStep: (d.id === "content" && advice) || NEXT_STEPS[d.id] || "" }));
 }
 
-/** The best weighted aspect, for an encouraging line; null when it is also one to work on. */
 export function strongest(report: Pick<ReportView, "dimensionScores" | "answers">): { id: string; score: number } | null {
   const best = report.dimensionScores
     .filter((d) => (WEIGHTS.get(d.id) ?? 0) > 0)

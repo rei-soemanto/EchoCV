@@ -1,9 +1,6 @@
-// Report building blocks from the Figma Components page. The landing page shows them with
-// sample values; the report page (KAN-40) feeds them real metrics.
 
 const TICKS = Array.from({ length: 39 }, (_, i) => i + 1);
 
-/** Positions are fractions 0..1 of the answer's length. */
 export function TimecodeTape({
   issues,
   playhead,
@@ -64,7 +61,6 @@ export function PaceMeter({
         />
         <span className="absolute -top-1.5 h-[68px] w-0.5 rounded-full bg-surface-inverse" style={{ left: at(wpm) }} />
       </div>
-      {/* Each number sits under its own place on the tape. */}
       <div className="relative h-4 font-mono text-xs leading-4 text-ink-tertiary" aria-hidden="true">
         <span className="absolute left-0">{min}</span>
         <span className="absolute -translate-x-1/2" style={{ left: at(targetLow) }}>

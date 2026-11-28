@@ -53,7 +53,6 @@ function Notice({
   );
 }
 
-// Figma 06 Kalibrasi: camera preview, device checks and the 5-second baseline, all on the device.
 export function DeviceCheck({ sessionId }: { sessionId?: string }) {
   const { videoRef, status, hasCamera, hasMic, level, lighting, online, retry, checkLighting } =
     useMediaCapture();
@@ -71,7 +70,6 @@ export function DeviceCheck({ sessionId }: { sessionId?: string }) {
   return (
     <div className="flex flex-col gap-12 px-4 pt-8 pb-16 md:px-12 md:pt-12 lg:flex-row lg:gap-16">
       <div className="flex min-w-0 flex-1 flex-col gap-3">
-        {/* The countdown sits above the preview, so the face guide stays centred (mid-MVP check). */}
         <div className="flex min-h-[60px] items-end justify-between gap-4" aria-hidden="true">
           {running ? (
             <>

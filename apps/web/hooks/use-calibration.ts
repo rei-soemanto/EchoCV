@@ -10,10 +10,6 @@ import { loadFaceModel, preloadSessionModels } from "@/lib/vision/session-models
 
 export type CalibrationPhase = "idle" | "loading" | "running" | "done" | "failed" | "unsupported";
 
-/**
- * The 5-second "look at the lens" step (UC-03): runs Rei's Calibration on the webcam video and
- * stores the baseline for the interview room. Only numbers are kept; video never leaves (BR-04).
- */
 export function useCalibration(videoRef: RefObject<HTMLVideoElement | null>) {
   const [phase, setPhase] = useState<CalibrationPhase>("idle");
   const [progress, setProgress] = useState(0);
@@ -34,7 +30,7 @@ export function useCalibration(videoRef: RefObject<HTMLVideoElement | null>) {
     const video = videoRef.current;
     if (!video) return;
     halt();
-    clearBaseline(); // a new attempt invalidates the old baseline
+    clearBaseline();
     setProgress(0);
     setFaceVisible(false);
     setPhase("loading");

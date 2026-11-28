@@ -1,4 +1,3 @@
-/** 409 means the session is already finished, which is what we want. */
 export async function finishSession(sessionId: string, fetcher: typeof fetch = fetch): Promise<boolean> {
   const res = await fetcher(`/api/sessions/${sessionId}`, {
     method: "PATCH",

@@ -8,7 +8,6 @@ type Session = History["sessions"][number];
 
 const DATE = new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" });
 
-/** What the row says about a session, and where its link goes. */
 export function sessionRow(session: Session): { tone: BadgeTone; label: string; action: string; href: string } {
   if (session.status === "in_progress") {
     const href = session.mode === "live" ? `/practice/check?session=${session.id}` : `/upload?session=${session.id}`;
@@ -23,7 +22,6 @@ export function sessionRow(session: Session): { tone: BadgeTone; label: string; 
   return { tone: session.status === "failed" ? "danger" : "neutral", label, action: "Latihan lagi", href: "/practice" };
 }
 
-// Figma 04 Beranda, "Sesi terakhir".
 export function SessionTable({ sessions }: { sessions: Session[] }) {
   return (
     <div className="overflow-x-auto">

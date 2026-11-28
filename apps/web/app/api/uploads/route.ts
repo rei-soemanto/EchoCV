@@ -80,3 +80,31 @@ export async function POST(request: Request) {
     { status: 201 },
   );
 }
+
+const RECENT_UPLOADS = 20;
+
+export async function GET() {
+  const supabase = await createClient();
+  const { data: auth } = await supabase.auth.getUser();
+  if (!auth.user) return Response.json({ error: "Sign in first." }, { status: 401 });
+
+  const { data, error } = await supabase
+    .from("uploads")
+    .select("id, answer_id, storage_path, status, failure_reason, created_at")
+    .eq("kind", "video")
+    .neq("status", "pending")
+    .order("created_at", { ascending: false })
+    .limit(RECENT_UPLOADS);
+  if (error) return Response.json({ error: "Could not load your uploads." }, { status: 500 });
+
+  return Response.json({
+    uploads: (data ?? []).map((upload) => ({
+      upload_id: upload.id,
+      answer_id: upload.answer_id,
+      session_id: upload.storage_path.split("/")[1],
+      status: upload.status,
+      failure_reason: upload.failure_reason,
+      created_at: upload.created_at,
+    })),
+  });
+}

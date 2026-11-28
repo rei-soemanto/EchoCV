@@ -56,7 +56,7 @@ The EchoCV MVP is complete when a signed-in candidate can complete both **Live M
 
 ### `UC-05`: Upload Practice Mode
 
-- **File Validation:** Accepts one pre-recorded video per question and validates format (`MP4`, `MOV`, `WebM`), maximum duration (`10 minutes`), and maximum file size (`500 MB`) on the client and server prior to analysis.
+- **File Validation:** Accepts one pre-recorded video per question and validates format (`MP4`, `MOV`, `WebM`), maximum duration (`3 minutes`), and maximum file size (`50 MB`) on the client and server prior to analysis. The limits come from the `video` block of `shared/speech.json`: 50 MB is the largest file the Supabase free plan stores, and 3 minutes keeps the analysis inside the web app's 270-second background budget.
 - **Upload & Processing Status:** Uploads directly to private `answer-videos` storage via signed URL with a visible progress bar and status polling (`pending`, `uploaded`, `processing`, `processed`, `failed`, `deleted`).
 - **Automatic Video Deletion (`BR-05`):** Uploaded raw video is always permanently deleted from Supabase Storage immediately after analysis finishes (`status = 'deleted'`, `deleted_at` recorded).
 - **Failure Handling (`BR-07`):** Corrupted or unreadable uploads transition to `failed` / not counted, do not deduct from any session quota, and present a retry action.
@@ -120,7 +120,7 @@ All High-priority findings and key Medium-priority findings from the prototype u
 - `UC-02` Session configuration and bilingual question bank (`BR-03`, `BR-25`, `BR-26`, `BR-30`)
 - `UC-03` Camera, mic, and 5-second personal calibration (`BR-04`)
 - `UC-04` Live interview room (`15s` prep, `3m` max recording, live hints, restart once, skip)
-- `UC-05` Upload practice mode (MP4/MOV/WebM, `10m`, `500 MB`, progress, auto-delete)
+- `UC-05` Upload practice mode (MP4/MOV/WebM, `3m`, `50 MB`, progress, auto-delete)
 - `UC-06` Multimodal analysis (browser/server vision + speech service + LLM STAR scoring)
 - `UC-07` Feedback report (overall & aspect scores, `BR-08` disclaimer, Pace Meter, Timecode Tape, highlighted transcript, STAR breakdown)
 - `UC-12` Plans and checkout with the **Midtrans sandbox** (added to the MVP on 26 Nov 2026): Sprint Pass Rp 15.000 for 7 days, Premium Rp 29.000 per month and Yearly Rp 299.000 per year; a Snap checkout, a payment notification webhook that verifies the Midtrans signature and activates the plan, and plans visible after sign-in. Sandbox only: no real money moves. The free quota (`UC-11`) is not enforced in the MVP.

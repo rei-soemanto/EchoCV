@@ -95,7 +95,7 @@ export const SEND_ERRORS = {
   offline: "Koneksi terputus, jadi video belum terkirim. Periksa internet, lalu coba lagi.",
   server: "Server EchoCV sedang bermasalah. Coba lagi beberapa menit lagi.",
   signedOut: "Sesi masuk Anda berakhir. Masuk lagi, lalu buka halaman ini kembali.",
-  rejected: "Server menolak video ini: formatnya harus MP4, MOV atau WEBM, maksimal 500 MB dan 10 menit.",
+  rejected: `Server menolak video ini: formatnya harus MP4, MOV atau WEBM, maksimal ${MAX_VIDEO_BYTES / 1024 / 1024} MB dan ${MAX_VIDEO_SECONDS / 60} menit.`,
   closed: "Sesi ini sudah selesai, atau pertanyaan ini sudah dianalisis. Muat ulang halaman untuk melihat statusnya.",
   missing: "Pertanyaan ini tidak ditemukan. Muat ulang halaman.",
   storageFull: "Penyimpanan menolak video karena terlalu besar. Kompres video, lalu coba lagi.",

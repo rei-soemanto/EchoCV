@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
+import { MAX_VIDEO_BYTES, MAX_VIDEO_SECONDS } from "@/lib/db/uploads";
 import { finishSession } from "@/lib/practice/finish-session";
 import {
   durationProblem,
@@ -34,14 +35,14 @@ describe("file checks", () => {
     expect(videoType({ type: "", name: "tanpa-akhiran" })).toBeNull();
   });
 
-  it("allows exactly 500 MB and 10 minutes, not more", () => {
-    const file = { type: "video/mp4", name: "a.mp4", size: 500 * 1024 * 1024 };
+  it("allows exactly the size and length limits in shared/speech.json, not more", () => {
+    const file = { type: "video/mp4", name: "a.mp4", size: MAX_VIDEO_BYTES };
     expect(videoProblem(file)).toBeNull();
-    expect(videoProblem({ ...file, size: file.size + 1 })).toContain("500 MB");
+    expect(videoProblem({ ...file, size: file.size + 1 })).toContain(`${MAX_VIDEO_BYTES / 1024 / 1024} MB`);
     expect(videoProblem({ ...file, size: 0 })).toContain("kosong");
     expect(videoProblem({ ...file, type: "image/png" })).toContain("MP4");
-    expect(durationProblem(600)).toBeNull();
-    expect(durationProblem(600.1)).toContain("10 menit");
+    expect(durationProblem(MAX_VIDEO_SECONDS)).toBeNull();
+    expect(durationProblem(MAX_VIDEO_SECONDS + 0.1)).toContain(`${MAX_VIDEO_SECONDS / 60} menit`);
     expect(durationProblem(null)).toContain("tidak bisa dibaca");
     expect(durationProblem(0)).toContain("tidak bisa dibaca");
   });

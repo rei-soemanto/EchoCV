@@ -17,6 +17,7 @@ function table(name: string) {
   const filters: ((row: Row) => boolean)[] = [];
   let op: "select" | "update" | "insert" = "select";
   let payload: Row = {};
+  let sortBy: string | null = null;
   const run = () => {
     if (op === "insert") {
       db[name].push({ status: "pending", ...payload });
@@ -24,13 +25,15 @@ function table(name: string) {
     }
     const matched = (db[name] ?? []).filter((row) => filters.every((f) => f(row)));
     if (op === "update") matched.forEach((row) => Object.assign(row, payload));
-    return matched;
+    if (sortBy) matched.sort((a, b) => Number(a[sortBy as string]) - Number(b[sortBy as string]));
+    return matched.map((row) => ({ ...row }));
   };
   const query = {
     select: () => query,
     insert: (value: Row) => ((op = "insert"), (payload = value), query),
     update: (value: Row) => ((op = "update"), (payload = value), query),
     eq: (c: string, v: unknown) => (filters.push((r) => r[c] === v), query),
+    order: (c: string) => ((sortBy = c), query),
     maybeSingle: async () => ({ data: run()[0] ?? null, error: null }),
     then: (resolve: (value: unknown) => unknown) => resolve({ data: run(), error: null }),
   };
@@ -60,6 +63,7 @@ vi.mock("@/lib/supabase/admin", () => ({
 const { POST: checkout } = await import("@/app/api/checkout/route");
 const { POST: notify } = await import("@/app/api/payments/midtrans/route");
 const { GET: currentPlan } = await import("@/app/api/plan/route");
+const { GET: listPlans } = await import("@/app/api/plans/route");
 
 const sign = (orderId: string, statusCode: string, gross: string, key = SERVER_KEY) =>
   createHash("sha512").update(orderId + statusCode + gross + key).digest("hex");
@@ -240,5 +244,19 @@ describe("GET /api/plan", () => {
   it("rejects a signed-out visitor", async () => {
     user = null;
     expect((await currentPlan()).status).toBe(401);
+  });
+});
+
+describe("GET /api/plans", () => {
+  it("lists the active paid plans cheapest first, without needing sign-in", async () => {
+    user = null;
+    db.plans.unshift({ id: "yearly", name: "Tahunan", price_idr: 299000, duration_days: 365, active: true });
+    db.plans.push({ id: "old", name: "Old", price_idr: 1000, duration_days: 1, active: false });
+    const body = await (await listPlans()).json();
+    expect(body.plans.map((plan: Row) => [plan.id, plan.price_idr])).toEqual([
+      ["sprint", 15000],
+      ["premium", 29000],
+      ["yearly", 299000],
+    ]);
   });
 });

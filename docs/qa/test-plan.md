@@ -74,7 +74,7 @@ Validates offline video file upload and server-side processing pipeline.
 
 - **Acceptance Criteria**:
   - Candidate uploads one pre-recorded video per question.
-  - Validation enforces formats (MP4, MOV, WebM), maximum duration (10 minutes), and size limit (500 MB).
+  - Validation enforces formats (MP4, MOV, WebM), maximum duration (3 minutes), and size limit (50 MB), from the `video` block of `shared/speech.json`.
   - Upload shows progress bar and processing status indicator.
   - Raw video file is permanently deleted from storage immediately after analysis completes (BR-05).
 - **Flow Tests**:

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { parseUploadRequest, parseVisualMetrics } from "@/lib/db/uploads";
+import { MAX_VIDEO_BYTES, MAX_VIDEO_SECONDS, parseUploadRequest, parseVisualMetrics } from "@/lib/db/uploads";
 
 const USER = "11111111-1111-4111-8111-111111111111";
 const SESSION = "22222222-2222-4222-8222-222222222222";
@@ -292,7 +292,7 @@ describe("POST /api/uploads/[id]/complete", () => {
 
 const status = (id: string) =>
   uploadStatus(new Request(`http://app.test/api/uploads/${id}`), { params: Promise.resolve({ id }) });
-const video = { session_question_id: QUESTION, content_type: "video/mp4", size_bytes: 80_000_000, duration_seconds: 95 };
+const video = { session_question_id: QUESTION, content_type: "video/mp4", size_bytes: 40_000_000, duration_seconds: 95 };
 const runAfter = async () => {
   for (const callback of pendingAfter.splice(0)) await callback();
 };
@@ -318,9 +318,9 @@ describe("video uploads (upload mode)", () => {
 
   it.each([
     ["a missing size", { size_bytes: undefined }],
-    ["a size over 500 MB", { size_bytes: 500 * 1024 * 1024 + 1 }],
+    ["a size over the limit", { size_bytes: MAX_VIDEO_BYTES + 1 }],
     ["a missing duration", { duration_seconds: undefined }],
-    ["a video over 10 minutes", { duration_seconds: 601 }],
+    ["a video over the length limit", { duration_seconds: MAX_VIDEO_SECONDS + 1 }],
     ["a negative duration", { duration_seconds: -3 }],
   ])("rejects %s", (_name, change) => {
     expect(parseUploadRequest({ ...video, ...change }).ok).toBe(false);

@@ -4,7 +4,7 @@
   "maxAudioSeconds": 300,
   "maxUploadMb": 50,
   "audioUrlTimeoutS": 30,
-  "video": { "maxMb": 500, "maxSeconds": 600, "urlTimeoutS": 300, "maxFrameWidth": 1280 },
+  "video": { "maxMb": 50, "maxSeconds": 180, "urlTimeoutS": 300, "maxFrameWidth": 1280 },
   "vad": {
     "threshold": 0.5,
     "minSpeechMs": 250,

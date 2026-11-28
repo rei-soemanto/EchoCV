@@ -164,6 +164,7 @@ Team decisions (architecture doc §5):
 - The web app is live at https://echocv-beta.vercel.app, hosted on Vercel in Singapore next to the database. It talks to the hosted speech service, downloads the browser models while it builds, and keeps its keys in Vercel's hidden settings instead of the repository.
 - Leftover answer recordings are now cleaned up automatically every night at 02:00 WIB by a scheduled job on the host, and the build steps live in the repository instead of only in the host's settings.
 - Transcripts are more accurate: measured against hand-corrected answers, the speech service now gets about 11 in 100 words wrong instead of 13, with half as many missing words in Indonesian, for about 5% more processing time. A practice session also opens faster: the face, pose and behaviour models start loading during the device check, load at the same time instead of one after another, and are reused from calibration instead of being loaded twice.
+- Upload mode now accepts answer videos of up to 50 MB and 3 minutes, the same 3 minutes as a live answer. Every video it accepts can be stored and fully analysed, instead of being refused by storage or stopped halfway through a long analysis.
 
 ## Contributors
 

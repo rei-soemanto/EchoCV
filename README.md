@@ -87,6 +87,7 @@ Team decisions (architecture doc §5):
 | Browser and webcam test matrix | Done |
 | MVP test plan and acceptance tests | Done |
 | MVP acceptance criteria and sprint scope | Done |
+| MVP demo script | Done |
 | Bilingual interview question bank starter dataset | Done |
 | Bilingual role and question set explanations for session setup | Done |
 | Bilingual interview question bank for the MVP (81 questions across all roles and levels) | Done |
@@ -167,6 +168,7 @@ Team decisions (architecture doc §5):
 - Leftover answer recordings are now cleaned up automatically every night at 02:00 WIB by a scheduled job on the host, and the build steps live in the repository instead of only in the host's settings.
 - Transcripts are more accurate: measured against hand-corrected answers, the speech service now gets about 11 in 100 words wrong instead of 13, with half as many missing words in Indonesian, for about 5% more processing time. A practice session also opens faster: the face, pose and behaviour models start loading during the device check, load at the same time instead of one after another, and are reused from calibration instead of being loaded twice.
 - Upload mode now accepts answer videos of up to 50 MB and 3 minutes, the same 3 minutes as a live answer. Every video it accepts can be stored and fully analysed, instead of being refused by storage or stopped halfway through a long analysis.
+- Wrote the end-to-end MVP demo script in `docs/pm/mvp-demo.md` covering Live mode, Upload mode, feedback reports, plans, privacy controls, team presenter timings, and contingency checks.
 - Confirmed the seven MVP IT roles and added bilingual Indonesian and English explanations for every role, experience level, question set, role-specific technical track, and quick-start flow in `shared/questions/explanations.json`.
 - Expanded the bilingual interview question bank in `shared/questions/bank.json` to 81 Indonesian and English questions across general, behavioural, and all seven IT role-specific tracks, so every role and experience level (`internship`, `fresh_graduate`, `junior`, `mid_level`) has at least 10 matching prompts per question set.
 
@@ -175,6 +177,7 @@ Team decisions (architecture doc §5):
 | Name | Work |
 |---|---|
 | Dave | Built the app shell and pages from the Paper and Ink design, with the landing page, dashboard and sidebar navigation. Added webcam and microphone capture with the device check page, which records only the audio so video stays on the device. Built the 5-second calibration screen that gates the interview room. Built the live practice flow: session setup, the interview room with timers, live hints, restart and skip, and sending each answer for analysis. Built the report page with scores, time-stamped tips, transcripts and content feedback. Built the sign-in and sign-up pages. Built the upload page with progress for Upload mode. Polished the practice flow with a first-time guide, quick start, next steps in the report and error pages. Connected the dashboard, history, progress and privacy pages to real data and made the mid-MVP check fixes. Finished the landing page with all four plans. Built the plans page. |
+| Ivan | Defined the MVP acceptance criteria, business-rule verification checks, and scope boundaries across live practice and upload modes. Created the bilingual Indonesian and English interview question bank starter dataset across general, behavioural, and IT role-specific sets. Wrote the end-to-end MVP demo script covering Live mode, Upload mode, reports, plans, privacy controls, and presenter timings. |
 | Ivan | Defined the MVP acceptance criteria, business-rule verification checks, and scope boundaries across live practice and upload modes. Created the bilingual Indonesian and English interview question bank starter dataset across general, behavioural, and IT role-specific sets. Confirmed the seven MVP roles and added bilingual Indonesian and English explanations for roles, question sets, and quick start for session setup. |
 | Ivan | Defined the MVP acceptance criteria, business-rule verification checks, and scope boundaries across live practice and upload modes. Created and expanded the bilingual Indonesian and English interview question bank to 81 questions across general, behavioural, and all seven IT role-specific sets and four experience levels. |
 | Kenjo | Built the Playwright end-to-end test skeleton with page objects for setup, calibration, interview room, upload and reports. |

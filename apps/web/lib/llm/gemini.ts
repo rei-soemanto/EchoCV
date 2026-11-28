@@ -54,6 +54,7 @@ export function contentPrompt(question: string, transcript: string, language: La
     "- clarity: is it easy to follow, well ordered and concise?",
     "Rules:",
     "- Mixing Indonesian and English words never lowers star or relevance.",
+    "- If the answer is completely off-topic, gibberish rambling, empty words, or does not address the question, score star and relevance strictly below 30.",
     "- Judge only the words of the answer. Ignore filler words such as eee or hmm; they are scored elsewhere.",
     "- The transcript comes from speech recognition and may contain small recognition errors; do not penalise them.",
     `- Write strength and improvement in ${name}, one sentence each, addressed to the candidate as "you". The improvement is one concrete next step. Coach the answer, never judge the person.`,

@@ -63,9 +63,9 @@ export function AppSidebar({ fullName, email }: { fullName: string; email: strin
         </ul>
       </nav>
       <div className="flex items-center justify-between gap-4 border-t border-ink-inverse px-3 pt-3 md:mt-auto md:flex-col md:items-start md:gap-1 md:pt-4">
-        <div className="flex min-w-0 flex-col gap-1 md:w-full">
-          <p className="text-label truncate">{fullName}</p>
-          <p className="text-body-sm truncate opacity-85">{email}</p>
+        <div className="flex min-w-0 flex-col gap-0.5 md:w-full">
+          <p className="text-label truncate" title={fullName}>{fullName}</p>
+          <p className="text-caption break-all opacity-85" title={email}>{email}</p>
         </div>
         <button type="button" onClick={leave} className="text-body-sm min-h-11 shrink-0 underline-offset-4 hover:underline">
           Keluar

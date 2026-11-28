@@ -208,6 +208,14 @@ export function UploadSession({ sessionId, initial }: { sessionId: string; initi
               </p>
               <h2 className="text-h2">{current.question}</h2>
             </div>
+            <div className="rounded-lg border border-border-default bg-surface-card p-4 text-body-sm text-ink-secondary">
+              <p className="mb-1 font-semibold text-ink-primary">Panduan rekaman video jawaban:</p>
+              <ul className="list-disc space-y-1 pl-5">
+                <li>Rekam diri Anda menjawab pertanyaan wawancara di atas secara lisan.</li>
+                <li>Wajah dan bahu harus terlihat jelas menghadap kamera dengan pencahayaan cukup.</li>
+                <li>Hanya unggah rekaman jawaban wawancara. Berkas yang tidak relevan atau rusak akan ditolak otomatis.</li>
+              </ul>
+            </div>
             <div
               onDragOver={(event) => {
                 event.preventDefault();
@@ -295,14 +303,32 @@ export function UploadSession({ sessionId, initial }: { sessionId: string; initi
             </div>
           </form>
         ) : (
-          <div className="flex min-w-0 flex-1 flex-col gap-6">
-            <h2 className="text-h2">{settled ? "Menyusun laporan Anda" : "Sedang menganalisis latihan Anda"}</h2>
-            <p className="text-body text-ink-secondary">
-              Kami menyusun transkrip, tempo bicara, kata pengisi dan bahasa tubuh. Halaman ini berpindah sendiri ke laporan
-              saat selesai.
-            </p>
+          <div className="flex min-w-0 flex-1 flex-col items-center justify-center gap-6 rounded-xl border border-border-default bg-surface-card p-8 text-center md:p-12">
+            <div className="size-12 rounded-full border-4 border-surface-accent border-t-transparent animate-spin" />
+            <div className="flex max-w-lg flex-col gap-2">
+              <h2 className="text-h2">{settled ? "Menyusun laporan Anda…" : "Sedang menganalisis latihan Anda…"}</h2>
+              <p className="text-body text-ink-secondary">
+                Kami menyusun transkrip, tempo bicara, kata pengisi dan bahasa tubuh. Halaman ini berpindah sendiri ke laporan
+                saat selesai.
+              </p>
+            </div>
+            <div className="flex w-full max-w-md flex-col gap-2">
+              <ProgressBar
+                label={settled ? "Penyusunan laporan" : "Kemajuan analisis"}
+                value={overall}
+              />
+              <p role="status" className="text-body-sm text-ink-secondary">
+                {processing.length
+                  ? elapsed < expectedMs
+                    ? `${processing.length} video dianalisis, sekitar ${minutesLeft} menit lagi`
+                    : `${processing.length} video dianalisis, hampir selesai`
+                  : doneCount
+                    ? `${doneCount} dari ${items.length} selesai`
+                    : "Mempersiapkan analisis…"}
+              </p>
+            </div>
             {finish.failed && (
-              <div role="alert" className="flex flex-col gap-4">
+              <div role="alert" className="flex flex-col items-center gap-4">
                 <p className="text-body-sm text-ink-danger">Sesi belum bisa diselesaikan. Periksa koneksi internet.</p>
                 <button
                   type="button"

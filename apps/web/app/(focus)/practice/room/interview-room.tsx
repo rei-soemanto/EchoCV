@@ -53,7 +53,7 @@ export function InterviewRoom({
   startAt: number;
 }) {
   const router = useRouter();
-  const { videoRef, stream, status, hasCamera, hasMic } = useMediaCapture();
+  const { videoRef, stream, status, hasCamera, hasMic, level } = useMediaCapture();
   const [baseline, setBaseline] = useState<Baseline | null | undefined>(undefined);
   const [index, setIndex] = useState(startAt);
   const [phase, setPhase] = useState<Phase>("loading");
@@ -278,6 +278,14 @@ export function InterviewRoom({
     [],
   );
 
+  if (baseline === undefined) {
+    return (
+      <div className="flex min-h-screen flex-1 flex-col items-center justify-center gap-3 bg-surface-primary">
+        <div className="size-6 rounded-full border-2 border-surface-accent border-t-transparent animate-spin" />
+        <p className="text-body text-ink-secondary">Menyiapkan ruang wawancara…</p>
+      </div>
+    );
+  }
   if (baseline === null) {
     return (
       <Blocked
@@ -310,10 +318,25 @@ export function InterviewRoom({
   return (
     <div className="flex min-h-full flex-1 flex-col">
       <div className="flex items-center justify-between gap-4 bg-surface-inverse px-4 py-4 text-ink-inverse md:px-12">
-        <p className="text-label flex items-center gap-3">
-          {phase === "recording" && <Image src="/icons/record.svg" alt="" width={16} height={16} />}
-          {phase === "prep" ? "Persiapan" : phase === "recording" ? "Merekam" : busy ? "Menganalisis" : "Jeda"}
-        </p>
+        <div className="flex items-center gap-3">
+          <p className="text-label flex items-center gap-2">
+            {phase === "recording" && <Image src="/icons/record.svg" alt="" width={16} height={16} />}
+            {phase === "prep" ? "Persiapan" : phase === "recording" ? "Merekam" : busy ? "Menganalisis" : "Jeda"}
+          </p>
+          {phase === "recording" && (
+            <div className="flex items-center gap-1 border-l border-ink-inverse/30 pl-2" title="Level suara mikrofon">
+              {Array.from({ length: 5 }, (_, i) => {
+                const lit = level > i * 0.12;
+                return (
+                  <span
+                    key={i}
+                    className={`h-3 w-1 rounded-xs transition-all duration-75 ${lit ? "bg-success-fill" : "bg-ink-inverse/30"}`}
+                  />
+                );
+              })}
+            </div>
+          )}
+        </div>
         <p className="font-mono text-[13px] leading-[18px]" aria-label={phase === "prep" ? "Sisa waktu persiapan" : "Lama jawaban"}>
           {clock}
         </p>
@@ -368,9 +391,22 @@ export function InterviewRoom({
                   Kontak mata dan postur Anda baik.
                 </p>
               ))}
-            {phase === "sending" && <p className="text-body-sm text-ink-secondary">Mengirim dan menganalisis jawaban…</p>}
+            {busy && (
+              <div className="flex flex-col gap-3 rounded-lg border border-border-default bg-surface-card p-6 shadow-xs">
+                <div className="flex items-center gap-3">
+                  <div className="size-5 shrink-0 rounded-full border-2 border-surface-accent border-t-transparent animate-spin" />
+                  <p className="text-h3 font-semibold text-ink-primary">
+                    {phase === "finishing" ? "Menyelesaikan sesi latihan…" : "Menganalisis jawaban Anda…"}
+                  </p>
+                </div>
+                <p className="text-body-sm text-ink-secondary">
+                  {phase === "finishing"
+                    ? "Menyusun ringkasan akhir sesi dan membuka halaman laporan evaluasi. Mohon tunggu sebentar."
+                    : "Audio jawaban dan metrik visual sedang dikirim ke layanan analisis AI. Jangan menutup tab browser ini."}
+                </p>
+              </div>
+            )}
             {phase === "skipping" && <p className="text-body-sm text-ink-secondary">Melewati pertanyaan…</p>}
-            {phase === "finishing" && <p className="text-body-sm text-ink-secondary">Menyelesaikan sesi…</p>}
             {message && (
               <p role="alert" className="text-body-sm text-ink-danger">
                 {message}

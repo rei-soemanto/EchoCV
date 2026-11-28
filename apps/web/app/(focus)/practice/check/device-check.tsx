@@ -101,6 +101,17 @@ export function DeviceCheck({ sessionId }: { sessionId?: string }) {
             className="absolute top-1/2 left-1/2 h-auto w-32 -translate-x-1/2 -translate-y-1/2 opacity-70 sm:w-[180px]"
             priority
           />
+          {running && (
+            <div className="absolute inset-x-0 bottom-6 mx-auto flex w-fit items-center gap-2 rounded-full bg-surface-inverse/85 px-4 py-2 text-ink-inverse backdrop-blur-xs">
+              <span className="size-2 rounded-full bg-warning-fill animate-pulse" />
+              <span className="text-body-sm font-medium">Tatap langsung lensa kamera ({calibration.secondsLeft} detik)</span>
+            </div>
+          )}
+          {!running && hasCamera && !calibrated && (
+            <div className="absolute inset-x-0 bottom-6 mx-auto flex w-fit items-center gap-2 rounded-full bg-surface-inverse/70 px-4 py-2 text-ink-inverse backdrop-blur-xs">
+              <span className="text-caption">Posisikan wajah Anda tepat di dalam garis panduan oval</span>
+            </div>
+          )}
         </div>
       </div>
 

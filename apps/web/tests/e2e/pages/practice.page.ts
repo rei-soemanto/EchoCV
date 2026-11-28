@@ -45,6 +45,14 @@ export class PracticePage {
     await this.page.getByRole("radio", { name: questionSet }).check({ force: true });
   }
 
+  async createSession(): Promise<string> {
+    await this.gotoSetup();
+    await this.chooseSetup();
+    await this.calibrationLink.click();
+    await expect(this.page).toHaveURL(/\/practice\/check\?session=[0-9a-f-]{36}$/);
+    return new URL(this.page.url()).searchParams.get("session")!;
+  }
+
   async expectSetupLoaded() {
     await expect(this.setupHeading).toBeVisible();
   }

@@ -1,0 +1,289 @@
+{
+  "version": "0.1.0",
+  "mvp_roles_confirmed": true,
+  "confirmed_roles": [
+    "Backend developer",
+    "Frontend developer",
+    "Fullstack developer",
+    "Mobile developer",
+    "QA engineer",
+    "Data / AI engineer",
+    "UI/UX designer"
+  ],
+  "roles_confirmation_note": {
+    "id": "Tujuh peran IT di atas sudah mencukupi kebutuhan MVP bagi mahasiswa tingkat akhir, lulusan baru, dan kandidat awal karier di Indonesia tanpa menambah peran baru.",
+    "en": "These seven IT roles cover the MVP scope for Indonesian final-year students, fresh graduates, and early-career candidates without adding extra roles."
+  },
+  "question_sets": {
+    "general": {
+      "id": {
+        "label": "Umum dan perkenalan diri",
+        "description": "Pertanyaan pembuka tentang latar belakang Anda, alasan memilih bidang IT, gaya kerja tim, dan tujuan karier.",
+        "best_for": "Pemanasan sebelum wawancara atau wawancara awal bersama HR."
+      },
+      "en": {
+        "label": "General & introduction",
+        "description": "Opening questions about your background, motivation for working in IT, teamwork habits, and career goals.",
+        "best_for": "Warming up or preparing for an initial HR screening call."
+      }
+    },
+    "behavioral": {
+      "id": {
+        "label": "Perilaku (STAR)",
+        "description": "Pertanyaan tentang pengalaman nyata saat bekerja dalam tim, menghadapi tenggat waktu, atau menyelesaikan masalah dengan alur Situasi, Tugas, Aksi, dan Hasil.",
+        "best_for": "Melatih cerita pengalaman kuliah, magang, atau kerja agar runtut dan punya hasil yang jelas."
+      },
+      "en": {
+        "label": "Behavioral (STAR)",
+        "description": "Experience-based questions on teamwork, tight deadlines, mistakes, and problem-solving using Situation, Task, Action, and Result.",
+        "best_for": "Structuring real project or campus stories clearly with concrete outcomes."
+      }
+    },
+    "role_specific": {
+      "id": {
+        "label": "Teknis sesuai peran",
+        "description": "Pertanyaan praktik kerja dan pengambilan keputusan teknis yang disesuaikan dengan peran IT yang Anda pilih.",
+        "best_for": "Persiapan wawancara user atau diskusi teknis bersama engineer dan desainer."
+      },
+      "en": {
+        "label": "Role-specific technical",
+        "description": "Practical engineering, testing, data, or design questions tailored to the IT role you selected.",
+        "best_for": "Preparing for technical user interviews and day-to-day problem-solving discussions."
+      }
+    }
+  },
+  "roles": {
+    "Backend developer": {
+      "id": {
+        "label": "Backend developer",
+        "description": "Membangun layanan server, alur data, autentikasi, dan basis data yang menopang aplikasi di balik layar.",
+        "best_for": "Kandidat yang terbiasa membuat API, mengelola database, atau menjaga keamanan dan kecepatan server."
+      },
+      "en": {
+        "label": "Backend developer",
+        "description": "Builds the server logic, APIs, databases, and security rules that power an application behind the scenes.",
+        "best_for": "Candidates focused on server-side code, databases, authentication, and reliability."
+      }
+    },
+    "Frontend developer": {
+      "id": {
+        "label": "Frontend developer",
+        "description": "Membangun tampilan situs atau aplikasi web yang cepat, responsif, dan nyaman dipakai di browser.",
+        "best_for": "Kandidat yang suka mengubah desain menjadi halaman web interaktif dan rapi di desktop maupun ponsel."
+      },
+      "en": {
+        "label": "Frontend developer",
+        "description": "Builds fast, responsive, and accessible web interfaces that users interact with directly in the browser.",
+        "best_for": "Candidates focused on web UI components, state handling, and browser performance."
+      }
+    },
+    "Fullstack developer": {
+      "id": {
+        "label": "Fullstack developer",
+        "description": "Mengerjakan fitur secara utuh dari tampilan antarmuka pengguna hingga layanan API dan penyimpanan data di server.",
+        "best_for": "Kandidat yang nyaman menghubungkan halaman web dengan backend dan database sekaligus."
+      },
+      "en": {
+        "label": "Fullstack developer",
+        "description": "Builds features end to end, connecting user interfaces on the browser with backend APIs and databases.",
+        "best_for": "Candidates comfortable working across both frontend screens and backend data flows."
+      }
+    },
+    "Mobile developer": {
+      "id": {
+        "label": "Mobile developer",
+        "description": "Membuat aplikasi Android atau iOS yang lancar dipakai di ponsel dengan koneksi stabil maupun terbatas.",
+        "best_for": "Kandidat yang berfokus pada pengembangan aplikasi ponsel, izin perangkat, dan pengalaman layar sentuh."
+      },
+      "en": {
+        "label": "Mobile developer",
+        "description": "Builds Android or iOS apps that stay smooth across device sizes, permissions, and uneven mobile networks.",
+        "best_for": "Candidates focused on native or cross-platform mobile apps and app store releases."
+      }
+    },
+    "QA engineer": {
+      "id": {
+        "label": "QA engineer",
+        "description": "Memastikan fitur berjalan sesuai kebutuhan dengan merancang skenario uji, mencari celah bug, dan menjaga mutu sebelum rilis.",
+        "best_for": "Kandidat yang teliti menguji alur pengguna, API, dan pencegahan error sebelum aplikasi dirilis."
+      },
+      "en": {
+        "label": "QA engineer",
+        "description": "Protects product quality by designing test cases, spotting edge-case bugs, and verifying fixes before release.",
+        "best_for": "Candidates focused on manual testing, test automation, and API or release quality checks."
+      }
+    },
+    "Data / AI engineer": {
+      "id": {
+        "label": "Data / AI engineer",
+        "description": "Menyiapkan data yang bersih, menganalisis pola, serta membangun dan mengevaluasi model AI agar berguna bagi pengguna.",
+        "best_for": "Kandidat yang bekerja dengan pengolahan data, pipeline ETL, machine learning, atau fitur berbasis AI."
+      },
+      "en": {
+        "label": "Data / AI engineer",
+        "description": "Cleans and organizes data, builds reliable pipelines, and trains or evaluates machine learning and AI features.",
+        "best_for": "Candidates focused on analytics, data engineering, ML evaluation, or LLM applications."
+      }
+    },
+    "UI/UX designer": {
+      "id": {
+        "label": "UI/UX designer",
+        "description": "Meriset kebutuhan pengguna, menyusun alur layar yang mudah dipahami, dan merancang tampilan antarmuka di Figma.",
+        "best_for": "Kandidat yang berfokus pada riset pengguna, wireframe, prototipe, aksesibilitas, dan kolaborasi desain ke tim dev."
+      },
+      "en": {
+        "label": "UI/UX designer",
+        "description": "Researches user needs, structures clear flows, and designs accessible, consistent interfaces and prototypes.",
+        "best_for": "Candidates focused on user research, wireframing, usability testing, and design systems."
+      }
+    }
+  },
+  "role_specific_sets": {
+    "Backend developer": {
+      "id": {
+        "label": "Teknis Backend developer",
+        "description": "Membahas perancangan API, pemilihan database, kueri lambat, keamanan akun pengguna, caching, dan penanganan error di server.",
+        "best_for": "Latihan menjelaskan keputusan arsitektur server dan pemecahan masalah produksi secara runtut."
+      },
+      "en": {
+        "label": "Backend technical track",
+        "description": "Covers API design, SQL vs NoSQL choices, slow database queries, authentication, caching, and server reliability.",
+        "best_for": "Practising clear explanations of server architecture and production debugging."
+      }
+    },
+    "Frontend developer": {
+      "id": {
+        "label": "Teknis Frontend developer",
+        "description": "Membahas tampilan responsif, kecepatan halaman, pengelolaan state, aksesibilitas, keamanan form, dan kolaborasi dengan desain.",
+        "best_for": "Latihan menjelaskan cara menjaga antarmuka web tetap cepat, rapi, dan nyaman dipakai."
+      },
+      "en": {
+        "label": "Frontend technical track",
+        "description": "Covers responsive layouts, rendering speed, state management, accessibility, form safety, and design implementation.",
+        "best_for": "Practising clear explanations of UI engineering and browser performance."
+      }
+    },
+    "Fullstack developer": {
+      "id": {
+        "label": "Teknis Fullstack developer",
+        "description": "Menggabungkan tampilan browser, desain API, database, keselarasan data antara layar dan server, serta penanganan sesi login.",
+        "best_for": "Latihan menjelaskan bagaimana antarmuka, backend, dan database bekerja bersama dalam satu fitur."
+      },
+      "en": {
+        "label": "Fullstack technical track",
+        "description": "Combines browser screens, API design, database queries, shared data checks, and sign-in flows.",
+        "best_for": "Practising how to explain full feature ownership from UI to database."
+      }
+    },
+    "Mobile developer": {
+      "id": {
+        "label": "Teknis Mobile developer",
+        "description": "Membahas siklus hidup layar ponsel, kondisi jaringan terputus, keamanan penyimpanan lokal, izin perangkat, dan rilis aplikasi.",
+        "best_for": "Latihan menjawab kendala nyata di perangkat Android maupun iOS."
+      },
+      "en": {
+        "label": "Mobile technical track",
+        "description": "Covers screen lifecycles, offline handling, secure local storage, device permissions, scrolling speed, and app releases.",
+        "best_for": "Practising practical Android and iOS engineering scenarios."
+      }
+    },
+    "QA engineer": {
+      "id": {
+        "label": "Teknis QA engineer",
+        "description": "Membahas penyusunan skenario uji, laporan bug yang mudah diulang, pengujian API, tes otomatis, dan pencegahan bug berulang.",
+        "best_for": "Latihan menjelaskan cara menjaga kualitas rilis saat jadwal sempit."
+      },
+      "en": {
+        "label": "QA technical track",
+        "description": "Covers test planning, reproducible bug reports, API edge-case checks, test automation strategy, and regression prevention.",
+        "best_for": "Practising how to defend quality priorities under tight release schedules."
+      }
+    },
+    "Data / AI engineer": {
+      "id": {
+        "label": "Teknis Data / AI engineer",
+        "description": "Membahas pembersihan data, alur olah data yang andal, ukuran keberhasilan model, pencegahan bocornya data uji, serta pengujian fitur AI.",
+        "best_for": "Latihan menjelaskan alur kerja data dan AI secara sederhana tanpa terjebak istilah rumit."
+      },
+      "en": {
+        "label": "Data / AI technical track",
+        "description": "Covers raw data checks, reliable pipelines, accuracy on unseen data, preventing test leakage, and AI output quality.",
+        "best_for": "Practising clear explanations of data quality and real-world AI evaluation."
+      }
+    },
+    "UI/UX designer": {
+      "id": {
+        "label": "Teknis UI/UX designer",
+        "description": "Membahas proses riset hingga prototipe, pengujian ke pengguna, alur informasi, design system, aksesibilitas, dan serah terima ke developer.",
+        "best_for": "Latihan menceritakan alasan di balik keputusan desain dan cara berkolaborasi dengan tim produk."
+      },
+      "en": {
+        "label": "UI/UX technical track",
+        "description": "Covers user research to prototyping, usability testing, information architecture, edge states, accessibility, and dev handoff.",
+        "best_for": "Practising how to explain design trade-offs and cross-team collaboration."
+      }
+    }
+  },
+  "quick_start": {
+    "id": {
+      "label": "Latihan cepat: perkenalkan diri",
+      "description": "Sesi singkat berisi satu pertanyaan pembuka (Perkenalkan diri Anda) agar Anda bisa langsung mencoba kamera, mikrofon, dan laporan tanpa mengatur set pertanyaan.",
+      "best_for": "Coba pertama kali atau pemanasan singkat kurang dari tiga menit."
+    },
+    "en": {
+      "label": "Quick start: introduce yourself",
+      "description": "A one-question session (Introduce yourself and your educational background) to test your setup and get a quick report without configuring a full set.",
+      "best_for": "First-time walkthroughs or a quick warm-up in under three minutes."
+    }
+  },
+  "levels": {
+    "internship": {
+      "id": {
+        "label": "Magang",
+        "description": "Untuk mahasiswa yang melamar program magang dengan proyek kuliah, organisasi, atau studi mandiri.",
+        "best_for": "Latihan magang pertama atau program kampus."
+      },
+      "en": {
+        "label": "Internship",
+        "description": "For students applying to internships using coursework, student projects, or independent builds.",
+        "best_for": "First internship applications and campus hiring."
+      }
+    },
+    "fresh_graduate": {
+      "id": {
+        "label": "Fresh graduate",
+        "description": "Untuk lulusan baru atau mahasiswa tingkat akhir yang bersiap masuk peran penuh waktu pertama.",
+        "best_for": "Pencari kerja lulusan baru dengan pengalaman tugas akhir atau magang."
+      },
+      "en": {
+        "label": "Fresh graduate",
+        "description": "For recent graduates or final-year students preparing for their first full-time role.",
+        "best_for": "Entry-level full-time interviews after graduation."
+      }
+    },
+    "junior": {
+      "id": {
+        "label": "Junior (1 sampai 3 tahun)",
+        "description": "Untuk kandidat dengan pengalaman kerja 1 hingga 3 tahun dalam pengiriman fitur dan kerja tim.",
+        "best_for": "Memperkuat cerita dampak proyek dan keandalan teknis sehari-hari."
+      },
+      "en": {
+        "label": "Junior (1 to 3 years)",
+        "description": "For candidates with 1 to 3 years of work experience shipping features in a team.",
+        "best_for": "Sharpening project impact stories and day-to-day technical judgment."
+      }
+    },
+    "mid_level": {
+      "id": {
+        "label": "Menengah (3 tahun atau lebih)",
+        "description": "Untuk praktisi berpengalaman yang mengambil keputusan teknis lintas tim dan menjaga skala sistem.",
+        "best_for": "Latihan menjelaskan trade-off arsitektur, kepemilikan, dan pembimbingan tim."
+      },
+      "en": {
+        "label": "Mid-level (3+ years)",
+        "description": "For experienced practitioners handling technical trade-offs, system scale, and team mentoring.",
+        "best_for": "Practising architecture decisions, ownership, and cross-team alignment."
+      }
+    }
+  }
+}
